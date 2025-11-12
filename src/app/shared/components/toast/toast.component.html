@@ -1,0 +1,17 @@
+<div class="toast-container">
+  <div 
+    *ngFor="let message of messages" 
+    class="toast toast-{{ message.severity }}"
+    [@slideIn]>
+    <div class="toast-content">
+      <i class="pi {{ getIcon(message.severity) }} toast-icon"></i>
+      <div class="toast-text">
+        <div class="toast-summary">{{ message.summary }}</div>
+        <div class="toast-detail" *ngIf="message.detail">{{ message.detail }}</div>
+      </div>
+      <button class="toast-close" (click)="remove(message.id)">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+  </div>
+</div>

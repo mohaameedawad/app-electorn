@@ -1,0 +1,69 @@
+<div class="page-header">
+  <h2>الموظفين</h2>
+  <button class="add-button" (click)="showDialog()">+ إضافة موظف</button>
+</div>
+<app-table 
+  [columns]="columns" 
+  [data]="data"
+  (edit)="onEdit($event)"
+  (delete)="onDelete($event)"
+></app-table>
+
+<app-confirmation-dialog></app-confirmation-dialog>
+
+<p-dialog 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [style]="{width: '500px'}"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onDialogHide()"
+  [header]="editingEmployeeId ? 'تعديل موظف' : 'إضافة موظف'">
+  
+  <div class="form-container">
+    <div class="form-group">
+      <label>الاسم</label>
+      <input 
+        type="text" 
+        pInputText
+        class="full-width"
+        [(ngModel)]="newEmployee.name"
+        placeholder="أدخل اسم الموظف" />
+    </div>
+
+    <div class="form-group">
+      <label>رقم الهاتف</label>
+      <input 
+        type="text" 
+        pInputText
+        class="full-width"
+        [(ngModel)]="newEmployee.phone"
+        placeholder="أدخل رقم الهاتف" />
+    </div>
+
+    <div class="form-group">
+      <label>الوظيفة</label>
+      <input 
+        type="text" 
+        pInputText
+        class="full-width"
+        [(ngModel)]="newEmployee.position"
+        placeholder="مثال: بائع، محاسب، مدير" />
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <p-button 
+        label="إلغاء" 
+        severity="secondary" 
+        (onClick)="closeDialog()"
+        [text]="true">
+      </p-button>
+      <p-button 
+        [label]="editingEmployeeId ? 'تحديث' : 'حفظ'"
+        (onClick)="saveEmployee()">
+      </p-button>
+    </div>
+  </ng-template>
+</p-dialog>

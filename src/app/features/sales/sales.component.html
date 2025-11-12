@@ -1,0 +1,342 @@
+<div class="page-header">
+  <h2>المبيعات</h2>
+  <button class="add-button" (click)="showDialog()">+ إضافة فاتورة</button>
+</div>
+<app-table
+  [columns]="columns"
+  [data]="data"
+  (edit)="onEdit($event)"
+  (delete)="onDelete($event)"
+  (preview)="onPreview($event)"
+></app-table>
+
+<app-confirmation-dialog></app-confirmation-dialog>
+
+<app-dialog
+  [(visible)]="visible"
+  [style]="{ width: '800px' }"
+  [draggable]="false"
+  (onHide)="onDialogHide()"
+  [header]="'فاتورة مبيعات'"
+>
+  <div class="form-container">
+    <div class="invoice-row">
+      <div class="invoice-number">
+        <span class="invoice-label">رقم الفاتورة:</span>
+        <span class="invoice-value">{{ newSale.invoice_no }}</span>
+      </div>
+
+      <div class="row">
+        <div class="col-3">
+          <label class="mb-2">العميل</label>
+          <p-select
+            [(ngModel)]="newSale.customer_id"
+            [options]="customers"
+            optionLabel="label"
+            optionValue="value"
+            [filter]="true"
+            filterBy="label"
+            placeholder="اختر العميل"
+            [appendTo]="'body'"
+            [style]="{ width: '100%' }"
+          >
+          </p-select>
+        </div>
+
+        <div class="col-3">
+          <label class="mb-2">البائع</label>
+          <p-select
+            [(ngModel)]="newSale.employee_id"
+            [options]="employees"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="اختر البائع"
+            [appendTo]="'body'"
+            [style]="{ width: '100%' }"
+          >
+          </p-select>
+        </div>
+
+        <div class="col-3">
+          <label class="mb-2">التاريخ</label>
+          <p-datepicker
+            [(ngModel)]="newSale.sale_date"
+            dateFormat="yy-mm-dd"
+            [showIcon]="true"
+            [appendTo]="'body'"
+            [style]="{ width: '100%' }"
+          >
+          </p-datepicker>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Product Section -->
+    <div class="add-product-section">
+      <div class="">
+        <h4>إضافة صنف</h4>
+
+        <!-- single responsive row: product | quantity | price | add-button -->
+        <div class="row align-items-start">
+          <div class="col-md-4 col-12">
+            <div class="input-wrapper">
+              <label class="mb-2">المنتج</label>
+              <p-select
+                [(ngModel)]="currentItem.product_id"
+                [options]="products"
+                optionLabel="label"
+                optionValue="value"
+                [filter]="true"
+                filterBy="label"
+                placeholder="اختر المنتج"
+                (onChange)="onProductChange()"
+                [appendTo]="'body'"
+                [style]="{ width: '100%' }"
+                [class.error-input]="showValidationErrors && !currentItem.product_id"
+              >
+              </p-select>
+              <small class="error-message">
+                <span *ngIf="showValidationErrors && !currentItem.product_id">هذا الحقل مطلوب</span>
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-2 col-6 mx-2">
+            <div class="input-wrapper ">
+              <label class="mb-2">الكمية</label>
+              <p-inputnumber
+                [(ngModel)]="currentItem.quantity"
+                [showButtons]="false"
+                (ngModelChange)="calculateItemTotal()"
+                [style]="{ width: '100%' }"
+                [class.error-input]="showValidationErrors && !currentItem.quantity"
+              >
+              </p-inputnumber>
+              <small class="error-message">
+                <span *ngIf="showValidationErrors && !currentItem.quantity">هذا الحقل مطلوب</span>
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-2 col-6 mx-2">
+            <div class="input-wrapper ">
+              <label class="mb-2">السعر</label>
+              <p-inputnumber
+                [(ngModel)]="currentItem.price"
+                [showButtons]="false"
+                (ngModelChange)="calculateItemTotal()"
+                [style]="{ width: '100%' }"
+                [class.error-input]="showValidationErrors && !currentItem.price"
+              >
+              </p-inputnumber>
+              <small class="error-message">
+                <span *ngIf="showValidationErrors && !currentItem.price">هذا الحقل مطلوب</span>
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-2 col-12">
+            <div class="input-wrapper">
+              <label class="mb-2" style="visibility: hidden;">زر</label>
+              <button class="add-button w-100 mx-3" (click)="addItem()">
+                إضافة منتج
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="items-table">
+      <h4>الأصناف</h4>
+      <p-table [value]="newSale.items">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>المنتج</th>
+            <th>الكمية</th>
+            <th>السعر</th>
+            <th>الإجمالي</th>
+            <th>حذف</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item let-i="rowIndex">
+          <tr>
+            <td>{{ item.product_name }}</td>
+            <td>
+              <p-inputnumber
+                [(ngModel)]="item.quantity"
+                [min]="1"
+                (ngModelChange)="updateItemTotal(i)"
+                [showButtons]="true"
+                [style]="{ width: '100px' }"
+              >
+              </p-inputnumber>
+            </td>
+            <td>
+              <p-inputnumber
+                [(ngModel)]="item.price"
+                [min]="0"
+                (ngModelChange)="updateItemTotal(i)"
+                [style]="{ width: '120px' }"
+              >
+              </p-inputnumber>
+            </td>
+            <td>{{ item.total }}</td>
+            <td>
+              <button class="delete-btn" (click)="removeItem(i)">
+                <i class="pi pi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="empty-message-center">لا توجد سجلات</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Totals Section -->
+    <div class="row">
+      <!-- Discount as an absolute number -->
+      <div class="col-4">
+        <label class="mb-2 col-12">الخصم</label>
+        <p-inputnumber
+          [(ngModel)]="newSale.discount"
+          [min]="0"
+          [showButtons]="false"
+          (ngModelChange)="calculateInvoiceTotal()"
+          [style]="{ width: '140px' }"
+        >
+        </p-inputnumber>
+      </div>
+
+      <!-- Tax percentage applied on after-discount amount -->
+      <div class="col-4">
+        <label class="mb-2 col-12">الضريبة %</label>
+        <p-inputnumber
+          [(ngModel)]="newSale.tax"
+          [min]="0"
+          [max]="100"
+          [showButtons]="false"
+          (ngModelChange)="calculateInvoiceTotal()"
+          [style]="{ width: '100px' }"
+        >
+        </p-inputnumber>
+      </div>
+
+      <!-- Paid amount -->
+      <div class="col-4">
+        <label class="mb-2 col-12">المدفوع</label>
+        <p-inputnumber
+          [(ngModel)]="newSale.paid_amount"
+          [min]="0"
+          [showButtons]="false"
+          [style]="{ width: '140px' }"
+        >
+        </p-inputnumber>
+      </div>
+
+      <div class="row mt-3">
+        <!-- Subtotal (before discount) -->
+        <div class="col-4">
+          <label class="mb-2 col">الإجمالي (قبل الخصم): </label>
+          <span class="mx-2">{{ newSale.subtotal }}</span>
+        </div>
+
+        <!-- Final total after discount and tax -->
+        <div class="col-4">
+          <label class="mb-2 col">الإجمالي (بعد الخصم): </label>
+          <span class="mx-2">{{ newSale.total }}</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div dialog-footer class="dialog-footer py-3">
+    <!-- <button class="print-button mx-2" (click)="printInvoice()">
+      <i class="pi pi-print"></i>
+      طباعة
+    </button> -->
+    <button class="cancel-button mx-2" (click)="closeDialog()">إلغاء</button>
+    <button class="add-button" (click)="saveSale()">حفظ و طباعة الفاتورة </button>
+  </div>
+</app-dialog>
+
+<!-- Preview Invoice Dialog -->
+<app-dialog
+  [(visible)]="previewVisible"
+  [style]="{ width: '800px' }"
+  [draggable]="false"
+  [header]="'معاينة الفاتورة'"
+>
+  <div class="invoice-preview">
+    <!-- Company Info -->
+    <div class="company-info">
+      <h2 class="company-name">{{ companyName }}</h2>
+      <p class="company-phone">رقم الهاتف: {{ companyPhone }}</p>
+    </div>
+    <!-- Header -->
+    <div class="invoice-header">
+      <h1>فاتورة مبيعات</h1>
+    </div>
+    <!-- Customer Info -->
+    <div class="customer-info">
+      <div class="info-row">
+        <div class="info-item">
+          <span class="label">العميل:</span>
+          <span class="value">{{ getCustomerName(previewSale.customer_id) }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">رقم الفاتورة:</span>
+          <span class="value">{{ previewSale.invoice_no }}</span>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-item">
+          <span class="label">التاريخ:</span>
+          <span class="value">{{ formatPreviewDate(previewSale.sale_date) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items Table -->
+    <table class="preview-table">
+      <thead>
+        <tr>
+          <th>الوصف</th>
+          <th>الكمية</th>
+          <th>السعر</th>
+          <th>الاجمالى</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of previewSale.items">
+          <td>{{ item.product_name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.price }} ج.م</td>
+          <td>{{ item.total }} ج.م</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Totals -->
+    <div class="totals-section">
+      <div class="total-row">
+        <span class="total-label">الصافي</span>
+        <span class="total-value">{{ previewSale.total }} ج.م</span>
+      </div>
+    </div>
+  </div>
+
+  <div dialog-footer class="dialog-footer py-3">
+    <button class="print-button mx-2" (click)="printPreview()">
+      <i class="pi pi-print"></i>
+      طباعة
+    </button>
+    <button class="cancel-button mx-2" (click)="closePreview()">إغلاق</button>
+  </div>
+</app-dialog>

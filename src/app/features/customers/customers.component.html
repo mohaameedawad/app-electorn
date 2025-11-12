@@ -1,0 +1,82 @@
+<div class="page-header">
+  <h2>العملاء</h2>
+  <button class="add-button" (click)="showDialog()">+ إضافة عميل</button>
+</div>
+<app-table [columns]="columns" [data]="data" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+
+<p-dialog 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [style]="{ width: '500px' }"
+  [header]="editingCustomerId ? 'تعديل عميل' : 'إضافة عميل'"
+  (onHide)="onDialogHide()"
+>
+  <div class="dialog-content">
+    <div class="form-group">
+      <label for="name">اسم العميل</label>
+      <input 
+        pInputText 
+        id="name" 
+        [(ngModel)]="newCustomer.name" 
+        placeholder="أدخل اسم العميل"
+        class="w-full"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="phone">رقم التليفون</label>
+      <input 
+        pInputText 
+        id="phone" 
+        [(ngModel)]="newCustomer.phone" 
+        placeholder="أدخل رقم التليفون"
+        class="w-full"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="credit">له (دائن)</label>
+      <p-inputnumber 
+        id="credit" 
+        [(ngModel)]="newCustomer.credit"
+        [showButtons]="true"
+        placeholder="المبلغ الذي له عندك"
+        mode="decimal"
+        [maxFractionDigits]="2"
+        suffix=" ج.م"
+        class="w-full"
+      ></p-inputnumber>
+    </div>
+
+    <div class="form-group">
+      <label for="debit">عليه (مدين)</label>
+      <p-inputnumber 
+        id="debit" 
+        [(ngModel)]="newCustomer.debit"
+        [showButtons]="true"
+        placeholder="المبلغ الذي عليه لك"
+        mode="decimal"
+        [maxFractionDigits]="2"
+        suffix=" ج.م"
+        class="w-full"
+      ></p-inputnumber>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button 
+      label="إلغاء" 
+      severity="secondary" 
+      (onClick)="closeDialog()"
+      [text]="true"
+    ></p-button>
+    <p-button 
+      [label]="editingCustomerId ? 'تحديث' : 'حفظ'" 
+      severity="success" 
+      (onClick)="saveCustomer()"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<app-confirmation-dialog></app-confirmation-dialog>
+    

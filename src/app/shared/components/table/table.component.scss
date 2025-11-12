@@ -1,0 +1,199 @@
+.table-filter-container {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+
+  .filter-controls {
+    .filter-search-input {
+      flex: 1;
+      padding: 0.625rem 0.75rem;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      direction: rtl;
+      text-align: right;
+
+      &:focus {
+        outline: none;
+        border-color: #0b6e3a;
+        box-shadow: 0 0 0 0.2rem rgba(11, 110, 58, 0.15);
+      }
+
+      &::placeholder {
+        color: #6c757d;
+      }
+    }
+
+    .clear-filter-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.625rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      height: auto;
+
+      &:hover {
+        background: #c82333;
+      }
+
+      i {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+::ng-deep .custom-table {
+  // .p-datatable-wrapper {
+  //   background: #fff;
+  // }
+
+  .empty-message-big-table {
+    text-align: center;
+    i {
+      font-size: 40px;
+      color: #cbd5e0;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-top: 0.75rem;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #cbd5e0;
+    }
+  }
+
+  .empty-message {
+    padding: 10px;
+    text-align: center;
+    color: #cbd5e0;
+
+    i {
+      font-size: 3rem;
+      color: #cbd5e0;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-top: 0.75rem;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #cbd5e0;
+    }
+  }
+
+  .p-datatable-thead > tr > th {
+    background: #0b6e3a !important;
+    color: #fff !important;
+    padding: 10px 12px;
+    text-align: right;
+    position: sticky;
+    top: 0;
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  .p-datatable-thead > tr:nth-child(2) > th {
+    background: #f8f9fa !important;
+    padding: 8px 12px;
+  }
+
+  .filter-input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    direction: rtl;
+    text-align: right;
+
+    &:focus {
+      outline: none;
+      border-color: #0b6e3a;
+      box-shadow: 0 0 0 0.2rem rgba(11, 110, 58, 0.15);
+    }
+
+    &::placeholder {
+      color: #6c757d;
+      opacity: 0.7;
+    }
+  }
+
+  .p-datatable-tbody > tr > td {
+    padding: 10px 12px;
+    text-align: right;
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  .p-datatable-tbody > tr:hover {
+    background: #f7fbf9 !important;
+  }
+
+  .btn-action {
+    border: none;
+    background: transparent;
+    padding: 4px 8px;
+    margin-inline-start: 4px;
+    cursor: pointer;
+    color: #333;
+    border-radius: 4px;
+    transition: all 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  .btn-action.edit {
+    color: #0b6e3a;
+    &:hover {
+      background-color: #f0fdf4;
+    }
+  }
+
+  .btn-action.delete {
+    color: #c82333;
+    &:hover {
+      background-color: #fee2e2;
+    }
+  }
+
+  .btn-action.preview {
+    color: #3b82f6;
+    &:hover {
+      background-color: #dbeafe;
+    }
+  }
+
+  .btn-action.print {
+    color: #8b5cf6;
+    &:hover {
+      background-color: #f3e8ff;
+    }
+  }
+
+  .cancel-button {
+    gap: 0.5rem;
+    background-color: #0b6e3a;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    margin: 0 4px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    &:hover {
+      background-color: #065a2e;
+    }
+  }
+}

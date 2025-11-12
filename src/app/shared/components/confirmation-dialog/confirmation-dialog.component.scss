@@ -1,0 +1,40 @@
+::ng-deep {
+  .confirmation-pop-up {
+    .confirmation-content {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+
+      i {
+        flex-shrink: 0;
+      }
+
+      p {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #334155;
+      }
+    }
+
+    .p-dialog-header {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 1rem 1.5rem;
+      font-weight: 600;
+    }
+
+    .p-dialog-content {
+      padding: 0 !important;
+    }
+
+    .p-dialog-footer {
+      border-top: 1px solid #e5e7eb;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      background-color: transparent;
+      gap: 0.5rem;
+    }
+  }
+}

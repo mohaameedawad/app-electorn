@@ -1,0 +1,117 @@
+<div class="table-filter-container" *ngIf="columns?.length">
+  <div class="row filter-controls">
+    <div class="col-3 mx-2">
+      <p-select
+        [(ngModel)]="selectedFilterColumn"
+        [options]="getFilterableColumns()"
+        optionLabel="header"
+        optionValue="field"
+        placeholder="اختر العمود"
+        class="filter-dropdown"
+        [style.width]="'100%'"
+      >
+      </p-select>
+    </div>
+    <div class="col-3">
+      <input
+        pInputText
+        type="text"
+        [(ngModel)]="filterValue"
+        (input)="onFilterChange()"
+        [placeholder]="'بحث في ' + getSelectedColumnHeader()"
+        class="filter-search-input w-100"
+      />
+    </div>
+
+    <button
+      *ngIf="filterValue"
+      (click)="clearFilter()"
+      class="clear-filter-btn"
+      title="مسح البحث"
+    >
+      <i class="pi pi-times"></i>
+    </button>
+  </div>
+</div>
+
+<p-table
+  [value]="data"
+  [columns]="columns"
+  [tableStyle]="{ width: '100%' }"
+  styleClass="custom-table"
+  *ngIf="columns?.length"
+  [paginator]="true"
+  [rows]="10"
+  [rowsPerPageOptions]="[5, 10, 20]"
+  [paginatorDropdownAppendTo]="'body'"
+  #dt
+>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns">
+        {{ col.header }}
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <tr>
+      <td *ngFor="let col of columns; let ri = index; let rowIndex = index">
+        <!-- if column is marked as actions, render buttons -->
+        <ng-container
+          *ngIf="
+            col.type === 'actions' || col.field === 'actions';
+            else normalCell
+          "
+        >
+          <button
+            *ngIf="!col.actions || hasAction(col, 'edit')"
+            class="cancel-button"
+            (click)="edit.emit(rowData)"
+          >
+            <i class="pi pi-pencil"></i>
+            تعديل
+          </button>
+          <button
+            *ngIf="!col.actions || hasAction(col, 'delete')"
+            class="cancel-button"
+            (click)="delete.emit(rowData)"
+          >
+            <i class="pi pi-trash"></i>
+            حذف
+          </button>
+          <button
+            *ngIf="hasAction(col, 'preview')"
+            class="cancel-button"
+            (click)="preview.emit(rowData)"
+          >
+            <i class="pi pi-eye"></i>
+            معاينة للطباعة
+          </button>
+          <!-- <button 
+            *ngIf="hasAction(col, 'print')" 
+            class="btn-action print" 
+            (click)="print.emit(rowData)"
+            title="طباعة">
+            <i class="pi pi-print"></i>
+
+          </button> -->
+        </ng-container>
+        <ng-template #normalCell>
+          {{ rowData[col.field] }}
+        </ng-template>
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td [attr.colspan]="columns.length" class="text-center">
+        <div class="empty-message">
+          <i class="pi pi-search"></i>
+          <p>لا توجد سجلات</p>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

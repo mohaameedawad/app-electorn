@@ -1,0 +1,89 @@
+@import "primeicons/primeicons.css";
+
+/* Cairo Font */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Cairo", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--surface-50);
+  color: var(--text-color);
+}
+
+/* ---------- PAGE HEADER ---------- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px 0;
+
+  h2 {
+    margin: 0;
+    color: #333;
+  }
+
+  .add-button {
+    background-color: #0b6e3a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "Cairo", sans-serif;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #007a3d;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar {
+  background-color: #0b6e3a;
+  color: #fff;
+}
+
+/* ---------- MAIN CONTENT ---------- */
+.main-content {
+  background-color: #f9fafb;
+  padding: 1.5rem;
+}
+
+/* ---------- TABLE (p-table / p-datatable) ---------- */
+.p-datatable {
+  background-color: #ffffff;
+
+  .p-datatable-thead > tr > th {
+    background-color: #0b6e3a;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .p-datatable-tbody > tr {
+    background-color: #ffffff;
+    color: #222;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+  }
+
+  .p-datatable-tbody > tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+
+  .p-datatable-tbody > tr:hover {
+    background-color: #e9f5ee;
+  }
+}

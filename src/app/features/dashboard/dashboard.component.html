@@ -1,0 +1,26 @@
+<div class="dashboard">
+  <h2>لوحة التحكم</h2>
+  
+  <div class="cards-container">
+    <div class="card" (click)="navigateTo('/products')">
+      <div class="card-content">
+        <h3>المنتجات</h3>
+        <p class="count">{{ productsCount }}</p>
+      </div>
+    </div>
+
+    <div class="card" (click)="navigateTo('/customers')">
+      <div class="card-content">
+        <h3>العملاء</h3>
+        <p class="count">{{ customersCount }}</p>
+      </div>
+    </div>
+
+    <div class="card" (click)="navigateTo('/suppliers')">
+      <div class="card-content">
+        <h3>الموردين</h3>
+        <p class="count">{{ suppliersCount }}</p>
+      </div>
+    </div>
+  </div>
+</div>
