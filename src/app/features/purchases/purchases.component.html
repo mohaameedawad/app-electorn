@@ -321,18 +321,16 @@
 
     <!-- Totals as table extension -->
     <table class="preview-table totals-table">
-      <thead>
-        <tr>
-          <th>الإجمالي</th>
-          <th *ngIf="previewPurchase.discount > 0">الخصم</th>
-          <th>الصافي</th>
-        </tr>
-      </thead>
       <tbody>
         <tr>
-          <td>{{ previewPurchase.subtotal }} ج.م</td>
-          <td *ngIf="previewPurchase.discount > 0">{{ previewPurchase.discount }} ج.م</td>
-          <td class="final-total">{{ previewPurchase.total }} ج.م</td>
+          <td class="total-header">الإجمالي</td>
+          <td class="total-value">{{ previewPurchase.subtotal }} ج.م</td>
+          <ng-container *ngIf="previewPurchase.discount > 0">
+            <td class="total-header">الخصم</td>
+            <td class="total-value">{{ previewPurchase.discount }} ج.م</td>
+            <td class="total-header">الصافي</td>
+            <td class="total-value final-total">{{ previewPurchase.total }} ج.م</td>
+          </ng-container>
         </tr>
       </tbody>
     </table>

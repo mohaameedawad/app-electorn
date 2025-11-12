@@ -277,21 +277,28 @@ app-dialog .dialog-footer {
     margin-bottom: 1rem;
     margin-top: 0;
     
-    thead th {
-      background-color: #dddddd;
-      border: 1px solid #000;
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-    
-    tbody td {
-      font-weight: 600;
-      font-size: 1.1rem;
-      border: 1px solid #000;
-      
-      &.final-total {
+    tbody tr {
+      td.total-header {
+        background-color: #dddddd;
+        border: 1px solid #000;
         font-weight: 700;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+        padding: 0.75rem;
+        text-align: center;
+      }
+      
+      td.total-value {
+        background-color: #f9f9f9;
+        font-weight: 600;
+        font-size: 1.1rem;
+        border: 1px solid #000;
+        padding: 0.75rem;
+        text-align: center;
+        
+        &.final-total {
+          font-weight: 700;
+          font-size: 1.2rem;
+        }
       }
     }
   }

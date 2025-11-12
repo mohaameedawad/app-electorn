@@ -245,7 +245,8 @@ export class SalesComponent implements OnInit {
     const printContent = document.querySelector('.invoice-preview');
     if (!printContent) return;
 
-    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    // Open window with A4 dimensions (210mm x 297mm at 96 DPI ≈ 794px x 1123px)
+    const printWindow = window.open('', '_blank', 'width=850,height=1200');
     if (!printWindow) return;
 
     // Write the content with styles
@@ -255,25 +256,48 @@ export class SalesComponent implements OnInit {
           <title>طباعة الفاتورة</title>
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 2rem; }
-            .invoice-header { text-align: center; margin-bottom: 2rem; }
-            .invoice-header h1 { font-size: 1.8rem; font-weight: bold; margin-bottom: 1.5rem; border-bottom: 3px solid #000; padding-bottom: 0.5rem; }
-            .customer-info { margin-bottom: 2rem; }
-            .info-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; }
+            html, body { 
+              width: 210mm; 
+              height: 297mm; 
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+              background: white;
+            }
+            body { 
+              padding: 1.5cm; 
+              margin: 0 auto;
+              max-width: 210mm;
+            }
+            .invoice-header { text-align: center; margin-bottom: 1.5rem; }
+            .invoice-header h1 { font-size: 1.6rem; font-weight: bold; margin-bottom: 1rem; border-bottom: 3px solid #000; padding-bottom: 0.5rem; }
+            .customer-info { margin-bottom: 1.5rem; }
+            .info-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
             .info-item { flex: 1; display: flex; gap: 0.5rem; }
             .label { font-weight: 600; min-width: 80px; }
-            .preview-table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; }
+            .preview-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
             .preview-table thead { background-color: #dddddd; color: #000000; }
-            .preview-table th { padding: 0.75rem; text-align: center; font-weight: 600; border: 1px solid #000; }
+            .preview-table th { padding: 0.5rem; text-align: center; font-weight: 600; border: 1px solid #000; font-size: 0.95rem; }
             .preview-table tbody tr:nth-child(even) { background-color: #f9f9f9; }
-            .preview-table td { padding: 0.75rem; text-align: center; border: 1px solid #ddd; }
+            .preview-table td { padding: 0.5rem; text-align: center; border: 1px solid #ddd; font-size: 0.9rem; }
             .totals-table { margin-bottom: 1rem; margin-top: 0; }
-            .totals-table thead th { background-color: #dddddd; border: 1px solid #000; font-weight: 700; font-size: 1.1rem; }
-            .totals-table tbody td { font-weight: 600; font-size: 1.1rem; border: 1px solid #000; }
-            .totals-table .final-total { font-weight: 700; font-size: 1.2rem; }
+            .totals-table tbody tr td.total-header { background-color: #dddddd; border: 1px solid #000; font-weight: 700; font-size: 1rem; padding: 0.6rem; text-align: center; }
+            .totals-table tbody tr td.total-value { background-color: #f9f9f9; font-weight: 600; font-size: 1rem; border: 1px solid #000; padding: 0.6rem; text-align: center; }
+            .totals-table .final-total { font-weight: 700; font-size: 1.1rem; }
             @media print {
-              body { padding: 0; }
-              @page { margin: 1cm; }
+              html, body { 
+                width: 210mm; 
+                height: 297mm; 
+              }
+              body { padding: 1cm; }
+              @page { 
+                size: A4; 
+                margin: 0; 
+              }
+            }
+            @media screen {
+              body {
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                margin: 20px auto;
+              }
             }
           </style>
         </head>
@@ -288,7 +312,8 @@ export class SalesComponent implements OnInit {
     // Wait for content to load then print
     setTimeout(() => {
       printWindow.print();
-      printWindow.close();
+      // Don't close automatically to allow preview
+      // printWindow.close();
     }, 250);
   }
 
