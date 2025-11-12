@@ -263,13 +263,14 @@ export class SalesComponent implements OnInit {
             .info-item { flex: 1; display: flex; gap: 0.5rem; }
             .label { font-weight: 600; min-width: 80px; }
             .preview-table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; }
-            .preview-table thead { background-color: #0b6e3a; color: white; }
+            .preview-table thead { background-color: #dddddd; color: #000000; }
             .preview-table th { padding: 0.75rem; text-align: center; font-weight: 600; border: 1px solid #000; }
             .preview-table tbody tr:nth-child(even) { background-color: #f9f9f9; }
             .preview-table td { padding: 0.75rem; text-align: center; border: 1px solid #ddd; }
-            .totals-section .total-row { display: flex; justify-content: flex-start; gap: 2rem; padding: 1rem; background-color: #f5f5f5; border: 1px solid #ddd; }
-            .total-label { font-weight: 600; font-size: 1.1rem; }
-            .total-value { font-weight: bold; font-size: 1.1rem; color: #0b6e3a; }
+            .totals-table { margin-bottom: 1rem; margin-top: 0; }
+            .totals-table thead th { background-color: #dddddd; border: 1px solid #000; font-weight: 700; font-size: 1.1rem; }
+            .totals-table tbody td { font-weight: 600; font-size: 1.1rem; border: 1px solid #000; }
+            .totals-table .final-total { font-weight: 700; font-size: 1.2rem; }
             @media print {
               body { padding: 0; }
               @page { margin: 1cm; }

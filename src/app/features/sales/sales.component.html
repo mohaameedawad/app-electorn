@@ -323,13 +323,23 @@
       </tbody>
     </table>
 
-    <!-- Totals -->
-    <div class="totals-section">
-      <div class="total-row">
-        <span class="total-label">الصافي</span>
-        <span class="total-value">{{ previewSale.total }} ج.م</span>
-      </div>
-    </div>
+    <!-- Totals as table extension -->
+    <table class="preview-table totals-table">
+      <thead>
+        <tr>
+          <th>الإجمالي</th>
+          <th *ngIf="previewSale.discount > 0">الخصم</th>
+          <th>الصافي</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ previewSale.subtotal }} ج.م</td>
+          <td *ngIf="previewSale.discount > 0">{{ previewSale.discount }} ج.م</td>
+          <td class="final-total">{{ previewSale.total }} ج.م</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <div dialog-footer class="dialog-footer py-3">
