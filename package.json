@@ -65,7 +65,11 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "src/favicon.ico",
+      "uninstallerIcon": "src/favicon.ico"
     }
   }
 }
