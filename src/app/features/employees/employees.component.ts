@@ -35,6 +35,7 @@ export class EmployeesComponent implements OnInit {
   data: any[] = [];
   visible: boolean = false;
   editingEmployeeId: number | null = null;
+  phoneError: string = '';
   
   newEmployee = {
     name: '',
@@ -96,6 +97,12 @@ export class EmployeesComponent implements OnInit {
         return;
       }
 
+      if (!this.validateEgyptianPhone(this.newEmployee.phone)) {
+        this.phoneError = 'يجب إدخال رقم مصري مكون من 11 رقم يبدأ بـ 01';
+        return;
+      }
+      this.phoneError = '';
+
       if (this.editingEmployeeId) {
         await this.dbService.updateEmployee(this.editingEmployeeId, this.newEmployee);
       } else {
@@ -109,8 +116,14 @@ export class EmployeesComponent implements OnInit {
     }
   }
 
+  validateEgyptianPhone(phone: string): boolean {
+    const phoneRegex = /^01[0-9]{9}$/;
+    return phoneRegex.test(phone);
+  }
+
   closeDialog() {
     this.visible = false;
+    this.phoneError = '';
     this.resetForm();
   }
 

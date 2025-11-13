@@ -8,6 +8,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-products',
@@ -20,7 +21,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     DialogModule,
     InputTextModule,
     ButtonModule,
-    InputNumberModule
+    InputNumberModule,
+    SelectModule
   ],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
@@ -32,6 +34,11 @@ export class ProductsComponent implements OnInit {
   products: any[] = [];
   visible: boolean = false;
   editingProductId: number | null = null;
+
+  categories = [
+    { label: 'اكسسوار', value: 'اكسسوار' },
+    { label: 'شنط', value: 'شنط' }
+  ];
 
   newProduct = {
     name: '',

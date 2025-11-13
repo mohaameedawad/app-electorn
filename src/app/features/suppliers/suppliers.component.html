@@ -25,7 +25,10 @@
         type="text" 
         pInputText 
         [(ngModel)]="newSupplier.phone"
+        placeholder="ادخل رقم الهاتف"
+        maxlength="11"
         class="full-width" />
+      <span class="error-message" *ngIf="phoneError">{{ phoneError }}</span>
     </div>
 
     <div class="form-group">
@@ -38,27 +41,25 @@
     </div>
 
     <div class="form-group">
-      <label>له (دائن)</label>
-      <p-inputnumber 
-        [(ngModel)]="newSupplier.credit"
-        mode="decimal"
-        [showButtons]="true"
-        placeholder="المبلغ الذي له عندك"
-        [maxFractionDigits]="2"
-        suffix=" ج.م"
-        class="full-width">
-      </p-inputnumber>
+      <label>نوع الرصيد</label>
+      <p-select 
+        [(ngModel)]="newSupplier.balanceType"
+        [options]="balanceTypes"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="اختر نوع الرصيد"
+        class="full-width"
+      ></p-select>
     </div>
 
     <div class="form-group">
-      <label>عليه (مدين)</label>
+      <label>المبلغ</label>
       <p-inputnumber 
-        [(ngModel)]="newSupplier.debit"
+        [(ngModel)]="newSupplier.balanceAmount"
         mode="decimal"
         [showButtons]="true"
-        placeholder="المبلغ الذي عليه لك"
+        placeholder="أدخل المبلغ"
         [maxFractionDigits]="2"
-        suffix=" ج.م"
         class="full-width">
       </p-inputnumber>
     </div>

@@ -156,27 +156,10 @@
       background-color: #f0fdf4;
     }
   }
-
-  .btn-action.delete {
-    color: #c82333;
-    &:hover {
-      background-color: #fee2e2;
-    }
   }
 
-  .btn-action.preview {
-    color: #3b82f6;
-    &:hover {
-      background-color: #dbeafe;
-    }
-  }
 
-  .btn-action.print {
-    color: #8b5cf6;
-    &:hover {
-      background-color: #f3e8ff;
-    }
-  }
+
 
   .cancel-button {
     gap: 0.5rem;
@@ -196,4 +179,4 @@
       background-color: #065a2e;
     }
   }
-}
+

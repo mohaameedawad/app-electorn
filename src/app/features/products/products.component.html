@@ -20,67 +20,77 @@
   (onHide)="onDialogHide()"
   [header]="editingProductId ? 'تعديل منتج' : 'إضافة منتج'">
   
-  <div class="form-container">
-    <div class="form-group">
-      <label>اسم المنتج</label>
+  <div class="p-4">
+    <div class="mb-3">
+      <label class="form-label fw-semibold text-secondary">اسم المنتج</label>
       <input 
         type="text" 
         pInputText
-        class="full-width" 
+        class="w-100" 
         [(ngModel)]="newProduct.name"
         placeholder="أدخل اسم المنتج" />
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>سعر الشراء</label>
-        <p-inputnumber 
-          [(ngModel)]="newProduct.purchase_price"
-          mode="decimal"
-          locale="en-US"
-          [minFractionDigits]="2"
-          placeholder="0.00"
-          [style]="{'width': '100%'}">
-        </p-inputnumber>
+    <div class="row g-3">
+      <div class="col-6">
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-secondary">سعر الشراء</label>
+          <p-inputnumber 
+            [(ngModel)]="newProduct.purchase_price"
+            mode="decimal"
+            locale="en-US"
+            [minFractionDigits]="2"
+            placeholder="0.00"
+            [style]="{'width': '100%'}">
+          </p-inputnumber>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>سعر البيع</label>
-        <p-inputnumber 
-          [(ngModel)]="newProduct.sale_price"
-          mode="decimal"
-          locale="en-US"
-          [minFractionDigits]="2"
-          placeholder="0.00"
-          [style]="{'width': '100%'}">
-        </p-inputnumber>
+      <div class="col-6">
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-secondary">سعر البيع</label>
+          <p-inputnumber 
+            [(ngModel)]="newProduct.sale_price"
+            mode="decimal"
+            locale="en-US"
+            [minFractionDigits]="2"
+            placeholder="0.00"
+            [style]="{'width': '100%'}">
+          </p-inputnumber>
+        </div>
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>المخزون</label>
-        <p-inputnumber 
-          [(ngModel)]="newProduct.stock"
-          [showButtons]="true"
-          [style]="{'width': '100%'}">
-        </p-inputnumber>
+    <div class="row g-3">
+      <div class="col-6">
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-secondary">المخزون</label>
+          <p-inputnumber 
+            [(ngModel)]="newProduct.stock"
+            [showButtons]="true"
+            [style]="{'width': '100%'}">
+          </p-inputnumber>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>الفئة</label>
-        <input 
-          type="text" 
-          pInputText
-          class="full-width" 
-          [(ngModel)]="newProduct.category"
-          placeholder="الفئة" />
+      <div class="col-6">
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-secondary">الفئة</label>
+          <p-select
+            [(ngModel)]="newProduct.category"
+            [options]="categories"
+            placeholder="اختر الفئة"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+            [style]="{'width': '100%'}">
+          </p-select>
+        </div>
       </div>
     </div>
   </div>
 
-  <ng-template pTemplate="footer">
-    <div class="dialog-footer">
+  <div dialog-footer class="dialog-footer">
       <p-button 
         label="إلغاء" 
         severity="secondary" 
@@ -88,9 +98,8 @@
         [text]="true">
       </p-button>
       <p-button 
-        [label]="editingProductId ? 'تحديث' : 'حفظ'"
+        [label]="editingProductId ? 'تعديل' : 'حفظ'"
         (onClick)="saveProduct()">
       </p-button>
     </div>
-  </ng-template>
 </p-dialog>

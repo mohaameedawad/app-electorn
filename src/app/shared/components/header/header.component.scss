@@ -1,0 +1,28 @@
+.app-header {
+  background-color: #0b6e3a;
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .user-name {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .btn-outline-light {
+      border-color: rgba(255, 255, 255, 0.5);
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: #fff;
+      }
+    }
+  }
+}

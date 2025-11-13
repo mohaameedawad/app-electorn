@@ -312,8 +312,7 @@ export class SalesComponent implements OnInit {
     // Wait for content to load then print
     setTimeout(() => {
       printWindow.print();
-      // Don't close automatically to allow preview
-      // printWindow.close();
+      printWindow.close();
     }, 250);
   }
 

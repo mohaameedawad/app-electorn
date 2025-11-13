@@ -1,0 +1,21 @@
+<header class="app-header">
+  <div class="container-fluid">
+    <div class="row align-items-center">
+      <div class="col-6">
+        <h3 class="m-0 text-white fw-bold">نظام إدارة المخزون</h3>
+      </div>
+      <div class="col-6 text-end">
+        <div class="user-info">
+          <span class="user-name text-white mx-3">
+            <i class="pi pi-user mx-2"></i>
+            {{ userName }}
+          </span>
+          <button class="btn btn-outline-light btn-sm mx-2" (click)="logout()">
+            <i class="pi pi-sign-out mx-2"></i>
+            تسجيل الخروج
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

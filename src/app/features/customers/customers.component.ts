@@ -8,6 +8,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-customers',
@@ -22,7 +23,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     DialogModule,
     InputTextModule,
     ButtonModule,
-    InputNumberModule
+    InputNumberModule,
+    SelectModule
   ]
 })
 export class CustomersComponent implements OnInit {
@@ -32,12 +34,18 @@ export class CustomersComponent implements OnInit {
   data: any[] = [];
   visible: boolean = false;
   editingCustomerId: number | null = null;
+  phoneError: string = '';
+
+  balanceTypes = [
+    { label: 'له (دائن)', value: 'credit' },
+    { label: 'عليه (مدين)', value: 'debit' }
+  ];
 
   newCustomer = {
     name: '',
     phone: '',
-    debit: 0,
-    credit: 0
+    balanceAmount: 0,
+    balanceType: 'debit'
   };
 
   constructor(private dbService: DatabaseService) {}
@@ -69,11 +77,15 @@ export class CustomersComponent implements OnInit {
   }
 
   onEdit(customer: any) {
+    // Determine balance type and amount from existing data
+    const hasCredit = customer.credit && customer.credit > 0;
+    const hasDebit = customer.debit && customer.debit > 0;
+    
     this.newCustomer = {
       name: customer.name || '',
       phone: customer.phone || '',
-      debit: customer.debit || 0,
-      credit: customer.credit || 0
+      balanceAmount: hasCredit ? customer.credit : (hasDebit ? customer.debit : 0),
+      balanceType: hasCredit ? 'credit' : 'debit'
     };
     this.editingCustomerId = customer.id;
     this.visible = true;
@@ -109,11 +121,19 @@ export class CustomersComponent implements OnInit {
         return;
       }
 
+      // Validate Egyptian phone number
+      if (!this.validateEgyptianPhone(this.newCustomer.phone)) {
+        this.phoneError = 'يجب إدخال رقم مصري مكون من 11 رقم يبدأ بـ 01';
+        return;
+      }
+
+      this.phoneError = '';
+
       const customerData = {
         name: this.newCustomer.name,
         phone: this.newCustomer.phone,
-        debit: this.newCustomer.debit,
-        credit: this.newCustomer.credit
+        debit: this.newCustomer.balanceType === 'debit' ? this.newCustomer.balanceAmount : 0,
+        credit: this.newCustomer.balanceType === 'credit' ? this.newCustomer.balanceAmount : 0
       };
 
       if (this.editingCustomerId) {
@@ -129,12 +149,20 @@ export class CustomersComponent implements OnInit {
     }
   }
 
+  validateEgyptianPhone(phone: string): boolean {
+    // Egyptian phone number: 11 digits starting with 01
+    const phoneRegex = /^01[0-9]{9}$/;
+    return phoneRegex.test(phone);
+  }
+
   closeDialog() {
     this.visible = false;
+    this.phoneError = '';
     this.resetForm();
   }
 
   onDialogHide() {
+    this.phoneError = '';
     this.resetForm();
   }
 
@@ -142,8 +170,8 @@ export class CustomersComponent implements OnInit {
     this.newCustomer = {
       name: '',
       phone: '',
-      debit: 0,
-      credit: 0
+      balanceAmount: 0,
+      balanceType: 'debit'
     };
     this.editingCustomerId = null;
   }

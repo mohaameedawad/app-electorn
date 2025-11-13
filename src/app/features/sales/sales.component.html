@@ -256,13 +256,17 @@
     </div>
   </div>
 
-  <div dialog-footer class="dialog-footer py-3">
-    <!-- <button class="print-button mx-2" (click)="printInvoice()">
-      <i class="pi pi-print"></i>
-      طباعة
-    </button> -->
-    <button class="cancel-button mx-2" (click)="closeDialog()">إلغاء</button>
-    <button class="add-button" (click)="saveSale()">حفظ و طباعة الفاتورة </button>
+  <div dialog-footer class="dialog-footer">
+    <p-button 
+      label="إلغاء" 
+      severity="secondary" 
+      (onClick)="closeDialog()"
+      [text]="true">
+    </p-button>
+    <p-button 
+      label="حفظ"
+      (onClick)="saveSale()">
+    </p-button>
   </div>
 </app-dialog>
 
@@ -340,11 +344,17 @@
     </table>
   </div>
 
-  <div dialog-footer class="dialog-footer py-3">
-    <button class="print-button mx-2" (click)="printPreview()">
-      <i class="pi pi-print"></i>
-      طباعة
-    </button>
-    <button class="cancel-button mx-2" (click)="closePreview()">إغلاق</button>
+  <div dialog-footer class="dialog-footer">
+    <p-button 
+      label="إغلاق" 
+      severity="secondary" 
+      (onClick)="closePreview()"
+      [text]="true">
+    </p-button>
+    <p-button 
+      label="طباعة"
+      icon="pi pi-print"
+      (onClick)="printPreview()">
+    </p-button>
   </div>
 </app-dialog>

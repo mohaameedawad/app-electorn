@@ -1,0 +1,62 @@
+<div class="d-flex align-items-center justify-content-center min-vh-100 p-4 bg-white">
+  <div class="login-card shadow rounded-3 p-5 border border-success">
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <div class="logo-circle mx-auto mb-4">
+        <i class="pi pi-box fs-1 text-white"></i>
+      </div>
+      <h2 class="text-success fw-bold mb-2">نظام إدارة المخزون</h2>
+      <p class="text-muted">تسجيل الدخول</p>
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="login()">
+      <div class="mb-4">
+        <label class="form-label fw-semibold text-secondary">اسم المستخدم</label>
+        <input 
+          pInputText 
+          type="text" 
+          [(ngModel)]="username"
+          name="username"
+          class="form-control w-100 login-input"
+          placeholder="أدخل اسم المستخدم"
+          autocomplete="username"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold text-secondary">كلمة المرور</label>
+        <input 
+          pInputText 
+          type="password" 
+          [(ngModel)]="password"
+          name="password"
+          class="form-control w-100 login-input"
+          placeholder="أدخل كلمة المرور"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn btn-success w-100 py-3 fw-semibold d-flex align-items-center justify-content-center gap-2 login-btn"
+      >
+        <i class="pi pi-sign-in"></i>
+        <span>تسجيل الدخول</span>
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <div class="text-center mt-4 pt-3 border-top">
+      <p class="text-muted small mb-0 d-flex align-items-center justify-content-center gap-2">
+        <i class="pi pi-info-circle"></i>
+        <span>اسم المستخدم وكلمة المرور الافتراضية: admin</span>
+      </p>
+    </div>
+  </div>
+</div>

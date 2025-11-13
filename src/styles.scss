@@ -87,3 +87,36 @@ body {
     background-color: #e9f5ee;
   }
 }
+
+/* ---------- PRIMENG BUTTONS ---------- */
+.p-button:not(.p-button-secondary):not(.p-button-text) {
+  background-color: #0b6e3a !important;
+  border-color: #0b6e3a !important;
+  
+  &:hover {
+    background-color: #065a2e !important;
+    border-color: #065a2e !important;
+  }
+}
+
+.p-button-secondary {
+  &:hover {
+    background-color: #e2e8f0 !important;
+  }
+}
+
+.error-message {
+  display: block;
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+}

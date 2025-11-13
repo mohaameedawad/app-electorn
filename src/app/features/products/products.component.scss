@@ -24,40 +24,6 @@
   }
 }
 
-.form-container {
-  padding: 1.5rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-  
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #334155;
-  }
-  
-  .full-width {
-    width: 100%;
-  }
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.dialog-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-top: 1px solid #e5e7eb;
-}
-
 ::ng-deep {
   .p-dialog-header {
     border-bottom: 1px solid #e5e7eb;
@@ -67,10 +33,5 @@
   
   .p-dialog-content {
     padding: 0 !important;
-  }
-
-  .p-inputtext,
-  .p-inputnumber-input {
-    width: 100%;
   }
 }

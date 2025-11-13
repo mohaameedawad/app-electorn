@@ -1,0 +1,51 @@
+.login-card {
+  max-width: 450px;
+  width: 100%;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logo-circle {
+  background: linear-gradient(135deg, #0b6e3a 0%, #065a2e 100%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(11, 110, 58, 0.3);
+}
+
+.login-input {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  
+  &:focus {
+    border-color: #0b6e3a;
+    box-shadow: 0 0 0 0.2rem rgba(11, 110, 58, 0.15);
+  }
+}
+
+.login-btn {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(11, 110, 58, 0.3);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(11, 110, 58, 0.4);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}

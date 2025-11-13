@@ -7,6 +7,7 @@ import { DatabaseService } from '../../services/database.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-suppliers',
@@ -17,7 +18,8 @@ import { ButtonModule } from 'primeng/button';
     DialogComponent,
     InputTextModule,
     InputNumberModule,
-    ButtonModule
+    ButtonModule,
+    SelectModule
   ],
   templateUrl: './suppliers.component.html',
   styleUrl: './suppliers.component.scss'
@@ -34,12 +36,19 @@ export class SuppliersComponent implements OnInit {
 
   data: any[] = [];
   visible: boolean = false;
+  phoneError: string = '';
+  
+  balanceTypes = [
+    { label: 'له (دائن)', value: 'credit' },
+    { label: 'عليه (مدين)', value: 'debit' }
+  ];
+  
   newSupplier = {
     name: '',
     phone: '',
     address: '',
-    debit: 0,
-    credit: 0
+    balanceAmount: 0,
+    balanceType: 'credit'
   };
 
   constructor(private dbService: DatabaseService) {}
@@ -58,12 +67,29 @@ export class SuppliersComponent implements OnInit {
 
   closeDialog() {
     this.visible = false;
+    this.phoneError = '';
     this.resetForm();
   }
 
   async saveSupplier() {
     try {
-      await this.dbService.addSupplier(this.newSupplier);
+      // Validate Egyptian phone number
+      if (!this.validateEgyptianPhone(this.newSupplier.phone)) {
+        this.phoneError = 'يجب إدخال رقم مصري مكون من 11 رقم يبدأ بـ 01';
+        return;
+      }
+
+      this.phoneError = '';
+      
+      const supplierData = {
+        name: this.newSupplier.name,
+        phone: this.newSupplier.phone,
+        address: this.newSupplier.address,
+        debit: this.newSupplier.balanceType === 'debit' ? this.newSupplier.balanceAmount : 0,
+        credit: this.newSupplier.balanceType === 'credit' ? this.newSupplier.balanceAmount : 0
+      };
+      
+      await this.dbService.addSupplier(supplierData);
       await this.loadSuppliers();
       this.closeDialog();
     } catch (error) {
@@ -71,13 +97,18 @@ export class SuppliersComponent implements OnInit {
     }
   }
 
+  validateEgyptianPhone(phone: string): boolean {
+    const phoneRegex = /^01[0-9]{9}$/;
+    return phoneRegex.test(phone);
+  }
+
   resetForm() {
     this.newSupplier = {
       name: '',
       phone: '',
       address: '',
-      debit: 0,
-      credit: 0
+      balanceAmount: 0,
+      balanceType: 'credit'
     };
   }
 }
