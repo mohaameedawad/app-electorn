@@ -7,65 +7,67 @@
 <app-dialog 
   [(visible)]="visible"
   [header]="'إضافة مورد'"
-  [width]="'500px'">
+  [width]="'600px'">
   
-  <div dialog-content class="form-container">
-    <div class="form-group">
-      <label>اسم المورد</label>
+  <div dialog-content class="p-4">
+    <div class="mb-3">
+      <label class="form-label fw-semibold text-secondary">اسم المورد</label>
       <input 
         type="text" 
         pInputText 
         [(ngModel)]="newSupplier.name"
-        class="full-width" />
+        placeholder="أدخل اسم المورد"
+        class="w-100" />
     </div>
 
-    <div class="form-group">
-      <label>رقم الهاتف</label>
+    <div class="mb-3">
+      <label class="form-label fw-semibold text-secondary">رقم الهاتف</label>
       <input 
         type="text" 
         pInputText 
         [(ngModel)]="newSupplier.phone"
-        placeholder="ادخل رقم الهاتف"
+        placeholder="01000000000"
         maxlength="11"
-        class="full-width" />
+        class="w-100" />
       <span class="error-message" *ngIf="phoneError">{{ phoneError }}</span>
     </div>
 
-    <div class="form-group">
-      <label>العنوان</label>
+    <div class="mb-3">
+      <label class="form-label fw-semibold text-secondary">العنوان</label>
       <input 
         type="text" 
         pInputText 
         [(ngModel)]="newSupplier.address"
-        class="full-width" />
+        placeholder="أدخل العنوان"
+        class="w-100" />
     </div>
 
-    <div class="form-group">
-      <label>نوع الرصيد</label>
+    <div class="mb-3">
+      <label class="form-label fw-semibold text-secondary">نوع الرصيد</label>
       <p-select 
         [(ngModel)]="newSupplier.balanceType"
         [options]="balanceTypes"
         optionLabel="label"
         optionValue="value"
         placeholder="اختر نوع الرصيد"
-        class="full-width"
-      ></p-select>
+        [style]="{'width': '100%'}">
+      </p-select>
     </div>
 
-    <div class="form-group">
-      <label>المبلغ</label>
+    <div class="mb-3">
+      <label class="form-label fw-semibold text-secondary">المبلغ</label>
       <p-inputnumber 
         [(ngModel)]="newSupplier.balanceAmount"
         mode="decimal"
         [showButtons]="true"
         placeholder="أدخل المبلغ"
         [maxFractionDigits]="2"
-        class="full-width">
+        [style]="{'width': '100%'}">
       </p-inputnumber>
     </div>
   </div>
 
-  <div dialog-footer class="dialog-footer">
+  <div dialog-footer class="d-flex justify-content-end gap-2 p-3 border-top">
     <p-button 
       label="إلغاء" 
       severity="secondary" 

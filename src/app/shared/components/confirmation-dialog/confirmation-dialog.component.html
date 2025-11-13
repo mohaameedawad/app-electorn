@@ -18,13 +18,13 @@
     <p-button
       *ngIf="showReject"
       [label]="rejectLabel"
-      severity="secondary"
+      severity="danger"
       (onClick)="onReject()"
       [text]="true"
     ></p-button>
     <p-button
       [label]="acceptLabel"
-      severity="danger"
+      severity="success"
       (onClick)="onAccept()"
     ></p-button>
   </ng-template>

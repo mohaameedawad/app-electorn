@@ -10,8 +10,12 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
-    }
+    },
+    autoHideMenuBar: true // Hide menu bar automatically
   });
+
+  // Remove menu completely
+  win.setMenuBarVisibility(false);
 
   win.maximize();
   win.loadFile(path.join(__dirname, 'dist/app-electron/browser/index.html'));

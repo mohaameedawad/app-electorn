@@ -13,6 +13,7 @@ import { filter } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   title = 'app-electron';
   showLayout = false;
+  // showLayout = true;
 
   constructor(private router: Router) {}
 

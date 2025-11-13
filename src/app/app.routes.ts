@@ -22,4 +22,16 @@ export const routes: Routes = [
   { path: 'employees', component: EmployeesComponent, canActivate: [AuthGuard] },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'login' } // Redirect any unknown route to login
+
+  // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  // { path: 'login', component: LoginComponent },
+  // { path: 'dashboard', component: DashboardComponent },
+  // { path: 'sales', component: SalesComponent },
+  // { path: 'purchases', component: PurchasesComponent },
+  // { path: 'customers', component: CustomersComponent },
+  // { path: 'suppliers', component: SuppliersComponent },
+  // { path: 'products', component: ProductsComponent },
+  // { path: 'employees', component: EmployeesComponent },
+  // { path: 'reports', component: ReportsComponent },
+  // { path: '**', redirectTo: 'login' } // Redirect any unknown route to login
 ];

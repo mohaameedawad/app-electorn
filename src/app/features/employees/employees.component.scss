@@ -46,31 +46,12 @@
   }
 }
 
-// .error-message {
-//   display: block;
-//   color: #dc2626;
-//   font-size: 0.875rem;
-//   margin-top: 0.5rem;
-//   font-weight: 500;
-// }
-
-// .dialog-footer {
-//   display: flex;
-//   justify-content: flex-end;
-//   gap: 0.5rem;
-//   padding: 1rem;
-//   border-top: 1px solid #e5e7eb;
-// }
 
 ::ng-deep {
   .p-dialog-header {
     border-bottom: 1px solid #e5e7eb;
     padding: 1rem 1.5rem;
     font-weight: 600;
-  }
-  
-  .p-dialog-content {
-    padding: 0 !important;
   }
 
   .p-inputtext {

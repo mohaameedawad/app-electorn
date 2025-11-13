@@ -1,45 +1,86 @@
-<div *ngIf="showLayout" class="layout" dir="rtl">
+<div
+  *ngIf="showLayout"
+  class="d-flex flex-column vh-100"
+  dir="rtl"
+  style="font-family: 'Cairo', sans-serif; background: #f2f8f5"
+>
   <app-header></app-header>
-  
-  <div class="main-layout">
-    <aside class="sidebar">
-      <nav>
-        <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="pi pi-home"></i>
-          <span>لوحة التحكم</span>
+
+  <div class="d-flex flex-fill overflow-hidden">
+    <aside
+      class="sidebar bg-success text-white p-3 overflow-auto"
+      style="width: 260px; background-color: #006b34 !important"
+    >
+      <nav class="d-flex flex-column gap-1">
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link text-white d-flex align-items-center gap-2 rounded-3 px-3 py-2 text-decoration-none"
+        >
+          <i class="pi pi-home sidebar-icon"></i>
+          <span class="flex-fill text-nowrap">لوحة التحكم</span>
         </a>
-        <a routerLink="/sales" routerLinkActive="active">
-          <i class="pi pi-shopping-cart"></i>
-          <span>فواتير البيع</span>
+        <a
+          routerLink="/sales"
+          routerLinkActive="active"
+          class="nav-link text-white d-flex align-items-center gap-2 rounded-3 px-3 py-2 text-decoration-none"
+        >
+          <i class="pi pi-shopping-cart sidebar-icon"></i>
+          <span class="flex-fill text-nowrap">فواتير البيع</span>
         </a>
-        <a routerLink="/purchases" routerLinkActive="active">
-          <i class="pi pi-shopping-bag"></i>
-          <span>فواتير المشتريات</span>
+        <a
+          routerLink="/purchases"
+          routerLinkActive="active"
+          class="nav-link text-white d-flex align-items-center gap-2 rounded-3 px-3 py-2 text-decoration-none"
+        >
+          <i class="pi pi-shopping-bag sidebar-icon"></i>
+          <span class="flex-fill text-nowrap">فواتير المشتريات</span>
         </a>
-        <a routerLink="/customers" routerLinkActive="active">
-          <i class="pi pi-users"></i>
-          <span>العملاء</span>
+        <a
+          routerLink="/customers"
+          routerLinkActive="active"
+          class="nav-link text-white d-flex align-items-center gap-2 rounded-3 px-3 py-2 text-decoration-none"
+        >
+          <i class="pi pi-users sidebar-icon"></i>
+          <span class="flex-fill text-nowrap">العملاء</span>
         </a>
-        <a routerLink="/suppliers" routerLinkActive="active">
-          <i class="pi pi-truck"></i>
-          <span>الموردين</span>
+        <a
+          routerLink="/suppliers"
+          routerLinkActive="active"
+          class="nav-link text-white d-flex align-items-center gap-2 rounded-3 px-3 py-2 text-decoration-none"
+        >
+          <i class="pi pi-truck sidebar-icon"></i>
+          <span class="flex-fill text-nowrap">الموردين</span>
         </a>
-        <a routerLink="/products" routerLinkActive="active">
-          <i class="pi pi-box"></i>
-          <span>المنتجات</span>
+        <a
+          routerLink="/products"
+          routerLinkActive="active"
+          class="nav-link text-white d-flex align-items-center gap-2 rounded-3 px-3 py-2 text-decoration-none"
+        >
+          <i class="pi pi-box sidebar-icon"></i>
+          <span class="flex-fill text-nowrap">المنتجات</span>
         </a>
-        <a routerLink="/employees" routerLinkActive="active">
-          <i class="pi pi-id-card"></i>
-          <span>الموظفين</span>
+        <a
+          routerLink="/employees"
+          routerLinkActive="active"
+          class="nav-link text-white d-flex align-items-center gap-2 rounded-3 px-3 py-2 text-decoration-none"
+        >
+          <i class="pi pi-id-card sidebar-icon"></i>
+          <span class="flex-fill text-nowrap">الموظفين</span>
         </a>
-        <a routerLink="/reports" routerLinkActive="active">
-          <i class="pi pi-chart-bar"></i>
-          <span>التقارير</span>
+        <a
+          routerLink="/reports"
+          routerLinkActive="active"
+          class="nav-link text-white d-flex align-items-center gap-2 rounded-3 px-3 py-2 text-decoration-none"
+        >
+          <i class="pi pi-chart-bar sidebar-icon"></i>
+          <span class="flex-fill text-nowrap">التقارير</span>
         </a>
       </nav>
     </aside>
 
-    <main class="content">
+    <main class="flex-fill p-3 overflow-auto">
       <router-outlet></router-outlet>
     </main>
   </div>

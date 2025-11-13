@@ -14,7 +14,7 @@
 
 <app-dialog
   [(visible)]="visible"
-  [style]="{ width: '800px' }"
+  [width]="'60%'"
   [draggable]="false"
   (onHide)="onDialogHide()"
   [header]="'فاتورة مشتريات'"
@@ -273,11 +273,11 @@
 <!-- Preview Invoice Dialog -->
 <app-dialog
   [(visible)]="previewVisible"
-  [style]="{ width: '800px' }"
+  [width]="'900px'"
   [draggable]="false"
   [header]="'معاينة الفاتورة'"
 >
-  <div class="invoice-preview">
+  <div class="invoice-preview px-3">
     <!-- Company Info -->
     <div class="company-info">
       <h2 class="company-name">{{ companyName }}</h2>
