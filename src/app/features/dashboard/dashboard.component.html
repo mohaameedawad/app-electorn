@@ -3,6 +3,7 @@
   
   <div class="cards-container">
     <div class="card" (click)="navigateTo('/products')">
+      <i class="pi pi-box card-icon"></i>
       <div class="card-content">
         <h3>المنتجات</h3>
         <p class="count">{{ productsCount }}</p>
@@ -10,6 +11,7 @@
     </div>
 
     <div class="card" (click)="navigateTo('/customers')">
+      <i class="pi pi-users card-icon"></i>
       <div class="card-content">
         <h3>العملاء</h3>
         <p class="count">{{ customersCount }}</p>
@@ -17,6 +19,7 @@
     </div>
 
     <div class="card" (click)="navigateTo('/suppliers')">
+      <i class="pi pi-truck card-icon"></i>
       <div class="card-content">
         <h3>الموردين</h3>
         <p class="count">{{ suppliersCount }}</p>

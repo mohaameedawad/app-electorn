@@ -55,6 +55,8 @@
     "files": [
       "dist/app-electron/browser/**/*",
       "main.js",
+      "preload.js",
+      "database.js",
       "package.json"
     ],
     "win": {

@@ -25,10 +25,15 @@
   justify-content: center;
   box-shadow: 0 4px 12px rgba(11, 110, 58, 0.3);
   i {
-    font-size: 36px;
+    font-size: 2.25rem !important;
+    line-height: 1;
     color: white;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-
 }
 
 .login-input {
@@ -53,4 +58,27 @@
   &:active {
     transform: translateY(0);
   }
+  
+  i {
+    font-size: 1rem !important;
+    line-height: 1;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Fix icon sizes to prevent shifting
+.alert i,
+.text-muted i {
+  font-size: 1rem !important;
+  line-height: 1;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }

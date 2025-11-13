@@ -21,6 +21,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 20px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
 
@@ -28,6 +29,17 @@
       transform: translateY(-5px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       background: #236030;
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      color: rgba(255, 255, 255, 0.9);
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
     .card-content {
