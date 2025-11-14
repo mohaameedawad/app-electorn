@@ -20,7 +20,7 @@
   transition: background-color 0.2s;
   
   &:hover {
-    background-color: #065a2e;
+    background-color: var(--primary-green-dark);
   }
 }
 

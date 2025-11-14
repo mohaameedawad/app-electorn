@@ -57,7 +57,7 @@ export class PurchasesComponent implements OnInit {
   
   // بيانات الفاتورة الجديدة
   newPurchase = {
-    invoice_no: '',
+    invoice_no: 0,
     supplier_id: null,
     employee_id: null,
     purchase_date: new Date(),
@@ -80,7 +80,7 @@ export class PurchasesComponent implements OnInit {
 
   // Preview purchase data
   previewPurchase: any = {
-    invoice_no: '',
+    invoice_no: null,
     supplier_id: null,
     purchase_date: new Date(),
     items: [],
@@ -130,10 +130,9 @@ export class PurchasesComponent implements OnInit {
     this.employees = employeesList.map((e:any) => ({ label: e.name, value: e.id }));
   }
 
-  generateInvoiceNumber() {
-    const lastInvoice = this.data.length > 0 ? this.data[0].invoice_no : 'PUR-000';
-    const lastNumber = parseInt(lastInvoice.split('-')[1]) || 0;
-    this.newPurchase.invoice_no = `PUR-${String(lastNumber + 1).padStart(3, '0')}`;
+generateInvoiceNumber() {
+    const lastInvoice = this.data.length > 0 ? this.data[this.data.length - 1].invoice_no : 0;
+    this.newPurchase.invoice_no = lastInvoice + 1;
   }
 
   // handle edit action from table
@@ -148,7 +147,7 @@ export class PurchasesComponent implements OnInit {
     }
 
     this.newPurchase = {
-      invoice_no: purchaseCopy.invoice_no || '',
+      invoice_no: purchaseCopy.invoice_no || 0,
       supplier_id: purchaseCopy.supplier_id || null,
       employee_id: purchaseCopy.employee_id || null,
       purchase_date: purchaseCopy.purchase_date ? new Date(purchaseCopy.purchase_date) : new Date(),
@@ -170,7 +169,7 @@ export class PurchasesComponent implements OnInit {
     if (!id) return;
     
     this.confirmDialog.show({
-      message: `هل أنت متأكد من حذف فاتورة المشتريات رقم "${purchase.invoice_no}"؟`,
+      message: `هل أنت متأكد من حذف فاتورة المشتريات رقم "${purchase.invoice_no}"؟ `,
       header: 'تأكيد الحذف',
       acceptLabel: 'حذف',
       rejectLabel: 'إلغاء',
@@ -196,7 +195,7 @@ export class PurchasesComponent implements OnInit {
     }
 
     this.previewPurchase = {
-      invoice_no: purchaseCopy.invoice_no || '',
+      invoice_no: purchaseCopy.invoice_no || 0,
       supplier_id: purchaseCopy.supplier_id || null,
       purchase_date: purchaseCopy.purchase_date ? new Date(purchaseCopy.purchase_date) : new Date(),
       items: purchaseCopy.items || [],
@@ -469,7 +468,7 @@ export class PurchasesComponent implements OnInit {
 
   resetForm() {
     this.newPurchase = {
-      invoice_no: '',
+      invoice_no: 0,
       supplier_id: null,
       employee_id: null,
       purchase_date: new Date(),

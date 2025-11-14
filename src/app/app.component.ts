@@ -15,6 +15,17 @@ export class AppComponent implements OnInit {
   showLayout = false;
   // showLayout = true;
 
+  navItems = [
+    { path: '/dashboard', icon: 'pi-home', label: 'لوحة التحكم' },
+    { path: '/sales', icon: 'pi-shopping-cart', label: 'فواتير البيع' },
+    { path: '/purchases', icon: 'pi-shopping-bag', label: 'فواتير المشتريات' },
+    { path: '/customers', icon: 'pi-users', label: 'العملاء' },
+    { path: '/suppliers', icon: 'pi-truck', label: 'الموردين' },
+    { path: '/products', icon: 'pi-box', label: 'المنتجات' },
+    { path: '/employees', icon: 'pi-id-card', label: 'الموظفين' },
+    { path: '/reports', icon: 'pi-chart-bar', label: 'التقارير' }
+  ];
+
   constructor(private router: Router) {}
 
   ngOnInit() {

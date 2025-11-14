@@ -1,3 +1,5 @@
+@use '../../../mixins' as *;
+
 .dashboard {
   padding: 20px;
 
@@ -15,9 +17,8 @@
 
   .card {
     background: #2d7a3e;
-    border-radius: 10px;
     padding: 30px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    @include card-style;
     display: flex;
     align-items: center;
     justify-content: center;

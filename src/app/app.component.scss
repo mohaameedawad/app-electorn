@@ -1,3 +1,5 @@
+@use '../mixins' as *;
+
 // Sidebar icon styling
 .sidebar-icon {
   font-size: 1.1rem;
@@ -13,11 +15,17 @@
 .sidebar .nav-link {
   transition: all 0.2s;
   
-  &:hover {
-    background-color: #007a3d !important;
-  }
-  
+  &:hover,
   &.active {
-    background-color: #007a3d !important;
+    background-color: var(--primary-green-hover) !important;
+    color: white !important;
   }
+}
+
+aside.sidebar {
+  height: 90%;
+  width: 16%;
+  background-color: white !important;
+  margin: 20px 10px;
+  @include card-style;
 }

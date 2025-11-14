@@ -1,11 +1,14 @@
-.app-header {
-  background-color: #0b6e3a;
-  padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+@use '../../../../mixins' as *;
 
+.app-header {
+    background-color: #fff !important;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    margin-top: 20px;
+    margin-inline-end: 27px;
+    @include card-style;
   .user-info {
     display: flex;
     align-items: center;
@@ -22,6 +25,17 @@
       &:hover {
         background-color: rgba(255, 255, 255, 0.1);
         border-color: #fff;
+      }
+    }
+
+    .logout-btn {
+      color: var(--primary-green);
+      border-color: var(--primary-green);
+      
+      &:hover {
+        background-color: var(--primary-green);
+        color: white;
+        border-color: var(--primary-green);
       }
     }
   }

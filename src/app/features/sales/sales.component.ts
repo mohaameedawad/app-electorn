@@ -58,7 +58,7 @@ export class SalesComponent implements OnInit {
   
   // بيانات الفاتورة الجديدة
   newSale = {
-    invoice_no: '',
+    invoice_no: 0,
     customer_id: null,
     employee_id: null,
     sale_date: new Date(),
@@ -81,7 +81,7 @@ export class SalesComponent implements OnInit {
 
   // Preview sale data
   previewSale: any = {
-    invoice_no: '',
+    invoice_no: 0,
     customer_id: null,
     sale_date: new Date(),
     items: [],
@@ -132,9 +132,8 @@ export class SalesComponent implements OnInit {
   }
 
   generateInvoiceNumber() {
-    const lastInvoice = this.data.length > 0 ? this.data[0].invoice_no : 'INV-000';
-    const lastNumber = parseInt(lastInvoice.split('-')[1]) || 0;
-    this.newSale.invoice_no = `INV-${String(lastNumber + 1).padStart(3, '0')}`;
+    const lastInvoice = this.data.length > 0 ? this.data[this.data.length - 1].invoice_no : 0;
+    this.newSale.invoice_no = lastInvoice + 1;
   }
 
   // handle edit action from table
@@ -149,7 +148,7 @@ export class SalesComponent implements OnInit {
     }
 
     this.newSale = {
-      invoice_no: saleCopy.invoice_no || '',
+      invoice_no: saleCopy.invoice_no || 0,
       customer_id: saleCopy.customer_id || null,
       employee_id: saleCopy.employee_id || null,
       sale_date: saleCopy.sale_date ? new Date(saleCopy.sale_date) : new Date(),
@@ -171,7 +170,7 @@ export class SalesComponent implements OnInit {
     if (!id) return;
     
     this.confirmDialog.show({
-      message: `هل أنت متأكد من حذف فاتورة المبيعات رقم "${sale.invoice_no}"؟`,
+      message: `هل أنت متأكد من حذف فاتورة المبيعات رقم "${sale.invoice_no}"؟ `,
       header: 'تأكيد الحذف',
       acceptLabel: 'حذف',
       rejectLabel: 'إلغاء',
@@ -197,7 +196,7 @@ export class SalesComponent implements OnInit {
     }
 
     this.previewSale = {
-      invoice_no: saleCopy.invoice_no || '',
+      invoice_no: saleCopy.invoice_no || 0,
       customer_id: saleCopy.customer_id || null,
       sale_date: saleCopy.sale_date ? new Date(saleCopy.sale_date) : new Date(),
       items: saleCopy.items || [],
@@ -475,7 +474,7 @@ export class SalesComponent implements OnInit {
 
   resetForm() {
     this.newSale = {
-      invoice_no: '',
+      invoice_no: 0,
       customer_id: null,
       employee_id: null,
       sale_date: new Date(),
