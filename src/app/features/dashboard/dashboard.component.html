@@ -1,18 +1,11 @@
 <div class="dashboard">
-  <h2 class="text-success">لوحة التحكم</h2>
+  <h2 class="text-success fw-bold">لوحة التحكم</h2>
   
   <div class="cards-container">
     <div class="card" *ngFor="let card of cards" (click)="navigateTo(card.route)">
-      <div class="card-content">
-        <div class="card-icon-wrapper">
-          <i class="pi {{ card.icon }} card-icon"></i>
-        </div>
-        <div class="card-info">
-          <h3>{{ card.title }}</h3>
-          <p class="count">{{ card.count | number }}</p>
-        </div>
-      </div>
-      <i class="pi pi-arrow-left nav-icon"></i>
+      <i class="pi {{ card.icon }} card-icon"></i>
+      <h3>{{ card.title }}</h3>
+      <p class="count">{{ card.count | number }}</p>
     </div>
   </div>
 </div>

@@ -1,0 +1,82 @@
+<div class="expenses-container">
+  <div class="page-header">
+    <h2 class="text-success fw-bold">المصروفات</h2>
+    <button class="add-button" (click)="showAddDialog()">
+      <i class="pi pi-plus mx-2"></i>
+      إضافة مصروف
+    </button>
+  </div>
+
+  <app-table
+    [data]="expenses"
+    [columns]="columns"
+    (edit)="editExpense($event)"
+    (delete)="deleteExpense($event)"
+  ></app-table>
+</div>
+
+<p-dialog
+  [(visible)]="displayDialog"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [header]="isEditMode ? 'تعديل مصروف' : 'إضافة مصروف جديد'"
+  [rtl]="true"
+>
+  <div class="dialog-content p-4">
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-secondary">رقم السند</label>
+      <input
+        pInputText
+        type="text"
+        [value]="expense.voucherNumber"
+        class="form-control w-100"
+        disabled
+        readonly
+      />
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-secondary">نوع المصروف</label>
+      <p-select
+        [(ngModel)]="expense.expenseType"
+        [options]="expenseTypes"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="اختر نوع المصروف"
+        class="w-100"
+        [style.width]="'100%'"
+      ></p-select>
+    </div>
+
+    <div class="mb-4">
+      <label for="expenseDate" class="font-bold block mb-2">التاريخ</label>
+      <p-datepicker
+        [(ngModel)]="expense.date"
+        dateFormat="yy-mm-dd"
+        [showIcon]="true"
+        [appendTo]="'body'"
+        [style]="{'width': '100% !important'}"
+        inputId="expenseDate"
+      ></p-datepicker>
+    </div>
+
+    <div class="mb-4 d-flex flex-column">
+      <label class="form-label fw-semibold text-secondary">المبلغ</label>
+      <p-inputnumber
+        [(ngModel)]="expense.amount"
+        styleClass="w-100"
+      ></p-inputnumber>
+    </div>
+  </div>
+
+  <div dialog-footer class="d-flex justify-content-end gap-2 p-3 border-top">
+    <p-button
+      label="إلغاء"
+      severity="secondary"
+      (onClick)="hideDialog()"
+      [text]="true"
+    >
+    </p-button>
+    <p-button label="حفظ" (onClick)="saveExpense()"> </p-button>
+  </div>
+</p-dialog>

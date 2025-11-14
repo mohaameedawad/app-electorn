@@ -25,7 +25,9 @@ class DatabaseHandler {
       products: [],
       sales: [],
       employees: [],
-      purchases: []
+      purchases: [],
+      payments: [],
+      expenses: []
     };
   }
 
@@ -226,6 +228,80 @@ class DatabaseHandler {
 
   deletePurchase(id) {
     this.data.purchases = this.data.purchases.filter(p => p.id !== id);
+    this.saveData();
+  }
+
+  // Payments methods
+  getPayments() {
+    if (!this.data.payments) {
+      this.data.payments = [];
+    }
+    return this.data.payments;
+  }
+
+  addPayment(payment) {
+    if (!this.data.payments) {
+      this.data.payments = [];
+    }
+    
+    const newPayment = {
+      id: this.data.payments.length > 0 ? Math.max(...this.data.payments.map(p => p.id)) + 1 : 1,
+      ...payment
+    };
+    this.data.payments.push(newPayment);
+    this.saveData();
+    return newPayment;
+  }
+
+  updatePayment(id, payment) {
+    const index = this.data.payments.findIndex(p => p.id === id);
+    if (index !== -1) {
+      this.data.payments[index] = { ...this.data.payments[index], ...payment };
+      this.saveData();
+      return this.data.payments[index];
+    }
+    return null;
+  }
+
+  deletePayment(id) {
+    this.data.payments = this.data.payments.filter(p => p.id !== id);
+    this.saveData();
+  }
+
+  // Expenses methods
+  getExpenses() {
+    if (!this.data.expenses) {
+      this.data.expenses = [];
+    }
+    return this.data.expenses;
+  }
+
+  addExpense(expense) {
+    if (!this.data.expenses) {
+      this.data.expenses = [];
+    }
+    
+    const newExpense = {
+      id: this.data.expenses.length > 0 ? Math.max(...this.data.expenses.map(e => e.id)) + 1 : 1,
+      ...expense
+    };
+    this.data.expenses.push(newExpense);
+    this.saveData();
+    return newExpense;
+  }
+
+  updateExpense(id, expense) {
+    const index = this.data.expenses.findIndex(e => e.id === id);
+    if (index !== -1) {
+      this.data.expenses[index] = { ...this.data.expenses[index], ...expense };
+      this.saveData();
+      return this.data.expenses[index];
+    }
+    return null;
+  }
+
+  deleteExpense(id) {
+    this.data.expenses = this.data.expenses.filter(e => e.id !== id);
     this.saveData();
   }
 

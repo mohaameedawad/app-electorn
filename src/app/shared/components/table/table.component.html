@@ -107,7 +107,12 @@
           </button> -->
         </ng-container>
         <ng-template #normalCell>
-          {{ rowData[col.field] }}
+          <ng-container *ngIf="col.type === 'date'; else regularCell">
+            {{ rowData[col.field] | date:'dd/MM/yyyy' }}
+          </ng-container>
+          <ng-template #regularCell>
+            {{ rowData[col.field] }}
+          </ng-template>
         </ng-template>
       </td>
     </tr>

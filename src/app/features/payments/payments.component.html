@@ -1,0 +1,82 @@
+<div class="payments-container">
+  <div class="page-header">
+    <h2 class="text-success fw-bold">المدفوعات</h2>
+    <button class="add-button" (click)="showAddDialog()">
+      <i class="pi pi-plus mx-2"></i>
+      إضافة سند قبض
+    </button>
+  </div>
+
+  <app-table
+    [data]="payments"
+    [columns]="columns"
+    (edit)="editPayment($event)"
+    (delete)="deletePayment($event)"
+  ></app-table>
+</div>
+
+<p-dialog
+  [(visible)]="displayDialog"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [header]="isEditMode ? 'تعديل سند قبض' : 'إضافة سند قبض جديد'"
+  [rtl]="true"
+>
+  <div class="dialog-content p-4">
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-secondary">رقم سند القبض</label>
+      <input
+        pInputText
+        type="text"
+        [value]="payment.receiptNumber"
+        class="form-control w-100"
+        disabled
+        readonly
+      />
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-secondary">اسم العميل</label>
+      <p-select
+        [(ngModel)]="payment.customerName"
+        [options]="customers"
+        optionLabel="name"
+        optionValue="name"
+        placeholder="اختر العميل"
+        class="w-100"
+        [style.width]="'100%'"
+      ></p-select>
+    </div>
+
+    <div class="mb-4 d-flex flex-column">
+      <label for="paymentDate" class="font-bold block mb-2">التاريخ</label>
+      <p-datepicker
+        [(ngModel)]="payment.date"
+        dateFormat="yy-mm-dd"
+        [showIcon]="true"
+        [appendTo]="'body'"
+        inputId="paymentDate"
+        [style]="{'width': '100% !important'}"
+      ></p-datepicker>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-secondary">المبلغ</label>
+      <p-inputnumber
+        [(ngModel)]="payment.amount"
+        styleClass="w-100"
+      ></p-inputnumber>
+    </div>
+  </div>
+
+  <div dialog-footer class="d-flex justify-content-end gap-2 p-3 border-top">
+    <p-button
+      label="إلغاء"
+      severity="secondary"
+      (onClick)="hideDialog()"
+      [text]="true"
+    >
+    </p-button>
+    <p-button label="حفظ" (onClick)="savePayment()"> </p-button>
+  </div>
+</p-dialog>

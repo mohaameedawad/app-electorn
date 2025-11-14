@@ -1,0 +1,43 @@
+.reports-container {
+  padding: 20px;
+}
+
+.report-card {
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background: var(--primary-green);
+    color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    .report-icon {
+      color: white;
+    }
+  }
+
+  .report-icon {
+    font-size: 3rem;
+    color: var(--primary-green);
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+  }
+
+  h4 {
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
+  p {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+}

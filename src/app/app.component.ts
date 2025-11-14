@@ -23,6 +23,8 @@ export class AppComponent implements OnInit {
     { path: '/suppliers', icon: 'pi-truck', label: 'الموردين' },
     { path: '/products', icon: 'pi-box', label: 'المنتجات' },
     { path: '/employees', icon: 'pi-id-card', label: 'الموظفين' },
+    { path: '/payments', icon: 'pi-money-bill', label: 'المدفوعات' },
+    { path: '/expenses', icon: 'pi-wallet', label: 'المصروفات' },
     { path: '/reports', icon: 'pi-chart-bar', label: 'التقارير' }
   ];
 

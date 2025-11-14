@@ -8,6 +8,8 @@ import { SuppliersComponent } from './features/suppliers/suppliers.component';
 import { ProductsComponent } from './features/products/products.component';
 import { EmployeesComponent } from './features/employees/employees.component';
 import { ReportsComponent } from './features/reports/reports.component';
+import { PaymentsComponent } from './features/payments/payments.component';
+import { ExpensesComponent } from './features/expenses/expenses.component';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -20,6 +22,8 @@ export const routes: Routes = [
   { path: 'suppliers', component: SuppliersComponent, canActivate: [AuthGuard] },
   { path: 'products', component: ProductsComponent, canActivate: [AuthGuard] },
   { path: 'employees', component: EmployeesComponent, canActivate: [AuthGuard] },
+  { path: 'payments', component: PaymentsComponent, canActivate: [AuthGuard] },
+  { path: 'expenses', component: ExpensesComponent, canActivate: [AuthGuard] },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'login' } // Redirect any unknown route to login
 

@@ -5,7 +5,6 @@
 
   h2 {
     margin-bottom: 30px;
-    color: #333;
   }
 
   .cards-container {
@@ -16,86 +15,49 @@
   }
 
   .card {
-    padding: 20px;
-    @include card-style;
     background: white;
-    transition: all 0.3s ease;
+    @include card-style;
+    padding: 30px;
+    text-align: center;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-direction: row;
-    justify-content: space-between;
-    .pi-arrow-left {
-      display: none;
-    }
-    .card-content {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-    }
+    transition: all 0.3s ease;
+
     &:hover {
       background: var(--primary-green);
-      box-shadow: 0 8px 20px rgba(11, 110, 58, 0.3);
-      transform: scale(1.05);
-      transition: transform 0.3s ease-in-out;
-      .pi-arrow-left {
-        display: block;
-        color: white;
-      }
-      .card-icon-wrapper {
-        background: white;
-        color: var(--primary-green);
-      }
-
-      .card-info {
-        .count,
-        h3 {
-          color: white;
-        }
-        h3 {
-          margin-bottom: 10px;
-        }
-      }
-    }
-
-    .card-icon-wrapper {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--primary-green);
-      flex-shrink: 0;
       color: white;
-      transition: all 0.3s ease-in-out;
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
       .card-icon {
-        font-size: 1.8rem;
+        color: white;
+      }
+
+      h3,
+      .count {
+        color: white;
       }
     }
 
-    .card-info {
-      flex: 1;
-      text-align: right;
+    .card-icon {
+      font-size: 3rem;
+      color: var(--primary-green);
+      margin-bottom: 15px;
+      transition: color 0.3s ease;
+    }
 
-      .count {
-        margin: 0;
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: var(--primary-green);
-        line-height: 1.2;
-        transition: color 0.3s  ease-in-out;
-      }
+    h3 {
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #333;
+      transition: color 0.3s ease;
+    }
 
-      h3 {
-        margin: 4px 0 0 0;
-        font-size: 1rem;
-        font-weight: 500;
-        color: var(--primary-green);
-        transition: color 0.3s  ease-in-out;
-      }
+    .count {
+      margin-bottom: 0;
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary-green);
+      transition: color 0.3s ease;
     }
   }
 }

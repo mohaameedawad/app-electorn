@@ -132,6 +132,40 @@ function setupIPCHandlers() {
   ipcMain.handle('db:deletePurchase', async (event, id) => {
     return db.deletePurchase(id);
   });
+
+  // المدفوعات
+  ipcMain.handle('db:getPayments', async () => {
+    return db.getPayments();
+  });
+
+  ipcMain.handle('db:addPayment', async (event, payment) => {
+    return db.addPayment(payment);
+  });
+
+  ipcMain.handle('db:updatePayment', async (event, id, payment) => {
+    return db.updatePayment(id, payment);
+  });
+
+  ipcMain.handle('db:deletePayment', async (event, id) => {
+    return db.deletePayment(id);
+  });
+
+  // المصروفات
+  ipcMain.handle('db:getExpenses', async () => {
+    return db.getExpenses();
+  });
+
+  ipcMain.handle('db:addExpense', async (event, expense) => {
+    return db.addExpense(expense);
+  });
+
+  ipcMain.handle('db:updateExpense', async (event, id, expense) => {
+    return db.updateExpense(id, expense);
+  });
+
+  ipcMain.handle('db:deleteExpense', async (event, id) => {
+    return db.deleteExpense(id);
+  });
 }
 
 

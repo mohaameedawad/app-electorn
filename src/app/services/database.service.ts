@@ -168,4 +168,56 @@ export class DatabaseService {
     if (!this.api) return null;
     return await this.api.deletePurchase(id);
   }
+
+  // المدفوعات
+  async getPayments() {
+    if (!this.api) return [];
+    try {
+      return await this.api.getPayments();
+    } catch (error) {
+      console.error('Error getting payments:', error);
+      return [];
+    }
+  }
+
+  async addPayment(payment: any) {
+    if (!this.api) return null;
+    return await this.api.addPayment(payment);
+  }
+
+  async updatePayment(id: number, payment: any) {
+    if (!this.api) return null;
+    return await this.api.updatePayment(id, payment);
+  }
+
+  async deletePayment(id: number) {
+    if (!this.api) return null;
+    return await this.api.deletePayment(id);
+  }
+
+  // المصروفات
+  async getExpenses() {
+    if (!this.api) return [];
+    try {
+      return await this.api.getExpenses();
+    } catch (error) {
+      console.error('Error getting expenses:', error);
+      return [];
+    }
+  }
+
+  async addExpense(expense: any) {
+    if (!this.api) return null;
+    return await this.api.addExpense(expense);
+  }
+
+  async updateExpense(id: number, expense: any) {
+    if (!this.api) return null;
+    return await this.api.updateExpense(id, expense);
+  }
+
+  async deleteExpense(id: number) {
+    if (!this.api) return null;
+    return await this.api.deleteExpense(id);
+  }
 }

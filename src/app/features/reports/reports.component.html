@@ -1,2 +1,222 @@
-<h2 class="text-success">التقارير</h2>
-<app-table [columns]="columns" [data]="data"></app-table>
+<div class="reports-container p-4">
+  <h2 class="text-success fw-bold mb-4">التقارير</h2>
+
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="report-card" (click)="showExpensesReport()">
+        <i class="pi pi-wallet report-icon"></i>
+        <h4>تقرير المصروفات</h4>
+        <p>عرض جميع المصروفات خلال فترة محددة</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="report-card" (click)="showPaymentsReport()">
+        <i class="pi pi-money-bill report-icon"></i>
+        <h4>تقرير المدفوعات</h4>
+        <p>عرض جميع المدفوعات خلال فترة محددة</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="report-card" (click)="showPurchasesReport()">
+        <i class="pi pi-shopping-bag report-icon"></i>
+        <h4>تقرير المشتريات</h4>
+        <p>عرض جميع المشتريات خلال فترة محددة</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="report-card" (click)="showProfitsReport()">
+        <i class="pi pi-chart-line report-icon"></i>
+        <h4>تقرير الأرباح الشهرية</h4>
+        <p>عرض صافي الأرباح لكل شهر</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="report-card" (click)="showCustomerStatement()">
+        <i class="pi pi-users report-icon"></i>
+        <h4>كشف حساب عميل</h4>
+        <p>عرض حركة حساب عميل معين</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="report-card" (click)="showSupplierStatement()">
+        <i class="pi pi-truck report-icon"></i>
+        <h4>كشف حساب مورد</h4>
+        <p>عرض حركة حساب مورد معين</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- تقرير المصروفات -->
+<p-dialog
+  [(visible)]="displayExpensesDialog"
+  [modal]="true"
+  [style]="{ width: '80vw' }"
+  header="تقرير المصروفات"
+  [rtl]="true"
+>
+  <div class="p-4">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="mb-2">من تاريخ</label>
+        <p-datepicker
+          [(ngModel)]="dateFrom"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          styleClass="w-100"
+        ></p-datepicker>
+      </div>
+      <div class="col-md-6">
+        <label class="mb-2">إلى تاريخ</label>
+        <p-datepicker
+          [(ngModel)]="dateTo"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          styleClass="w-100"
+        ></p-datepicker>
+      </div>
+    </div>
+    <div class="mb-3">
+      <p-button label="إنشاء التقرير" (onClick)="generateExpensesReport()"></p-button>
+    </div>
+    <app-table [columns]="expensesColumns" [data]="expensesData"></app-table>
+  </div>
+</p-dialog>
+
+<!-- كشف حساب عميل -->
+<p-dialog
+  [(visible)]="displayCustomerDialog"
+  [modal]="true"
+  [style]="{ width: '80vw' }"
+  header="كشف حساب عميل"
+  [rtl]="true"
+>
+  <div class="p-4">
+    <div class="mb-3">
+      <label class="mb-2">اختر العميل</label>
+      <p-select
+        [(ngModel)]="selectedCustomer"
+        [options]="customers"
+        optionLabel="name"
+        placeholder="اختر العميل"
+        styleClass="w-100"
+        (onChange)="generateCustomerStatement()"
+      ></p-select>
+    </div>
+    <app-table [columns]="customerStatementColumns" [data]="customerStatementData"></app-table>
+  </div>
+</p-dialog>
+
+<!-- كشف حساب مورد -->
+<p-dialog
+  [(visible)]="displaySupplierDialog"
+  [modal]="true"
+  [style]="{ width: '80vw' }"
+  header="كشف حساب مورد"
+  [rtl]="true"
+>
+  <div class="p-4">
+    <div class="mb-3">
+      <label class="mb-2">اختر المورد</label>
+      <p-select
+        [(ngModel)]="selectedSupplier"
+        [options]="suppliers"
+        optionLabel="name"
+        placeholder="اختر المورد"
+        styleClass="w-100"
+        (onChange)="generateSupplierStatement()"
+      ></p-select>
+    </div>
+    <app-table [columns]="supplierStatementColumns" [data]="supplierStatementData"></app-table>
+  </div>
+</p-dialog>
+
+<!-- تقرير المدفوعات -->
+<p-dialog
+  [(visible)]="displayPaymentsDialog"
+  [modal]="true"
+  [style]="{ width: '80vw' }"
+  header="تقرير المدفوعات"
+  [rtl]="true"
+>
+  <div class="p-4">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="mb-2">من تاريخ</label>
+        <p-datepicker
+          [(ngModel)]="dateFrom"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          styleClass="w-100"
+        ></p-datepicker>
+      </div>
+      <div class="col-md-6">
+        <label class="mb-2">إلى تاريخ</label>
+        <p-datepicker
+          [(ngModel)]="dateTo"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          styleClass="w-100"
+        ></p-datepicker>
+      </div>
+    </div>
+    <div class="mb-3">
+      <p-button label="إنشاء التقرير" (onClick)="generatePaymentsReport()"></p-button>
+    </div>
+    <app-table [columns]="paymentsColumns" [data]="paymentsData"></app-table>
+  </div>
+</p-dialog>
+
+<!-- تقرير المشتريات -->
+<p-dialog
+  [(visible)]="displayPurchasesDialog"
+  [modal]="true"
+  [style]="{ width: '80vw' }"
+  header="تقرير المشتريات"
+  [rtl]="true"
+>
+  <div class="p-4">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="mb-2">من تاريخ</label>
+        <p-datepicker
+          [(ngModel)]="dateFrom"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          styleClass="w-100"
+        ></p-datepicker>
+      </div>
+      <div class="col-md-6">
+        <label class="mb-2">إلى تاريخ</label>
+        <p-datepicker
+          [(ngModel)]="dateTo"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          styleClass="w-100"
+        ></p-datepicker>
+      </div>
+    </div>
+    <div class="mb-3">
+      <p-button label="إنشاء التقرير" (onClick)="generatePurchasesReport()"></p-button>
+    </div>
+    <app-table [columns]="purchasesColumns" [data]="purchasesData"></app-table>
+  </div>
+</p-dialog>
+
+<!-- تقرير الأرباح الشهرية -->
+<p-dialog
+  [(visible)]="displayProfitsDialog"
+  [modal]="true"
+  [style]="{ width: '80vw' }"
+  header="تقرير الأرباح الشهرية"
+  [rtl]="true"
+>
+  <div class="p-4">
+    <app-table [columns]="profitsColumns" [data]="profitsData"></app-table>
+  </div>
+</p-dialog>
