@@ -5,15 +5,31 @@
   background-color: white;
 .table-filter-container {
   margin-bottom: 1rem;
-  // padding: 1rem;
-  // border-radius: 8px;
-  // background-color: var(--sidebar-bg);
-  // border-radius: 10px;
-
+  
+  ::ng-deep .p-iconfield {
+    width: 100%;
+    
+    .p-inputtext {
+      padding-right: 2.5rem;
+      padding-left: 2.5rem;
+    }
+    
+    .p-inputicon {
+      &:first-child {
+        right: 0.75rem;
+        left: auto;
+      }
+      
+      &:last-child {
+        left: 0.75rem;
+        right: auto;
+      }
+    }
+  }
   .filter-controls {
     .filter-search-input {
       flex: 1;
-      padding: 0.625rem 0.75rem;
+      padding: 0.625rem 2.5rem 0.625rem 0.75rem;
       border: 1px solid #ced4da;
       border-radius: 6px;
       font-size: 0.95rem;
@@ -57,10 +73,6 @@
 }
 
 ::ng-deep .custom-table {
-  // .p-datatable-wrapper {
-  //   background: #fff;
-  // }
-
   .empty-message-big-table {
     text-align: center;
     i {

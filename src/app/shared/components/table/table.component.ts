@@ -4,11 +4,14 @@ import { TableModule, Table } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule, TableModule, FormsModule, InputTextModule, SelectModule],
+  imports: [CommonModule, TableModule, FormsModule, InputTextModule, SelectModule, IconFieldModule, InputIconModule, ButtonModule],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
@@ -26,7 +29,6 @@ export class TableComponent implements OnInit {
   filterValue: string = '';
 
   ngOnInit() {
-    // Set the first filterable column as default
     const filterableColumns = this.getFilterableColumns();
     if (filterableColumns.length > 0) {
       this.selectedFilterColumn = filterableColumns[0].field;
@@ -42,9 +44,20 @@ export class TableComponent implements OnInit {
     return column ? column.header : '';
   }
 
-  onFilterChange() {
+  onColumnChange() {
+    this.filterValue = '';
     if (this.table) {
-      this.table.filter(this.filterValue, this.selectedFilterColumn, 'contains');
+      this.table.clear();
+    }
+  }
+
+  performSearch() {
+    if (this.table) {
+      this.table.clear();
+      const trimmedValue = this.filterValue.trim();
+      if (trimmedValue) {
+        this.table.filter(trimmedValue, this.selectedFilterColumn, 'contains');
+      }
     }
   }
 

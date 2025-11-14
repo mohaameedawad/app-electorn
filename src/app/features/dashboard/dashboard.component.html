@@ -2,28 +2,17 @@
   <h2 class="text-success">لوحة التحكم</h2>
   
   <div class="cards-container">
-    <div class="card" (click)="navigateTo('/products')">
-      <i class="pi pi-box card-icon"></i>
+    <div class="card" *ngFor="let card of cards" (click)="navigateTo(card.route)">
       <div class="card-content">
-        <h3>المنتجات</h3>
-        <p class="count">{{ productsCount }}</p>
+        <div class="card-icon-wrapper">
+          <i class="pi {{ card.icon }} card-icon"></i>
+        </div>
+        <div class="card-info">
+          <h3>{{ card.title }}</h3>
+          <p class="count">{{ card.count | number }}</p>
+        </div>
       </div>
-    </div>
-
-    <div class="card" (click)="navigateTo('/customers')">
-      <i class="pi pi-users card-icon"></i>
-      <div class="card-content">
-        <h3>العملاء</h3>
-        <p class="count">{{ customersCount }}</p>
-      </div>
-    </div>
-
-    <div class="card" (click)="navigateTo('/suppliers')">
-      <i class="pi pi-truck card-icon"></i>
-      <div class="card-content">
-        <h3>الموردين</h3>
-        <p class="count">{{ suppliersCount }}</p>
-      </div>
+      <i class="pi pi-arrow-left nav-icon"></i>
     </div>
   </div>
 </div>
