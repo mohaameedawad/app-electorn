@@ -1,62 +1,51 @@
-<div class="login-container d-flex align-items-center justify-content-center min-vh-100">
-  <div class="login-card shadow rounded-3 p-5 border border-success">
-    <!-- Header -->
-    <div class="text-center mb-4">
-      <div class="logo-circle mx-auto mb-4">
-        <i class="pi pi-box fs-1 text-white"></i>
-      </div>
-      <h2 class="text-success fw-bold mb-2">برنامج إدارة  المبيعات</h2>
-      <p class="text-muted">تسجيل الدخول</p>
+<app-auth-card>
+  <ng-container auth-title>تسجيل الدخول</ng-container>
+  <form (ngSubmit)="login()">
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-secondary">اسم المستخدم</label>
+      <input 
+        pInputText 
+        type="text" 
+        [(ngModel)]="username"
+        name="username"
+        class="form-control w-100 login-input"
+        placeholder="أدخل اسم المستخدم"
+        autocomplete="username"
+      />
     </div>
-
-    <!-- Form -->
-    <form (ngSubmit)="login()">
-      <div class="mb-4">
-        <label class="form-label fw-semibold text-secondary">اسم المستخدم</label>
-        <input 
-          pInputText 
-          type="text" 
-          [(ngModel)]="username"
-          name="username"
-          class="form-control w-100 login-input"
-          placeholder="أدخل اسم المستخدم"
-          autocomplete="username"
-        />
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label fw-semibold text-secondary">كلمة المرور</label>
-        <input 
-          pInputText 
-          type="password" 
-          [(ngModel)]="password"
-          name="password"
-          class="form-control w-100 login-input"
-          placeholder="أدخل كلمة المرور"
-          autocomplete="current-password"
-        />
-      </div>
-
-      <div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
-        <i class="pi pi-exclamation-triangle"></i>
-        <span>{{ errorMessage }}</span>
-      </div>
-
-      <button 
-        type="submit" 
-        class="btn btn-success w-100 py-3 fw-semibold d-flex align-items-center justify-content-center gap-2 login-btn"
-      >
-        <i class="pi pi-sign-in"></i>
-        <span>تسجيل الدخول</span>
-      </button>
-    </form>
-
-    <!-- Footer -->
-    <div class="text-center mt-4 pt-3 border-top">
-      <p class="text-muted small mb-0 d-flex align-items-center justify-content-center gap-2">
-        <i class="pi pi-info-circle"></i>
-        <span>اسم المستخدم وكلمة المرور الافتراضية: admin</span>
-      </p>
+    <div class="mb-4">
+      <label for="password" class="form-label fw-semibold text-secondary">كلمة المرور</label>
+      <p-password 
+        [(ngModel)]="password"
+        name="password"
+        [inputStyle]="{'width':'100%'}"
+        [style]="{'width': '100%'}"
+        [feedback]="false"
+        [toggleMask]="true"
+        placeholder="أدخل كلمة المرور"
+        autocomplete="current-password"
+        inputId="password"
+        size="large"
+      ></p-password>
     </div>
-  </div>
-</div>
+    
+    <!-- Fixed height container for error message -->
+    <div class="error-container mb-3">
+      <div class="alert alert-danger mb-0" *ngIf="errorMessage" role="alert">
+        <i class="pi pi-exclamation-triangle"></i> {{ errorMessage }}
+      </div>
+    </div>
+    
+    <div class="forget-pass text-end mb-3">
+      <i class="pi pi-question-circle text-success"></i> 
+      <a routerLink="/forgot-password" class="text-success text-decoration-none small">نسيت كلمة المرور؟</a>
+    </div>
+    <button 
+      pButton
+      type="submit"
+      label="تسجيل الدخول"
+      icon="pi pi-sign-in"
+      class="w-100 py-3 fw-semibold login-btn"
+    ></button>
+  </form>
+</app-auth-card>

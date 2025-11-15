@@ -1,0 +1,82 @@
+.users-container {
+  padding: 20px;
+}
+
+.permissions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  padding: 15px;
+  background: var(--background-light);
+  border-radius: 8px;
+}
+
+.permission-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    cursor: pointer;
+    margin: 0;
+    user-select: none;
+  }
+}
+
+.table-wrapper {
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background: var(--primary-green);
+    color: white;
+
+    th {
+      padding: 15px;
+      text-align: right;
+      font-weight: 600;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--border-light);
+      transition: background 0.2s;
+
+      &:hover {
+        background: var(--background-light);
+      }
+
+      td {
+        padding: 15px;
+        text-align: right;
+      }
+    }
+  }
+}
+
+.badge {
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  &.badge-success {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  &.badge-danger {
+    background: #f8d7da;
+    color: #721c24;
+  }
+}

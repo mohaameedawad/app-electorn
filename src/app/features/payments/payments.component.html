@@ -1,6 +1,5 @@
 <div class="payments-container">
   <div class="page-header">
-    <h2 class="text-success fw-bold">المدفوعات</h2>
     <button class="add-button" (click)="showAddDialog()">
       <i class="pi pi-plus mx-2"></i>
       إضافة سند قبض
@@ -15,12 +14,10 @@
   ></app-table>
 </div>
 
-<p-dialog
+<app-dialog
   [(visible)]="displayDialog"
-  [modal]="true"
-  [style]="{ width: '500px' }"
-  [header]="isEditMode ? 'تعديل سند قبض' : 'إضافة سند قبض جديد'"
-  [rtl]="true"
+  [header]="isEditMode ? 'تعديل مستخدم' : 'إضافة مستخدم جديد'"
+  [width]="'500px'"
 >
   <div class="dialog-content p-4">
     <div class="mb-4">
@@ -56,7 +53,7 @@
         [showIcon]="true"
         [appendTo]="'body'"
         inputId="paymentDate"
-        [style]="{'width': '100% !important'}"
+        [style]="{ width: '100% !important' }"
       ></p-datepicker>
     </div>
 
@@ -79,4 +76,4 @@
     </p-button>
     <p-button label="حفظ" (onClick)="savePayment()"> </p-button>
   </div>
-</p-dialog>
+</app-dialog>

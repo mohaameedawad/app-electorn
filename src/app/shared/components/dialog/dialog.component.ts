@@ -12,6 +12,7 @@ export class DialogComponent {
   @Input() visible: boolean = false;
   @Input() header: string = '';
   @Input() width: string = '500px';
+  @Input() height: string = 'auto';
   @Output() visibleChange = new EventEmitter<boolean>();
 
   onHide() {

@@ -7,6 +7,7 @@ import { DatabaseService } from '../../services/database.service';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 
 @Component({
   selector: 'app-employees',
@@ -17,7 +18,8 @@ import { ButtonModule } from 'primeng/button';
     ConfirmationDialogComponent,
     DialogModule,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    DialogComponent
   ],
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.scss'

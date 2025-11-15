@@ -1,8 +1,6 @@
 <div class="reports-container p-4">
-  <h2 class="text-success fw-bold mb-4">التقارير</h2>
-
-  <div class="row g-3">
-    <div class="col-md-4">
+  <div class="row g-3 my-3">
+    <div class="col-md-3">
       <div class="report-card" (click)="showExpensesReport()">
         <i class="pi pi-wallet report-icon"></i>
         <h4>تقرير المصروفات</h4>
@@ -10,7 +8,7 @@
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="report-card" (click)="showPaymentsReport()">
         <i class="pi pi-money-bill report-icon"></i>
         <h4>تقرير المدفوعات</h4>
@@ -18,15 +16,16 @@
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="report-card" (click)="showPurchasesReport()">
         <i class="pi pi-shopping-bag report-icon"></i>
         <h4>تقرير المشتريات</h4>
         <p>عرض جميع المشتريات خلال فترة محددة</p>
       </div>
     </div>
-
-    <div class="col-md-4">
+    </div>
+    <div class="row g-3" >
+    <div class="col-md-3">
       <div class="report-card" (click)="showProfitsReport()">
         <i class="pi pi-chart-line report-icon"></i>
         <h4>تقرير الأرباح الشهرية</h4>
@@ -34,7 +33,7 @@
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="report-card" (click)="showCustomerStatement()">
         <i class="pi pi-users report-icon"></i>
         <h4>كشف حساب عميل</h4>
@@ -42,7 +41,7 @@
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="report-card" (click)="showSupplierStatement()">
         <i class="pi pi-truck report-icon"></i>
         <h4>كشف حساب مورد</h4>
@@ -53,12 +52,10 @@
 </div>
 
 <!-- تقرير المصروفات -->
-<p-dialog
+<app-dialog
   [(visible)]="displayExpensesDialog"
-  [modal]="true"
-  [style]="{ width: '80vw' }"
+  [width]="'80vw'"
   header="تقرير المصروفات"
-  [rtl]="true"
 >
   <div class="p-4">
     <div class="row mb-3">
@@ -86,15 +83,13 @@
     </div>
     <app-table [columns]="expensesColumns" [data]="expensesData"></app-table>
   </div>
-</p-dialog>
+</app-dialog>
 
 <!-- كشف حساب عميل -->
-<p-dialog
+<app-dialog
   [(visible)]="displayCustomerDialog"
-  [modal]="true"
-  [style]="{ width: '80vw' }"
+  [width]="'80vw'"
   header="كشف حساب عميل"
-  [rtl]="true"
 >
   <div class="p-4">
     <div class="mb-3">
@@ -110,15 +105,13 @@
     </div>
     <app-table [columns]="customerStatementColumns" [data]="customerStatementData"></app-table>
   </div>
-</p-dialog>
+</app-dialog>
 
 <!-- كشف حساب مورد -->
-<p-dialog
+<app-dialog
   [(visible)]="displaySupplierDialog"
-  [modal]="true"
-  [style]="{ width: '80vw' }"
+  [width]="'80vw'"
   header="كشف حساب مورد"
-  [rtl]="true"
 >
   <div class="p-4">
     <div class="mb-3">
@@ -134,15 +127,13 @@
     </div>
     <app-table [columns]="supplierStatementColumns" [data]="supplierStatementData"></app-table>
   </div>
-</p-dialog>
+</app-dialog>
 
 <!-- تقرير المدفوعات -->
-<p-dialog
+<app-dialog
   [(visible)]="displayPaymentsDialog"
-  [modal]="true"
-  [style]="{ width: '80vw' }"
+  [width]="'80vw'"
   header="تقرير المدفوعات"
-  [rtl]="true"
 >
   <div class="p-4">
     <div class="row mb-3">
@@ -170,16 +161,14 @@
     </div>
     <app-table [columns]="paymentsColumns" [data]="paymentsData"></app-table>
   </div>
-</p-dialog>
+</app-dialog>
 
 <!-- تقرير المشتريات -->
-<p-dialog
+<app-dialog
   [(visible)]="displayPurchasesDialog"
-  [modal]="true"
-  [style]="{ width: '80vw' }"
+  [width]="'80vw'"
   header="تقرير المشتريات"
-  [rtl]="true"
->
+  >
   <div class="p-4">
     <div class="row mb-3">
       <div class="col-md-6">
@@ -206,17 +195,15 @@
     </div>
     <app-table [columns]="purchasesColumns" [data]="purchasesData"></app-table>
   </div>
-</p-dialog>
+</app-dialog>
 
 <!-- تقرير الأرباح الشهرية -->
-<p-dialog
+<app-dialog
   [(visible)]="displayProfitsDialog"
-  [modal]="true"
-  [style]="{ width: '80vw' }"
+  [width]="'80vw' "
   header="تقرير الأرباح الشهرية"
-  [rtl]="true"
 >
   <div class="p-4">
     <app-table [columns]="profitsColumns" [data]="profitsData"></app-table>
   </div>
-</p-dialog>
+</app-dialog>

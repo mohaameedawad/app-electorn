@@ -220,4 +220,30 @@ export class DatabaseService {
     if (!this.api) return null;
     return await this.api.deleteExpense(id);
   }
+
+  // المستخدمين
+  async getUsers() {
+    if (!this.api) return [];
+    try {
+      return await this.api.getUsers();
+    } catch (error) {
+      console.error('Error getting users:', error);
+      return [];
+    }
+  }
+
+  async addUser(user: any) {
+    if (!this.api) return null;
+    return await this.api.addUser(user);
+  }
+
+  async updateUser(id: number, user: any) {
+    if (!this.api) return null;
+    return await this.api.updateUser(id, user);
+  }
+
+  async deleteUser(id: number) {
+    if (!this.api) return null;
+    return await this.api.deleteUser(id);
+  }
 }

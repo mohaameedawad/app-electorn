@@ -1,0 +1,116 @@
+<div class="users-container">
+  <div class="page-header">
+    <button class="add-button" (click)="showAddDialog()">
+      <i class="pi pi-plus mx-2"></i>
+      إضافة مستخدم
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <app-table
+      [columns]="columns"
+      [data]="users"
+      (edit)="editUser($event)"
+      (delete)="deleteUser($event)"
+    ></app-table>
+  </div>
+</div>
+
+<app-dialog
+  [(visible)]="displayDialog"
+  [header]="isEditMode ? 'تعديل مستخدم' : 'إضافة مستخدم جديد'"
+  [width]="'60%'"
+>
+  <div class="row m-2 pb-4">
+    <div class="col">
+      <label class="form-label fw-semibold text-secondary">اسم المستخدم</label>
+      <input
+        pInputText
+        type="text"
+        [(ngModel)]="user.username"
+        class="form-control w-100"
+        placeholder="أدخل اسم المستخدم"
+        [disabled]="isEditMode"
+      />
+    </div>
+
+    <div class="col">
+      <label for="password" class="form-label fw-semibold text-secondary ">كلمة المرور</label>
+      <p-password 
+        [(ngModel)]="user.password"
+        name="password"
+        [inputStyle]="{'width':'100%'}"
+        [style]="{'width': '100%'}"
+        [feedback]="false"
+        [toggleMask]="true"
+        placeholder="أدخل كلمة المرور"
+        autocomplete="current-password"
+        inputId="password"
+        size="large"
+      ></p-password>
+    </div>
+  </div>
+  <div class="row m-2 pb-4">
+    <div class="col ">  
+      <label class="form-label fw-semibold text-secondary">الاسم الكامل</label>
+      <input
+        pInputText
+        type="text"
+        [(ngModel)]="user.fullName"
+        class="form-control w-100"
+        placeholder="أدخل الاسم الكامل"
+      />
+    </div>
+    <div class="col">
+      <label class="form-label fw-semibold text-secondary">الصلاحية</label>
+      <p-select
+        [(ngModel)]="user.role"
+        [options]="roles"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="اختر الصلاحية"
+        styleClass="w-100"
+        (onChange)="onRoleChange()"
+      ></p-select>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-secondary d-block mb-3"
+        >الصفحات المسموحة</label
+      >
+      <div class="permissions-grid">
+        <div *ngFor="let page of availablePages" class="permission-item">
+          <p-checkbox
+            [value]="page.name"
+            [(ngModel)]="user.permissions"
+            [inputId]="page.name"
+          ></p-checkbox>
+          <label [for]="page.name" class="me-2">{{ page.label }}</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col mb-4">
+      <label class="form-label fw-semibold text-secondary">الحالة</label>
+      <p-select
+        [(ngModel)]="user.isActive"
+        [options]="statusOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="اختر الحالة"
+        styleClass="w-100"
+      ></p-select>
+    </div>
+  </div>
+
+  <div dialog-footer class="dialog-footer">
+    <p-button
+      label="إلغاء"
+      severity="secondary"
+      (onClick)="hideDialog()"
+      [text]="true"
+    >
+    </p-button>
+    <p-button label="حفظ" icon="pi pi-save" (onClick)="saveUser()"> </p-button>
+  </div>
+</app-dialog>

@@ -1,6 +1,5 @@
 <div class="expenses-container">
   <div class="page-header">
-    <h2 class="text-success fw-bold">المصروفات</h2>
     <button class="add-button" (click)="showAddDialog()">
       <i class="pi pi-plus mx-2"></i>
       إضافة مصروف
@@ -15,12 +14,10 @@
   ></app-table>
 </div>
 
-<p-dialog
+<app-dialog
   [(visible)]="displayDialog"
-  [modal]="true"
-  [style]="{ width: '500px' }"
+  [width]="'500px'"
   [header]="isEditMode ? 'تعديل مصروف' : 'إضافة مصروف جديد'"
-  [rtl]="true"
 >
   <div class="dialog-content p-4">
     <div class="mb-4">
@@ -55,7 +52,7 @@
         dateFormat="yy-mm-dd"
         [showIcon]="true"
         [appendTo]="'body'"
-        [style]="{'width': '100% !important'}"
+        [style]="{ width: '100% !important' }"
         inputId="expenseDate"
       ></p-datepicker>
     </div>
@@ -79,4 +76,4 @@
     </p-button>
     <p-button label="حفظ" (onClick)="saveExpense()"> </p-button>
   </div>
-</p-dialog>
+</app-dialog>

@@ -1,17 +1,28 @@
 <header class="app-header">
   <div class="container-fluid">
     <div class="row align-items-center">
-      <div class="col-6">
-        <h4 class="m-0 text-success fw-bold"> مرحبا Luvi</h4>
-      </div>
-      <div class="col-6 text-end">
-        <div class="user-info">
-          <button class="btn btn-outline-success btn-sm mx-2 logout-btn" (click)="logout()">
-            <i class="pi pi-sign-out mx-2"></i>
-            تسجيل الخروج
-          </button>
+      <div class="col-12 text-end d-flex justify-content-between align-items-center">
+        <div class="header-title fw-bold fs-5 text-success">
+          {{ pageTitle }}
         </div>
+<div class="user-dropdown">
+  <button 
+    pButton
+    type="button"
+    class="user-btn border-0 bg-transparent d-flex align-items-center px-2"
+    (click)="menu.toggle($event)">
+    <span>{{ 'مرحبا ' + userName }}</span>
+    <i class="pi pi-angle-down ms-2"></i>
+  </button>
+
+  <p-tieredMenu 
+    #menu 
+    [model]="items" 
+    [popup]="true">
+  </p-tieredMenu>
+
       </div>
     </div>
-  </div>
+    </div>
+    </div>
 </header>

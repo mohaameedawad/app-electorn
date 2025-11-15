@@ -138,7 +138,7 @@
     overflow: hidden;
   }
   .p-datatable-thead > tr > th {
-    background-color: #0b6e3a;
+    background-color: var(--primary-green);
     color: white;
     text-align: center;
     font-weight: 600;

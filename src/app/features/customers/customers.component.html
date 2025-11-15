@@ -1,5 +1,4 @@
 <div class="page-header">
-  <h2 class="text-success">العملاء</h2>
   <button class="add-button" (click)="showDialog()">+ إضافة عميل</button>
 </div>
 <app-table [columns]="columns" [data]="data" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>

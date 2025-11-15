@@ -10,21 +10,27 @@ import { EmployeesComponent } from './features/employees/employees.component';
 import { ReportsComponent } from './features/reports/reports.component';
 import { PaymentsComponent } from './features/payments/payments.component';
 import { ExpensesComponent } from './features/expenses/expenses.component';
+import { UsersComponent } from './features/users/users.component';
+import { ForgotPasswordComponent } from './features/forgot-password/forgot-password.component';
+import { ChangePasswordComponent } from './features/change-password/change-password.component';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  { path: 'sales', component: SalesComponent, canActivate: [AuthGuard] },
-  { path: 'purchases', component: PurchasesComponent, canActivate: [AuthGuard] },
-  { path: 'customers', component: CustomersComponent, canActivate: [AuthGuard] },
-  { path: 'suppliers', component: SuppliersComponent, canActivate: [AuthGuard] },
-  { path: 'products', component: ProductsComponent, canActivate: [AuthGuard] },
-  { path: 'employees', component: EmployeesComponent, canActivate: [AuthGuard] },
-  { path: 'payments', component: PaymentsComponent, canActivate: [AuthGuard] },
-  { path: 'expenses', component: ExpensesComponent, canActivate: [AuthGuard] },
-  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { title: 'لوحة التحكم' } },
+  { path: 'sales', component: SalesComponent, canActivate: [AuthGuard], data: { title: 'المبيعات' } },
+  { path: 'purchases', component: PurchasesComponent, canActivate: [AuthGuard], data: { title: 'المشتريات' } },
+  { path: 'customers', component: CustomersComponent, canActivate: [AuthGuard], data: { title: 'العملاء' } },
+  { path: 'suppliers', component: SuppliersComponent, canActivate: [AuthGuard], data: { title: 'الموردين' } },
+  { path: 'products', component: ProductsComponent, canActivate: [AuthGuard], data: { title: 'المنتجات' } },
+  { path: 'employees', component: EmployeesComponent, canActivate: [AuthGuard], data: { title: 'الموظفين' } },
+  { path: 'payments', component: PaymentsComponent, canActivate: [AuthGuard], data: { title: 'الدفعات' } },
+  { path: 'expenses', component: ExpensesComponent, canActivate: [AuthGuard], data: { title: 'المصروفات' } },
+  { path: 'users', component: UsersComponent, canActivate: [AuthGuard], data: { title: 'إدارة المستخدمين' } },
+  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard], data: { title: 'التقارير' } },
   { path: '**', redirectTo: 'login' } // Redirect any unknown route to login
 
   // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

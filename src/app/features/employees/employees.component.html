@@ -1,5 +1,4 @@
 <div class="page-header">
-  <h2 class="text-success">الموظفين</h2>
   <button class="add-button" (click)="showDialog()">+ إضافة موظف</button>
 </div>
 <app-table 
@@ -11,12 +10,10 @@
 
 <app-confirmation-dialog></app-confirmation-dialog>
 
-<p-dialog 
+<app-dialog 
   [(visible)]="visible" 
-  [modal]="true" 
-  [style]="{width: '500px'}"
+  [width]="'500px'"
   [draggable]="false"
-  [resizable]="false"
   (onHide)="onDialogHide()"
   [header]="editingEmployeeId ? 'تعديل موظف' : 'إضافة موظف'">
   
@@ -66,4 +63,4 @@
         (onClick)="saveEmployee()">
       </p-button>
     </div>
-</p-dialog>
+</app-dialog>

@@ -1,28 +1,17 @@
-::ng-deep {
-  .confirmation-pop-up {
-    .confirmation-content {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 1.5rem;
+.confirmation-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
 
-      i {
-        flex-shrink: 0;
-      }
+  i {
+    flex-shrink: 0;
+  }
 
-      p {
-        margin: 0;
-        font-size: 1rem;
-        line-height: 1.5;
-        color: #334155;
-      }
-    }
-
-    .p-dialog-header {
-      border-bottom: 1px solid #e5e7eb;
-      padding: 1rem 1.5rem;
-      font-weight: 600;
-    }
-
+  p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #334155;
   }
 }

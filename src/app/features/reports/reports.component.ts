@@ -7,13 +7,23 @@ import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ButtonModule } from 'primeng/button';
 import { DatabaseService } from '../../services/database.service';
+import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableComponent, DialogModule, SelectModule, DatePickerModule, ButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TableComponent,
+    DialogModule,
+    SelectModule,
+    DatePickerModule,
+    ButtonModule,
+    DialogComponent
+  ],
   templateUrl: './reports.component.html',
-  styleUrl: './reports.component.scss'
+  styleUrl: './reports.component.scss',
 })
 export class ReportsComponent implements OnInit {
   displayExpensesDialog = false;
@@ -46,7 +56,7 @@ export class ReportsComponent implements OnInit {
     { field: 'voucherNumber', header: 'رقم السند' },
     { field: 'expenseType', header: 'نوع المصروف' },
     { field: 'date', header: 'التاريخ', type: 'date' },
-    { field: 'amount', header: 'المبلغ' }
+    { field: 'amount', header: 'المبلغ' },
   ];
 
   customerStatementColumns = [
@@ -54,7 +64,7 @@ export class ReportsComponent implements OnInit {
     { field: 'type', header: 'النوع' },
     { field: 'invoiceNumber', header: 'رقم الفاتورة' },
     { field: 'amount', header: 'المبلغ' },
-    { field: 'balance', header: 'الرصيد' }
+    { field: 'balance', header: 'الرصيد' },
   ];
 
   supplierStatementColumns = [
@@ -62,21 +72,21 @@ export class ReportsComponent implements OnInit {
     { field: 'type', header: 'النوع' },
     { field: 'invoiceNumber', header: 'رقم الفاتورة' },
     { field: 'amount', header: 'المبلغ' },
-    { field: 'balance', header: 'الرصيد' }
+    { field: 'balance', header: 'الرصيد' },
   ];
 
   paymentsColumns = [
     { field: 'receiptNumber', header: 'رقم سند القبض' },
     { field: 'customerName', header: 'اسم العميل' },
     { field: 'date', header: 'التاريخ', type: 'date' },
-    { field: 'amount', header: 'المبلغ' }
+    { field: 'amount', header: 'المبلغ' },
   ];
 
   purchasesColumns = [
     { field: 'invoiceNumber', header: 'رقم الفاتورة' },
     { field: 'supplierName', header: 'اسم المورد' },
     { field: 'date', header: 'التاريخ', type: 'date' },
-    { field: 'totalAmount', header: 'إجمالي المبلغ' }
+    { field: 'totalAmount', header: 'إجمالي المبلغ' },
   ];
 
   profitsColumns = [
@@ -84,7 +94,7 @@ export class ReportsComponent implements OnInit {
     { field: 'totalSales', header: 'إجمالي المبيعات' },
     { field: 'totalPurchases', header: 'إجمالي المشتريات' },
     { field: 'totalExpenses', header: 'إجمالي المصروفات' },
-    { field: 'profit', header: 'صافي الربح' }
+    { field: 'profit', header: 'صافي الربح' },
   ];
 
   constructor(private dbService: DatabaseService) {}
@@ -124,7 +134,7 @@ export class ReportsComponent implements OnInit {
   }
 
   generateExpensesReport() {
-    const filtered = this.expenses.filter(expense => {
+    const filtered = this.expenses.filter((expense) => {
       const expenseDate = new Date(expense.date);
       return expenseDate >= this.dateFrom && expenseDate <= this.dateTo;
     });
@@ -138,8 +148,12 @@ export class ReportsComponent implements OnInit {
       const sales = await this.dbService.getSales();
       const payments = await this.dbService.getPayments();
 
-      const customerSales = sales.filter((s: any) => s.customerName === this.selectedCustomer.name);
-      const customerPayments = payments.filter((p: any) => p.customerName === this.selectedCustomer.name);
+      const customerSales = sales.filter(
+        (s: any) => s.customerName === this.selectedCustomer.name
+      );
+      const customerPayments = payments.filter(
+        (p: any) => p.customerName === this.selectedCustomer.name
+      );
 
       const transactions: any[] = [];
 
@@ -149,7 +163,7 @@ export class ReportsComponent implements OnInit {
           type: 'فاتورة بيع',
           invoiceNumber: sale.invoiceNumber,
           amount: sale.totalAmount,
-          isDebit: true
+          isDebit: true,
         });
       });
 
@@ -159,21 +173,21 @@ export class ReportsComponent implements OnInit {
           type: 'سند قبض',
           invoiceNumber: payment.receiptNumber,
           amount: payment.amount,
-          isDebit: false
+          isDebit: false,
         });
       });
 
       transactions.sort((a, b) => a.date.getTime() - b.date.getTime());
 
       let balance = 0;
-      this.customerStatementData = transactions.map(t => {
+      this.customerStatementData = transactions.map((t) => {
         balance += t.isDebit ? t.amount : -t.amount;
         return {
           date: t.date,
           type: t.type,
           invoiceNumber: t.invoiceNumber,
           amount: t.amount,
-          balance: balance
+          balance: balance,
         };
       });
     } catch (error) {
@@ -187,31 +201,33 @@ export class ReportsComponent implements OnInit {
     try {
       const purchases = await this.dbService.getPurchases();
 
-      const supplierPurchases = purchases.filter((p: any) => p.supplierName === this.selectedSupplier.name);
+      const supplierPurchases = purchases.filter(
+        (p: any) => p.supplierName === this.selectedSupplier.name
+      );
 
       const transactions: any[] = [];
 
-      supplierPurchases.forEach((purchase:any) => {
+      supplierPurchases.forEach((purchase: any) => {
         transactions.push({
           date: new Date(purchase.date),
           type: 'فاتورة شراء',
           invoiceNumber: purchase.invoiceNumber,
           amount: purchase.totalAmount,
-          isDebit: true
+          isDebit: true,
         });
       });
 
       transactions.sort((a, b) => a.date.getTime() - b.date.getTime());
 
       let balance = 0;
-      this.supplierStatementData = transactions.map(t => {
+      this.supplierStatementData = transactions.map((t) => {
         balance += t.isDebit ? t.amount : -t.amount;
         return {
           date: t.date,
           type: t.type,
           invoiceNumber: t.invoiceNumber,
           amount: t.amount,
-          balance: balance
+          balance: balance,
         };
       });
     } catch (error) {
@@ -256,54 +272,63 @@ export class ReportsComponent implements OnInit {
     // Process sales
     this.sales.forEach((sale: any) => {
       const date = new Date(sale.date);
-      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      
+      const monthKey = `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+      ).padStart(2, '0')}`;
+
       if (!monthsData.has(monthKey)) {
         monthsData.set(monthKey, {
-          month: this.getMonthName(date.getMonth() + 1) + ' ' + date.getFullYear(),
+          month:
+            this.getMonthName(date.getMonth() + 1) + ' ' + date.getFullYear(),
           totalSales: 0,
           totalPurchases: 0,
           totalExpenses: 0,
-          profit: 0
+          profit: 0,
         });
       }
-      
+
       monthsData.get(monthKey).totalSales += sale.totalAmount || 0;
     });
 
     // Process purchases
     this.purchases.forEach((purchase: any) => {
       const date = new Date(purchase.date);
-      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      
+      const monthKey = `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+      ).padStart(2, '0')}`;
+
       if (!monthsData.has(monthKey)) {
         monthsData.set(monthKey, {
-          month: this.getMonthName(date.getMonth() + 1) + ' ' + date.getFullYear(),
+          month:
+            this.getMonthName(date.getMonth() + 1) + ' ' + date.getFullYear(),
           totalSales: 0,
           totalPurchases: 0,
           totalExpenses: 0,
-          profit: 0
+          profit: 0,
         });
       }
-      
+
       monthsData.get(monthKey).totalPurchases += purchase.totalAmount || 0;
     });
 
     // Process expenses
     this.expenses.forEach((expense: any) => {
       const date = new Date(expense.date);
-      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      
+      const monthKey = `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+      ).padStart(2, '0')}`;
+
       if (!monthsData.has(monthKey)) {
         monthsData.set(monthKey, {
-          month: this.getMonthName(date.getMonth() + 1) + ' ' + date.getFullYear(),
+          month:
+            this.getMonthName(date.getMonth() + 1) + ' ' + date.getFullYear(),
           totalSales: 0,
           totalPurchases: 0,
           totalExpenses: 0,
-          profit: 0
+          profit: 0,
         });
       }
-      
+
       monthsData.get(monthKey).totalExpenses += expense.amount || 0;
     });
 
@@ -319,8 +344,18 @@ export class ReportsComponent implements OnInit {
 
   getMonthName(month: number): string {
     const months = [
-      'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
-      'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+      'يناير',
+      'فبراير',
+      'مارس',
+      'أبريل',
+      'مايو',
+      'يونيو',
+      'يوليو',
+      'أغسطس',
+      'سبتمبر',
+      'أكتوبر',
+      'نوفمبر',
+      'ديسمبر',
     ];
     return months[month - 1];
   }

@@ -49,4 +49,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   addExpense: (expense) => ipcRenderer.invoke('db:addExpense', expense),
   updateExpense: (id, expense) => ipcRenderer.invoke('db:updateExpense', id, expense),
   deleteExpense: (id) => ipcRenderer.invoke('db:deleteExpense', id),
+
+  // المستخدمين
+  getUsers: () => ipcRenderer.invoke('db:getUsers'),
+  addUser: (user) => ipcRenderer.invoke('db:addUser', user),
+  updateUser: (id, user) => ipcRenderer.invoke('db:updateUser', id, user),
+  deleteUser: (id) => ipcRenderer.invoke('db:deleteUser', id),
 });

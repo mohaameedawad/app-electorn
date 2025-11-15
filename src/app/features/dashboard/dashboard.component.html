@@ -1,6 +1,4 @@
-<div class="dashboard">
-  <h2 class="text-success fw-bold">لوحة التحكم</h2>
-  
+<div class="dashboard">  
   <div class="cards-container">
     <div class="card" *ngFor="let card of cards" (click)="navigateTo(card.route)">
       <i class="pi {{ card.icon }} card-icon"></i>

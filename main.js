@@ -166,6 +166,23 @@ function setupIPCHandlers() {
   ipcMain.handle('db:deleteExpense', async (event, id) => {
     return db.deleteExpense(id);
   });
+
+  // المستخدمين
+  ipcMain.handle('db:getUsers', async () => {
+    return db.getUsers();
+  });
+
+  ipcMain.handle('db:addUser', async (event, user) => {
+    return db.addUser(user);
+  });
+
+  ipcMain.handle('db:updateUser', async (event, id, user) => {
+    return db.updateUser(id, user);
+  });
+
+  ipcMain.handle('db:deleteUser', async (event, id) => {
+    return db.deleteUser(id);
+  });
 }
 
 

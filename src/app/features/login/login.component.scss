@@ -1,86 +1,10 @@
-.login-container {
-  background-image: url('../../../assets/images/backgound-image.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  position: relative;
+// Fixed height container for error messages to prevent layout shift
+.error-container {
+  min-height: 60px;
+  display: flex;
+  align-items: flex-start;
   
-  // Add overlay for better text readability
-  // &::before {
-  //   content: '';
-  //   position: absolute;
-  //   top: 0;
-  //   left: 0;
-  //   right: 0;
-  //   bottom: 0;
-  //   background: rgba(0, 0, 0, 0.4);
-  //   z-index: 0;
-  // }
-}
-
-.login-card {
-  max-width: 450px;
-  width: 100%;
-  animation: slideUp 0.4s ease-out;
-  position: relative;
-  z-index: 1;
-  background: white;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  .alert {
+    width: 100%;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.login-input {
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  
-  &:focus {
-    border-color: var(--primary-green);
-    box-shadow: 0 0 0 0.2rem rgba(11, 110, 58, 0.15);
-  }
-}
-
-.login-btn {
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(11, 110, 58, 0.3);
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(11, 110, 58, 0.4);
-  }
-  
-  &:active {
-    transform: translateY(0);
-  }
-  
-  i {
-    font-size: 1rem !important;
-    line-height: 1;
-    width: 16px;
-    height: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-// Fix icon sizes to prevent shifting
-.alert i,
-.text-muted i {
-  font-size: 1rem !important;
-  line-height: 1;
-  width: 16px;
-  height: 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
 }

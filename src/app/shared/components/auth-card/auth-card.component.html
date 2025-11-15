@@ -1,0 +1,23 @@
+<div class="login-container d-flex align-items-center justify-content-center min-vh-100">
+<!-- <div class=""> -->
+  <div class="login-card shadow rounded-3 p-5 border border-success">
+    <div>
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <div class="logo-circle mx-auto mb-4">
+        <i class="pi pi-box fs-1 text-white"></i>
+      </div>
+      <h2 class="text-success fw-bold mb-2">برنامج إدارة  المبيعات</h2>
+      <p class="text-muted"><ng-content select="[auth-title]"></ng-content></p>
+    </div>
+    <!-- Form or content -->
+    <ng-content></ng-content>
+    <!-- Footer info inside card, after form -->
+    <div class="text-center mt-4 pt-3 border-top">
+      <p class="text-muted small mb-0 d-flex align-items-center justify-content-center gap-2">
+        <i class="pi pi-info-circle prefix-icon"></i>
+        <span>اسم المستخدم وكلمة المرور الافتراضية: admin</span>
+      </p>
+    </div>
+  </div>
+</div>

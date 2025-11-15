@@ -10,6 +10,7 @@ import { DatabaseService } from '../../services/database.service';
 import { TableComponent } from '../../shared/components/table/table.component';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
+import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 
 
 interface Expense {
@@ -33,7 +34,8 @@ interface Expense {
     DatePickerModule,
     TableComponent,
     ButtonModule,
-    CalendarModule
+    CalendarModule,
+    DialogComponent
   ],
   templateUrl: './expenses.component.html',
   styleUrl: './expenses.component.scss'

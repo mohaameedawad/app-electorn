@@ -27,7 +27,8 @@ class DatabaseHandler {
       employees: [],
       purchases: [],
       payments: [],
-      expenses: []
+      expenses: [],
+      users: []
     };
   }
 
@@ -302,6 +303,47 @@ class DatabaseHandler {
 
   deleteExpense(id) {
     this.data.expenses = this.data.expenses.filter(e => e.id !== id);
+    this.saveData();
+  }
+
+  // Users methods
+  getUsers() {
+    if (!this.data.users) {
+      this.data.users = [];
+    }
+    return this.data.users;
+  }
+
+  addUser(user) {
+    if (!this.data.users) {
+      this.data.users = [];
+    }
+    
+    const newUser = {
+      id: this.data.users.length > 0 ? Math.max(...this.data.users.map(u => u.id)) + 1 : 1,
+      ...user
+    };
+    this.data.users.push(newUser);
+    this.saveData();
+    return newUser;
+  }
+
+  updateUser(id, user) {
+    const index = this.data.users.findIndex(u => u.id === id);
+    if (index !== -1) {
+      // If password is empty, keep the old password
+      if (!user.password) {
+        delete user.password;
+      }
+      this.data.users[index] = { ...this.data.users[index], ...user };
+      this.saveData();
+      return this.data.users[index];
+    }
+    return null;
+  }
+
+  deleteUser(id) {
+    this.data.users = this.data.users.filter(u => u.id !== id);
     this.saveData();
   }
 

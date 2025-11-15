@@ -1,22 +1,5 @@
-::ng-deep .custom-dialog {
-  .p-dialog {
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    overflow: hidden;
-  }
-
-  .p-dialog-header {
-    border-bottom: 1px solid #e5e7eb;
-    padding: 1.5rem;
-    font-weight: 600;
-  }
-
-  // .p-dialog-content {
-  //   padding: 1.5rem;
-  // }
-
-  // .p-dialog-footer {
-  //   padding: 1rem 1.5rem;
-  //   border-top: 1px solid #e5e7eb;
-  // }
+.custom-dialog .p-dialog {
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
 }
