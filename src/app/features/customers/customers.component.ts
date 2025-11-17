@@ -24,12 +24,13 @@ import { SelectModule } from 'primeng/select';
     InputTextModule,
     ButtonModule,
     InputNumberModule,
-    SelectModule
-  ]
+    SelectModule,
+  ],
 })
 export class CustomersComponent implements OnInit {
-  @ViewChild(ConfirmationDialogComponent) confirmDialog!: ConfirmationDialogComponent;
-  
+  @ViewChild(ConfirmationDialogComponent)
+  confirmDialog!: ConfirmationDialogComponent;
+
   columns: any[] = [];
   data: any[] = [];
   visible: boolean = false;
@@ -38,17 +39,19 @@ export class CustomersComponent implements OnInit {
 
   balanceTypes = [
     { label: 'له (دائن)', value: 'credit' },
-    { label: 'عليه (مدين)', value: 'debit' }
+    { label: 'عليه (مدين)', value: 'debit' },
   ];
 
   newCustomer = {
     name: '',
     phone: '',
     balanceAmount: 0,
-    balanceType: 'debit'
+    balanceType: 'debit',
   };
 
-  constructor(private dbService: DatabaseService) {}
+  constructor(
+    private dbService: DatabaseService,
+  ) {}
 
   async ngOnInit() {
     this.columns = [
@@ -57,9 +60,14 @@ export class CustomersComponent implements OnInit {
       { header: 'التليفون', field: 'phone' },
       { header: 'له (دائن)', field: 'credit' },
       { header: 'عليه (مدين)', field: 'debit' },
-      { header: 'إجراءات', field: 'actions', type: 'actions', actions: ['edit', 'delete'] }
+      {
+        header: 'إجراءات',
+        field: 'actions',
+        type: 'actions',
+        actions: ['edit', 'delete'],
+      },
     ];
-    
+
     await this.loadCustomers();
   }
 
@@ -80,12 +88,16 @@ export class CustomersComponent implements OnInit {
     // Determine balance type and amount from existing data
     const hasCredit = customer.credit && customer.credit > 0;
     const hasDebit = customer.debit && customer.debit > 0;
-    
+
     this.newCustomer = {
       name: customer.name || '',
       phone: customer.phone || '',
-      balanceAmount: hasCredit ? customer.credit : (hasDebit ? customer.debit : 0),
-      balanceType: hasCredit ? 'credit' : 'debit'
+      balanceAmount: hasCredit
+        ? customer.credit
+        : hasDebit
+        ? customer.debit
+        : 0,
+      balanceType: hasCredit ? 'credit' : 'debit',
     };
     this.editingCustomerId = customer.id;
     this.visible = true;
@@ -104,7 +116,7 @@ export class CustomersComponent implements OnInit {
         } catch (error) {
           console.error('Error deleting customer:', error);
         }
-      }
+      },
     });
   }
 
@@ -116,7 +128,7 @@ export class CustomersComponent implements OnInit {
           header: 'تنبيه',
           acceptLabel: 'إلغاء',
           rejectLabel: '',
-          showReject: false
+          showReject: false,
         });
         return;
       }
@@ -132,12 +144,21 @@ export class CustomersComponent implements OnInit {
       const customerData = {
         name: this.newCustomer.name,
         phone: this.newCustomer.phone,
-        debit: this.newCustomer.balanceType === 'debit' ? this.newCustomer.balanceAmount : 0,
-        credit: this.newCustomer.balanceType === 'credit' ? this.newCustomer.balanceAmount : 0
+        debit:
+          this.newCustomer.balanceType === 'debit'
+            ? this.newCustomer.balanceAmount
+            : 0,
+        credit:
+          this.newCustomer.balanceType === 'credit'
+            ? this.newCustomer.balanceAmount
+            : 0,
       };
 
       if (this.editingCustomerId) {
-        await this.dbService.updateCustomer(this.editingCustomerId, customerData);
+        await this.dbService.updateCustomer(
+          this.editingCustomerId,
+          customerData
+        );
       } else {
         await this.dbService.addCustomer(customerData);
       }
@@ -171,7 +192,7 @@ export class CustomersComponent implements OnInit {
       name: '',
       phone: '',
       balanceAmount: 0,
-      balanceType: 'debit'
+      balanceType: 'debit',
     };
     this.editingCustomerId = null;
   }

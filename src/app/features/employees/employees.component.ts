@@ -19,30 +19,36 @@ import { DialogComponent } from '../../shared/components/dialog/dialog.component
     DialogModule,
     InputTextModule,
     ButtonModule,
-    DialogComponent
+    DialogComponent,
   ],
   templateUrl: './employees.component.html',
-  styleUrl: './employees.component.scss'
+  styleUrl: './employees.component.scss',
 })
 export class EmployeesComponent implements OnInit {
-  @ViewChild(ConfirmationDialogComponent) confirmDialog!: ConfirmationDialogComponent;
-  
+  @ViewChild(ConfirmationDialogComponent)
+  confirmDialog!: ConfirmationDialogComponent;
+
   columns = [
     { header: 'الاسم', field: 'name' },
     { header: 'رقم الهاتف', field: 'phone' },
     { header: 'الوظيفة', field: 'position' },
-    { header: 'إجراءات', field: 'actions', type: 'actions', actions: ['edit', 'delete'] }
+    {
+      header: 'إجراءات',
+      field: 'actions',
+      type: 'actions',
+      actions: ['edit', 'delete'],
+    },
   ];
 
   data: any[] = [];
   visible: boolean = false;
   editingEmployeeId: number | null = null;
   phoneError: string = '';
-  
+
   newEmployee = {
     name: '',
     phone: '',
-    position: ''
+    position: '',
   };
 
   constructor(private dbService: DatabaseService) {}
@@ -64,7 +70,7 @@ export class EmployeesComponent implements OnInit {
     this.newEmployee = {
       name: employee.name || '',
       phone: employee.phone || '',
-      position: employee.position || ''
+      position: employee.position || '',
     };
     this.editingEmployeeId = employee.id;
     this.visible = true;
@@ -83,7 +89,7 @@ export class EmployeesComponent implements OnInit {
         } catch (error) {
           console.error('Error deleting employee:', error);
         }
-      }
+      },
     });
   }
 
@@ -94,7 +100,7 @@ export class EmployeesComponent implements OnInit {
           message: 'الرجاء إدخال اسم الموظف',
           header: 'تنبيه',
           acceptLabel: 'إلغاء',
-          showReject: false
+          showReject: false,
         });
         return;
       }
@@ -106,7 +112,10 @@ export class EmployeesComponent implements OnInit {
       this.phoneError = '';
 
       if (this.editingEmployeeId) {
-        await this.dbService.updateEmployee(this.editingEmployeeId, this.newEmployee);
+        await this.dbService.updateEmployee(
+          this.editingEmployeeId,
+          this.newEmployee
+        );
       } else {
         await this.dbService.addEmployee(this.newEmployee);
       }
@@ -137,7 +146,7 @@ export class EmployeesComponent implements OnInit {
     this.newEmployee = {
       name: '',
       phone: '',
-      position: ''
+      position: '',
     };
     this.editingEmployeeId = null;
   }

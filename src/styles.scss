@@ -112,6 +112,7 @@ body {
   color: #dc2626;
   font-size: 0.875rem;
   margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
@@ -152,6 +153,9 @@ body {
     color: #222;
     text-align: center;
     border-bottom: 1px solid #eee;
+    td {
+      text-align: center;
+    }
   }
 
   .p-datatable-tbody > tr:nth-child(even) {

@@ -8,7 +8,6 @@
   (delete)="onDelete($event)"
   (preview)="onPreview($event)"
 ></app-table>
-
 <app-confirmation-dialog></app-confirmation-dialog>
 
 <app-dialog
@@ -91,34 +90,42 @@
                 (onChange)="onProductChange()"
                 [appendTo]="'body'"
                 [style]="{ width: '100%' }"
-                [class.error-input]="showValidationErrors && !currentItem.product_id"
+                [class.error-input]="
+                  showValidationErrors && !currentItem.product_id
+                "
               >
               </p-select>
               <small class="error-message">
-                <span *ngIf="showValidationErrors && !currentItem.product_id">هذا الحقل مطلوب</span>
+                <span *ngIf="showValidationErrors && !currentItem.product_id"
+                  >هذا الحقل مطلوب</span
+                >
               </small>
             </div>
           </div>
 
           <div class="col-md-2 col-6 mx-2">
-            <div class="input-wrapper ">
+            <div class="input-wrapper">
               <label class="mb-2">الكمية</label>
               <p-inputnumber
                 [(ngModel)]="currentItem.quantity"
                 [showButtons]="false"
                 (ngModelChange)="calculateItemTotal()"
                 [style]="{ width: '100%' }"
-                [class.error-input]="showValidationErrors && !currentItem.quantity"
+                [class.error-input]="
+                  showValidationErrors && !currentItem.quantity
+                "
               >
               </p-inputnumber>
               <small class="error-message">
-                <span *ngIf="showValidationErrors && !currentItem.quantity">هذا الحقل مطلوب</span>
+                <span *ngIf="showValidationErrors && !currentItem.quantity"
+                  >هذا الحقل مطلوب</span
+                >
               </small>
             </div>
           </div>
 
           <div class="col-md-2 col-6 mx-2">
-            <div class="input-wrapper ">
+            <div class="input-wrapper">
               <label class="mb-2">السعر</label>
               <p-inputnumber
                 [(ngModel)]="currentItem.price"
@@ -129,14 +136,16 @@
               >
               </p-inputnumber>
               <small class="error-message">
-                <span *ngIf="showValidationErrors && !currentItem.price">هذا الحقل مطلوب</span>
+                <span *ngIf="showValidationErrors && !currentItem.price"
+                  >هذا الحقل مطلوب</span
+                >
               </small>
             </div>
           </div>
 
           <div class="col-md-2 col-12">
             <div class="input-wrapper">
-              <label class="mb-2" style="visibility: hidden;">زر</label>
+              <label class="mb-2" style="visibility: hidden">زر</label>
               <button class="add-button w-100 mx-3" (click)="addItem()">
                 إضافة منتج
               </button>
@@ -250,22 +259,19 @@
           <label class="mb-2 col">الإجمالي (بعد الخصم): </label>
           <span class="mx-2">{{ newSale.total }}</span>
         </div>
-
       </div>
     </div>
   </div>
 
   <div dialog-footer class="dialog-footer">
-    <p-button 
-      label="إلغاء" 
-      severity="secondary" 
+    <p-button
+      label="إلغاء"
+      severity="secondary"
       (onClick)="closeDialog()"
-      [text]="true">
+      [text]="true"
+    >
     </p-button>
-    <p-button 
-      label="حفظ"
-      (onClick)="saveSale()">
-    </p-button>
+    <p-button label="حفظ" (onClick)="saveSale()"> </p-button>
   </div>
 </app-dialog>
 
@@ -291,7 +297,9 @@
       <div class="info-row">
         <div class="info-item">
           <span class="label">العميل:</span>
-          <span class="value">{{ getCustomerName(previewSale.customer_id) }}</span>
+          <span class="value">{{
+            getCustomerName(previewSale.customer_id)
+          }}</span>
         </div>
         <div class="info-item">
           <span class="label">رقم الفاتورة:</span>
@@ -301,7 +309,9 @@
       <div class="info-row">
         <div class="info-item">
           <span class="label">التاريخ:</span>
-          <span class="value">{{ formatPreviewDate(previewSale.sale_date) }}</span>
+          <span class="value">{{
+            formatPreviewDate(previewSale.sale_date)
+          }}</span>
         </div>
       </div>
     </div>
@@ -344,16 +354,14 @@
   </div>
 
   <div dialog-footer class="dialog-footer">
-    <p-button 
-      label="إغلاق" 
-      severity="secondary" 
+    <p-button
+      label="إغلاق"
+      severity="secondary"
       (onClick)="closePreview()"
-      [text]="true">
+      [text]="true"
+    >
     </p-button>
-    <p-button 
-      label="طباعة"
-      icon="pi pi-print"
-      (onClick)="printPreview()">
+    <p-button label="طباعة" icon="pi pi-print" (onClick)="printPreview()">
     </p-button>
   </div>
 </app-dialog>

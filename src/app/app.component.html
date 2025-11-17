@@ -1,6 +1,6 @@
 <div
   *ngIf="showLayout"
-  class="d-flex vh-100"
+  class="d-flex vh-100 p-3"
   dir="rtl"
   style="font-family: 'Cairo', sans-serif;"
 >
@@ -30,7 +30,6 @@
 
   <div class="d-flex flex-column flex-fill overflow-hidden">
     <app-header></app-header>
-    
     <main class="flex-fill overflow-auto main-content">
       <router-outlet></router-outlet>
     </main>

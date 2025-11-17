@@ -18,6 +18,7 @@ import { ButtonModule } from 'primeng/button';
 export class TableComponent implements OnInit {
   @Input() columns!: any[]
   @Input() data!: any[];
+  @Input() showFilter: boolean = true;
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
   @Output() preview = new EventEmitter<any>();

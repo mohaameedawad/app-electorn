@@ -2,6 +2,7 @@
   <button class="add-button" (click)="showDialog()">+ إضافة عميل</button>
 </div>
 <app-table [columns]="columns" [data]="data" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+<app-confirmation-dialog></app-confirmation-dialog>
 
 <p-dialog 
   [(visible)]="visible" 
@@ -76,5 +77,4 @@
     </div>
 </p-dialog>
 
-<app-confirmation-dialog></app-confirmation-dialog>
     

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -11,6 +11,7 @@ import { TableComponent } from '../../shared/components/table/table.component';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogComponent } from '../../shared/components/dialog/dialog.component';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 
 interface Expense {
@@ -35,12 +36,16 @@ interface Expense {
     TableComponent,
     ButtonModule,
     CalendarModule,
-    DialogComponent
+    DialogComponent,
+    ConfirmationDialogComponent
   ],
   templateUrl: './expenses.component.html',
   styleUrl: './expenses.component.scss'
 })
 export class ExpensesComponent implements OnInit {
+  @ViewChild(ConfirmationDialogComponent)
+  confirmDialog!: ConfirmationDialogComponent;
+
   expenses: Expense[] = [];
   displayDialog = false;
   expense: Expense = this.getEmptyExpense();
@@ -104,15 +109,22 @@ export class ExpensesComponent implements OnInit {
     this.displayDialog = true;
   }
 
+
   async deleteExpense(expense: Expense) {
-    if (confirm('هل أنت متأكد من حذف هذا المصروف؟')) {
-      try {
-        await this.dbService.deleteExpense(expense.id!);
-        await this.loadData();
-      } catch (error) {
-        console.error('Error deleting expense:', error);
-      }
-    }
+    this.confirmDialog.show({
+      message: `هل أنت متأكد من حذف سند الصرف رقم "${expense.voucherNumber}"؟`,
+      header: 'تأكيد الحذف',
+      acceptLabel: 'حذف',
+      rejectLabel: 'إلغاء',
+      accept: async () => {
+        try {
+          await this.dbService.deleteExpense(expense.id!);
+          await this.loadData();
+        } catch (error) {
+          console.error('Error deleting expense:', error);
+        }
+      },
+    });
   }
 
   async saveExpense() {

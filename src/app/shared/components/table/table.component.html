@@ -1,5 +1,5 @@
 <div class="table-card">
-<div class="table-filter-container" *ngIf="columns?.length">
+<div class="table-filter-container" *ngIf="columns?.length && showFilter">
   <div class="row filter-controls align-items-center">
     <div class="col-2 mx-2">
       <p-select
@@ -97,14 +97,6 @@
             <i class="pi pi-eye"></i>
             معاينة للطباعة
           </button>
-          <!-- <button 
-            *ngIf="hasAction(col, 'print')" 
-            class="btn-action print" 
-            (click)="print.emit(rowData)"
-            title="طباعة">
-            <i class="pi pi-print"></i>
-
-          </button> -->
         </ng-container>
         <ng-template #normalCell>
           <ng-container *ngIf="col.type === 'date'; else regularCell">

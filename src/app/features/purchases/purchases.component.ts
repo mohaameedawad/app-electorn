@@ -13,7 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { IconFieldModule } from 'primeng/iconfield';
-import { TableModule } from "primeng/table";
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-purchases',
@@ -28,21 +28,27 @@ import { TableModule } from "primeng/table";
     ButtonModule,
     DatePickerModule,
     InputNumberModule,
-    TableModule
+    TableModule,
   ],
   templateUrl: './purchases.component.html',
-  styleUrl: './purchases.component.scss'
+  styleUrl: './purchases.component.scss',
 })
 export class PurchasesComponent implements OnInit {
-  @ViewChild(ConfirmationDialogComponent) confirmDialog!: ConfirmationDialogComponent;
-  
+  @ViewChild(ConfirmationDialogComponent)
+  confirmDialog!: ConfirmationDialogComponent;
+
   columns = [
     { header: 'رقم الفاتورة', field: 'invoice_no' },
     { header: 'التاريخ', field: 'purchase_date' },
     { header: 'المورد', field: 'supplier' },
     { header: 'الإجمالي', field: 'total' },
     { header: 'الحالة', field: 'status' },
-    { header: 'إجراءات', field: 'actions', type: 'actions', actions: ['edit', 'delete', 'preview', 'print'] }
+    {
+      header: 'إجراءات',
+      field: 'actions',
+      type: 'actions',
+      actions: ['edit', 'delete', 'preview', 'print'],
+    },
   ];
 
   data: any[] = [];
@@ -54,7 +60,7 @@ export class PurchasesComponent implements OnInit {
   // Company information for invoice
   companyName: string = 'Luvi';
   companyPhone: string = '01070121737';
-  
+
   // بيانات الفاتورة الجديدة
   newPurchase = {
     invoice_no: 0,
@@ -67,7 +73,7 @@ export class PurchasesComponent implements OnInit {
     tax: 0,
     total: 0,
     paid_amount: 0,
-    status: 'معلقة'
+    status: 'معلقة',
   };
 
   // الصنف الحالي قيد الإضافة
@@ -75,7 +81,7 @@ export class PurchasesComponent implements OnInit {
     product_id: null,
     quantity: 1,
     price: 0,
-    total: 0
+    total: 0,
   };
 
   // Preview purchase data
@@ -89,7 +95,7 @@ export class PurchasesComponent implements OnInit {
     tax: 0,
     total: 0,
     paid_amount: 0,
-    status: 'معلقة'
+    status: 'معلقة',
   };
 
   products: any[] = [];
@@ -113,25 +119,32 @@ export class PurchasesComponent implements OnInit {
 
   async loadProducts() {
     const productsList = await this.dbService.getProducts();
-    this.products = productsList.map((p:any) => ({ 
-      label: p.name, 
-      value: p.id, 
-      price: p.purchase_price || p.price || 0 
+    this.products = productsList.map((p: any) => ({
+      label: p.name,
+      value: p.id,
+      price: p.purchase_price || p.price || 0,
     }));
   }
 
   async loadSuppliers() {
     const suppliersList = await this.dbService.getSuppliers();
-    this.suppliers = suppliersList.map((s:any) => ({ label: s.name, value: s.id }));
+    this.suppliers = suppliersList.map((s: any) => ({
+      label: s.name,
+      value: s.id,
+    }));
   }
 
   async loadEmployees() {
     const employeesList = await this.dbService.getEmployees();
-    this.employees = employeesList.map((e:any) => ({ label: e.name, value: e.id }));
+    this.employees = employeesList.map((e: any) => ({
+      label: e.name,
+      value: e.id,
+    }));
   }
 
-generateInvoiceNumber() {
-    const lastInvoice = this.data.length > 0 ? this.data[this.data.length - 1].invoice_no : 0;
+  generateInvoiceNumber() {
+    const lastInvoice =
+      this.data.length > 0 ? this.data[this.data.length - 1].invoice_no : 0;
     this.newPurchase.invoice_no = lastInvoice + 1;
   }
 
@@ -141,7 +154,10 @@ generateInvoiceNumber() {
     // load full purchase data (items may be stored as JSON string)
     const purchaseCopy: any = { ...purchase };
     try {
-      purchaseCopy.items = typeof purchaseCopy.items === 'string' ? JSON.parse(purchaseCopy.items) : (purchaseCopy.items || []);
+      purchaseCopy.items =
+        typeof purchaseCopy.items === 'string'
+          ? JSON.parse(purchaseCopy.items)
+          : purchaseCopy.items || [];
     } catch (err) {
       purchaseCopy.items = purchaseCopy.items || [];
     }
@@ -150,14 +166,16 @@ generateInvoiceNumber() {
       invoice_no: purchaseCopy.invoice_no || 0,
       supplier_id: purchaseCopy.supplier_id || null,
       employee_id: purchaseCopy.employee_id || null,
-      purchase_date: purchaseCopy.purchase_date ? new Date(purchaseCopy.purchase_date) : new Date(),
+      purchase_date: purchaseCopy.purchase_date
+        ? new Date(purchaseCopy.purchase_date)
+        : new Date(),
       items: purchaseCopy.items || [],
       subtotal: purchaseCopy.subtotal || 0,
       discount: purchaseCopy.discount || 0,
       tax: purchaseCopy.tax || 0,
       total: purchaseCopy.total || 0,
       paid_amount: purchaseCopy.paid_amount || 0,
-      status: purchaseCopy.status || 'معلقة'
+      status: purchaseCopy.status || 'معلقة',
     };
     this.editingPurchaseId = purchaseCopy.id || null;
     this.visible = true;
@@ -167,7 +185,7 @@ generateInvoiceNumber() {
   async onDelete(purchase: any) {
     const id = purchase?.id;
     if (!id) return;
-    
+
     this.confirmDialog.show({
       message: `هل أنت متأكد من حذف فاتورة المشتريات رقم "${purchase.invoice_no}"؟ `,
       header: 'تأكيد الحذف',
@@ -180,7 +198,7 @@ generateInvoiceNumber() {
         } catch (err) {
           console.error('Error deleting purchase:', err);
         }
-      }
+      },
     });
   }
 
@@ -189,7 +207,10 @@ generateInvoiceNumber() {
     // Parse items if stored as JSON string
     const purchaseCopy: any = { ...purchase };
     try {
-      purchaseCopy.items = typeof purchaseCopy.items === 'string' ? JSON.parse(purchaseCopy.items) : (purchaseCopy.items || []);
+      purchaseCopy.items =
+        typeof purchaseCopy.items === 'string'
+          ? JSON.parse(purchaseCopy.items)
+          : purchaseCopy.items || [];
     } catch (err) {
       purchaseCopy.items = purchaseCopy.items || [];
     }
@@ -197,14 +218,16 @@ generateInvoiceNumber() {
     this.previewPurchase = {
       invoice_no: purchaseCopy.invoice_no || 0,
       supplier_id: purchaseCopy.supplier_id || null,
-      purchase_date: purchaseCopy.purchase_date ? new Date(purchaseCopy.purchase_date) : new Date(),
+      purchase_date: purchaseCopy.purchase_date
+        ? new Date(purchaseCopy.purchase_date)
+        : new Date(),
       items: purchaseCopy.items || [],
       subtotal: purchaseCopy.subtotal || 0,
       discount: purchaseCopy.discount || 0,
       tax: purchaseCopy.tax || 0,
       total: purchaseCopy.total || 0,
       paid_amount: purchaseCopy.paid_amount || 0,
-      status: purchaseCopy.status || 'معلقة'
+      status: purchaseCopy.status || 'معلقة',
     };
     this.previewVisible = true;
   }
@@ -216,7 +239,7 @@ generateInvoiceNumber() {
         message: 'يجب إضافة صنف واحد على الأقل للمعاينة',
         header: 'تنبيه',
         acceptLabel: 'إلغاء',
-        showReject: false
+        showReject: false,
       });
       return;
     }
@@ -299,7 +322,7 @@ generateInvoiceNumber() {
     `);
 
     printWindow.document.close();
-    
+
     // Wait for content to load then print
     setTimeout(() => {
       printWindow.print();
@@ -314,7 +337,7 @@ generateInvoiceNumber() {
 
   // Get supplier name by ID
   getSupplierName(supplierId: any): string {
-    const supplier = this.suppliers.find(s => s.value === supplierId);
+    const supplier = this.suppliers.find((s) => s.value === supplierId);
     return supplier ? supplier.label : '';
   }
 
@@ -329,7 +352,9 @@ generateInvoiceNumber() {
   }
 
   onProductChange() {
-    const selectedProduct = this.products.find(p => p.value === this.currentItem.product_id);
+    const selectedProduct = this.products.find(
+      (p) => p.value === this.currentItem.product_id
+    );
     if (selectedProduct) {
       this.currentItem.price = selectedProduct.price;
       this.calculateItemTotal();
@@ -346,21 +371,29 @@ generateInvoiceNumber() {
 
   addItem() {
     // Validate inputs
-    if (!this.currentItem.product_id || !this.currentItem.quantity || this.currentItem.quantity <= 0 || !this.currentItem.price || this.currentItem.price <= 0) {
+    if (
+      !this.currentItem.product_id ||
+      !this.currentItem.quantity ||
+      this.currentItem.quantity <= 0 ||
+      !this.currentItem.price ||
+      this.currentItem.price <= 0
+    ) {
       this.showValidationErrors = true;
       return;
     }
 
     this.showValidationErrors = false;
-    const product = this.products.find(p => p.value === this.currentItem.product_id);
+    const product = this.products.find(
+      (p) => p.value === this.currentItem.product_id
+    );
     this.newPurchase.items.push({
       product_id: this.currentItem.product_id,
       product_name: product?.label || '',
       quantity: this.currentItem.quantity,
       price: this.currentItem.price,
-      total: this.currentItem.total
+      total: this.currentItem.total,
     });
-    
+
     this.calculateInvoiceTotal();
     this.resetCurrentItem();
   }
@@ -377,11 +410,18 @@ generateInvoiceNumber() {
   }
 
   calculateInvoiceTotal() {
-    this.newPurchase.subtotal = this.newPurchase.items.reduce((sum, item) => sum + item.total, 0);
+    this.newPurchase.subtotal = this.newPurchase.items.reduce(
+      (sum, item) => sum + item.total,
+      0
+    );
     // discount is now an absolute number (not percentage)
     const discountAmount = Number(this.newPurchase.discount) || 0;
-    const afterDiscount = Math.max(0, this.newPurchase.subtotal - discountAmount);
-    const taxAmount = (afterDiscount * (Number(this.newPurchase.tax) || 0)) / 100;
+    const afterDiscount = Math.max(
+      0,
+      this.newPurchase.subtotal - discountAmount
+    );
+    const taxAmount =
+      (afterDiscount * (Number(this.newPurchase.tax) || 0)) / 100;
     this.newPurchase.total = afterDiscount + taxAmount;
   }
 
@@ -390,7 +430,7 @@ generateInvoiceNumber() {
       product_id: null,
       quantity: 1,
       price: 0,
-      total: 0
+      total: 0,
     };
     this.showValidationErrors = false;
   }
@@ -402,12 +442,14 @@ generateInvoiceNumber() {
           message: 'يجب إضافة صنف واحد على الأقل',
           header: 'تنبيه',
           acceptLabel: 'إلغاء',
-          showReject: false
+          showReject: false,
         });
         return;
       }
 
-      const supplier = this.suppliers.find((s: any) => s.value === this.newPurchase.supplier_id);
+      const supplier = this.suppliers.find(
+        (s: any) => s.value === this.newPurchase.supplier_id
+      );
       const purchaseData = {
         invoice_no: this.newPurchase.invoice_no,
         supplier_id: this.newPurchase.supplier_id,
@@ -420,30 +462,32 @@ generateInvoiceNumber() {
         total: this.newPurchase.total,
         paid_amount: this.newPurchase.paid_amount,
         status: this.newPurchase.status,
-        purchase_date: this.formatDate(this.newPurchase.purchase_date)
+        purchase_date: this.formatDate(this.newPurchase.purchase_date),
       };
 
       if (this.editingPurchaseId) {
         // update existing
-        await this.dbService.updatePurchase(this.editingPurchaseId, purchaseData);
+        await this.dbService.updatePurchase(
+          this.editingPurchaseId,
+          purchaseData
+        );
       } else {
         await this.dbService.addPurchase(purchaseData);
       }
       await this.loadPurchases();
-      
+
       // Save current purchase data for preview
       this.previewPurchase = { ...this.newPurchase };
-      
+
       // Close main dialog
       this.visible = false;
-      
+
       // Reset form
       this.resetForm();
       this.editingPurchaseId = null;
-      
+
       // Open preview dialog for printing
       this.previewVisible = true;
-      
     } catch (error) {
       console.error('Error saving purchase:', error);
     }
@@ -478,7 +522,7 @@ generateInvoiceNumber() {
       tax: 0,
       total: 0,
       paid_amount: 0,
-      status: 'معلقة'
+      status: 'معلقة',
     };
     this.editingPurchaseId = null;
   }

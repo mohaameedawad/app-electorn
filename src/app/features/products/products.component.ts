@@ -14,7 +14,7 @@ import { SelectModule } from 'primeng/select';
   selector: 'app-products',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     FormsModule,
     TableComponent,
     ConfirmationDialogComponent,
@@ -22,14 +22,15 @@ import { SelectModule } from 'primeng/select';
     InputTextModule,
     ButtonModule,
     InputNumberModule,
-    SelectModule
+    SelectModule,
   ],
   templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss']
+  styleUrls: ['./products.component.scss'],
 })
 export class ProductsComponent implements OnInit {
-  @ViewChild(ConfirmationDialogComponent) confirmDialog!: ConfirmationDialogComponent;
-  
+  @ViewChild(ConfirmationDialogComponent)
+  confirmDialog!: ConfirmationDialogComponent;
+
   columns: any[] = [];
   products: any[] = [];
   visible: boolean = false;
@@ -37,7 +38,7 @@ export class ProductsComponent implements OnInit {
 
   categories = [
     { label: 'اكسسوار', value: 'اكسسوار' },
-    { label: 'شنط', value: 'شنط' }
+    { label: 'شنط', value: 'شنط' },
   ];
 
   newProduct = {
@@ -45,7 +46,7 @@ export class ProductsComponent implements OnInit {
     purchase_price: 0,
     sale_price: 0,
     stock: 0,
-    category: ''
+    category: '',
   };
 
   constructor(private dbService: DatabaseService) {}
@@ -57,7 +58,12 @@ export class ProductsComponent implements OnInit {
       { field: 'sale_price', header: 'سعر البيع' },
       { field: 'stock', header: 'المخزون' },
       { field: 'category', header: 'الفئة' },
-      { header: 'إجراءات', field: 'actions', type: 'actions', actions: ['edit', 'delete'] }
+      {
+        header: 'إجراءات',
+        field: 'actions',
+        type: 'actions',
+        actions: ['edit', 'delete'],
+      },
     ];
 
     await this.loadProducts();
@@ -78,7 +84,7 @@ export class ProductsComponent implements OnInit {
       purchase_price: product.purchase_price || product.price || 0,
       sale_price: product.sale_price || product.price || 0,
       stock: product.stock || 0,
-      category: product.category || ''
+      category: product.category || '',
     };
     this.editingProductId = product.id;
     this.visible = true;
@@ -97,7 +103,7 @@ export class ProductsComponent implements OnInit {
         } catch (error) {
           console.error('Error deleting product:', error);
         }
-      }
+      },
     });
   }
 
@@ -108,7 +114,7 @@ export class ProductsComponent implements OnInit {
           message: 'الرجاء إدخال اسم المنتج',
           header: 'تنبيه',
           acceptLabel: 'إلغاء',
-          showReject: false
+          showReject: false,
         });
         return;
       }
@@ -119,7 +125,7 @@ export class ProductsComponent implements OnInit {
         sale_price: this.newProduct.sale_price,
         price: this.newProduct.sale_price, // للتوافق مع الكود القديم
         stock: this.newProduct.stock,
-        category: this.newProduct.category
+        category: this.newProduct.category,
       };
 
       if (this.editingProductId) {
@@ -150,7 +156,7 @@ export class ProductsComponent implements OnInit {
       purchase_price: 0,
       sale_price: 0,
       stock: 0,
-      category: ''
+      category: '',
     };
     this.editingProductId = null;
   }

@@ -13,8 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { IconFieldModule } from 'primeng/iconfield';
-import { TableModule } from "primeng/table";
-
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-sales',
@@ -29,21 +28,27 @@ import { TableModule } from "primeng/table";
     ButtonModule,
     DatePickerModule,
     InputNumberModule,
-    TableModule
-],
+    TableModule,
+  ],
   templateUrl: './sales.component.html',
-  styleUrl: './sales.component.scss'
+  styleUrl: './sales.component.scss',
 })
 export class SalesComponent implements OnInit {
-  @ViewChild(ConfirmationDialogComponent) confirmDialog!: ConfirmationDialogComponent;
-  
+  @ViewChild(ConfirmationDialogComponent)
+  confirmDialog!: ConfirmationDialogComponent;
+
   columns = [
     { header: 'رقم الفاتورة', field: 'invoice_no' },
     { header: 'التاريخ', field: 'sale_date' },
     { header: 'العميل', field: 'customer' },
     { header: 'الإجمالي', field: 'total' },
     { header: 'الحالة', field: 'status' },
-    { header: 'إجراءات', field: 'actions', type: 'actions', actions: ['edit', 'delete', 'preview', 'print'] }
+    {
+      header: 'إجراءات',
+      field: 'actions',
+      type: 'actions',
+      actions: ['edit', 'delete', 'preview', 'print'],
+    },
   ];
 
   data: any[] = [];
@@ -55,7 +60,7 @@ export class SalesComponent implements OnInit {
   // Company information for invoice
   companyName: string = 'Luvi';
   companyPhone: string = '01070121737';
-  
+
   // بيانات الفاتورة الجديدة
   newSale = {
     invoice_no: 0,
@@ -68,7 +73,7 @@ export class SalesComponent implements OnInit {
     tax: 0,
     total: 0,
     paid_amount: 0,
-    status: 'معلقة'
+    status: 'معلقة',
   };
 
   // الصنف الحالي قيد الإضافة
@@ -76,7 +81,7 @@ export class SalesComponent implements OnInit {
     product_id: null,
     quantity: 1,
     price: 0,
-    total: 0
+    total: 0,
   };
 
   // Preview sale data
@@ -90,7 +95,7 @@ export class SalesComponent implements OnInit {
     tax: 0,
     total: 0,
     paid_amount: 0,
-    status: 'معلقة'
+    status: 'معلقة',
   };
 
   products: any[] = [];
@@ -114,25 +119,32 @@ export class SalesComponent implements OnInit {
 
   async loadProducts() {
     const productsList = await this.dbService.getProducts();
-    this.products = productsList.map((p:any) => ({ 
-      label: p.name, 
-      value: p.id, 
-      price: p.sale_price || p.price || 0 
+    this.products = productsList.map((p: any) => ({
+      label: p.name,
+      value: p.id,
+      price: p.sale_price || p.price || 0,
     }));
   }
 
   async loadCustomers() {
     const customersList = await this.dbService.getCustomers();
-    this.customers = customersList.map((c:any) => ({ label: c.name, value: c.id }));
+    this.customers = customersList.map((c: any) => ({
+      label: c.name,
+      value: c.id,
+    }));
   }
 
   async loadEmployees() {
     const employeesList = await this.dbService.getEmployees();
-    this.employees = employeesList.map((e:any) => ({ label: e.name, value: e.id }));
+    this.employees = employeesList.map((e: any) => ({
+      label: e.name,
+      value: e.id,
+    }));
   }
 
   generateInvoiceNumber() {
-    const lastInvoice = this.data.length > 0 ? this.data[this.data.length - 1].invoice_no : 0;
+    const lastInvoice =
+      this.data.length > 0 ? this.data[this.data.length - 1].invoice_no : 0;
     this.newSale.invoice_no = lastInvoice + 1;
   }
 
@@ -142,7 +154,10 @@ export class SalesComponent implements OnInit {
     // load full sale data (items may be stored as JSON string)
     const saleCopy: any = { ...sale };
     try {
-      saleCopy.items = typeof saleCopy.items === 'string' ? JSON.parse(saleCopy.items) : (saleCopy.items || []);
+      saleCopy.items =
+        typeof saleCopy.items === 'string'
+          ? JSON.parse(saleCopy.items)
+          : saleCopy.items || [];
     } catch (err) {
       saleCopy.items = saleCopy.items || [];
     }
@@ -158,7 +173,7 @@ export class SalesComponent implements OnInit {
       tax: saleCopy.tax || 0,
       total: saleCopy.total || 0,
       paid_amount: saleCopy.paid_amount || 0,
-      status: saleCopy.status || 'معلقة'
+      status: saleCopy.status || 'معلقة',
     };
     this.editingSaleId = saleCopy.id || null;
     this.visible = true;
@@ -168,7 +183,7 @@ export class SalesComponent implements OnInit {
   async onDelete(sale: any) {
     const id = sale?.id;
     if (!id) return;
-    
+
     this.confirmDialog.show({
       message: `هل أنت متأكد من حذف فاتورة المبيعات رقم "${sale.invoice_no}"؟ `,
       header: 'تأكيد الحذف',
@@ -181,7 +196,7 @@ export class SalesComponent implements OnInit {
         } catch (err) {
           console.error('Error deleting sale:', err);
         }
-      }
+      },
     });
   }
 
@@ -190,7 +205,10 @@ export class SalesComponent implements OnInit {
     // Parse items if stored as JSON string
     const saleCopy: any = { ...sale };
     try {
-      saleCopy.items = typeof saleCopy.items === 'string' ? JSON.parse(saleCopy.items) : (saleCopy.items || []);
+      saleCopy.items =
+        typeof saleCopy.items === 'string'
+          ? JSON.parse(saleCopy.items)
+          : saleCopy.items || [];
     } catch (err) {
       saleCopy.items = saleCopy.items || [];
     }
@@ -205,7 +223,7 @@ export class SalesComponent implements OnInit {
       tax: saleCopy.tax || 0,
       total: saleCopy.total || 0,
       paid_amount: saleCopy.paid_amount || 0,
-      status: saleCopy.status || 'معلقة'
+      status: saleCopy.status || 'معلقة',
     };
     this.previewVisible = true;
   }
@@ -225,7 +243,7 @@ export class SalesComponent implements OnInit {
         message: 'يجب إضافة صنف واحد على الأقل للمعاينة',
         header: 'تنبيه',
         acceptLabel: 'إلغاء',
-        showReject: false
+        showReject: false,
       });
       return;
     }
@@ -307,7 +325,7 @@ export class SalesComponent implements OnInit {
     `);
 
     printWindow.document.close();
-    
+
     // Wait for content to load then print
     setTimeout(() => {
       printWindow.print();
@@ -322,7 +340,7 @@ export class SalesComponent implements OnInit {
 
   // Get customer name by ID
   getCustomerName(customerId: any): string {
-    const customer = this.customers.find(c => c.value === customerId);
+    const customer = this.customers.find((c) => c.value === customerId);
     return customer ? customer.label : '';
   }
 
@@ -337,7 +355,9 @@ export class SalesComponent implements OnInit {
   }
 
   onProductChange() {
-    const selectedProduct = this.products.find(p => p.value === this.currentItem.product_id);
+    const selectedProduct = this.products.find(
+      (p) => p.value === this.currentItem.product_id
+    );
     if (selectedProduct) {
       this.currentItem.price = selectedProduct.price;
       this.calculateItemTotal();
@@ -354,21 +374,29 @@ export class SalesComponent implements OnInit {
 
   addItem() {
     // Validate inputs
-    if (!this.currentItem.product_id || !this.currentItem.quantity || this.currentItem.quantity <= 0 || !this.currentItem.price || this.currentItem.price <= 0) {
+    if (
+      !this.currentItem.product_id ||
+      !this.currentItem.quantity ||
+      this.currentItem.quantity <= 0 ||
+      !this.currentItem.price ||
+      this.currentItem.price <= 0
+    ) {
       this.showValidationErrors = true;
       return;
     }
 
     this.showValidationErrors = false;
-    const product = this.products.find(p => p.value === this.currentItem.product_id);
+    const product = this.products.find(
+      (p) => p.value === this.currentItem.product_id
+    );
     this.newSale.items.push({
       product_id: this.currentItem.product_id,
       product_name: product?.label || '',
       quantity: this.currentItem.quantity,
       price: this.currentItem.price,
-      total: this.currentItem.total
+      total: this.currentItem.total,
     });
-    
+
     this.calculateInvoiceTotal();
     this.resetCurrentItem();
   }
@@ -385,7 +413,10 @@ export class SalesComponent implements OnInit {
   }
 
   calculateInvoiceTotal() {
-    this.newSale.subtotal = this.newSale.items.reduce((sum, item) => sum + item.total, 0);
+    this.newSale.subtotal = this.newSale.items.reduce(
+      (sum, item) => sum + item.total,
+      0
+    );
     // discount is now an absolute number (not percentage)
     const discountAmount = Number(this.newSale.discount) || 0;
     const afterDiscount = Math.max(0, this.newSale.subtotal - discountAmount);
@@ -398,7 +429,7 @@ export class SalesComponent implements OnInit {
       product_id: null,
       quantity: 1,
       price: 0,
-      total: 0
+      total: 0,
     };
     this.showValidationErrors = false;
   }
@@ -410,12 +441,14 @@ export class SalesComponent implements OnInit {
           message: 'يجب إضافة صنف واحد على الأقل',
           header: 'تنبيه',
           acceptLabel: 'إلغاء',
-          showReject: false
+          showReject: false,
         });
         return;
       }
 
-      const customer = this.customers.find((c: any) => c.value === this.newSale.customer_id);
+      const customer = this.customers.find(
+        (c: any) => c.value === this.newSale.customer_id
+      );
       const saleData = {
         invoice_no: this.newSale.invoice_no,
         customer_id: this.newSale.customer_id,
@@ -426,7 +459,7 @@ export class SalesComponent implements OnInit {
         tax: this.newSale.tax,
         total: this.newSale.total,
         paid_amount: this.newSale.paid_amount,
-        sale_date: this.formatDate(this.newSale.sale_date)
+        sale_date: this.formatDate(this.newSale.sale_date),
       };
 
       if (this.editingSaleId) {
@@ -436,20 +469,19 @@ export class SalesComponent implements OnInit {
         await this.dbService.addSale(saleData);
       }
       await this.loadSales();
-      
+
       // Save current sale data for preview
       this.previewSale = { ...this.newSale };
-      
+
       // Close main dialog
       this.visible = false;
-      
+
       // Reset form
       this.resetForm();
       this.editingSaleId = null;
-      
+
       // Open preview dialog for printing
       this.previewVisible = true;
-      
     } catch (error) {
       console.error('Error saving sale:', error);
     }
@@ -484,7 +516,7 @@ export class SalesComponent implements OnInit {
       tax: 0,
       total: 0,
       paid_amount: 0,
-      status: 'معلقة'
+      status: 'معلقة',
     };
     this.editingSaleId = null;
   }

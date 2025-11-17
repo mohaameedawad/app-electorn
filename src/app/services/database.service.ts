@@ -169,7 +169,7 @@ export class DatabaseService {
     return await this.api.deletePurchase(id);
   }
 
-  // المدفوعات
+  // الدفعات
   async getPayments() {
     if (!this.api) return [];
     try {

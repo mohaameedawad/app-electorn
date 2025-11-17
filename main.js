@@ -133,7 +133,7 @@ function setupIPCHandlers() {
     return db.deletePurchase(id);
   });
 
-  // المدفوعات
+  // الدفعات
   ipcMain.handle('db:getPayments', async () => {
     return db.getPayments();
   });

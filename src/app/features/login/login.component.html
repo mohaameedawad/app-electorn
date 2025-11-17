@@ -3,44 +3,50 @@
   <form (ngSubmit)="login()">
     <div class="mb-4">
       <label class="form-label fw-semibold text-secondary">اسم المستخدم</label>
-      <input 
-        pInputText 
-        type="text" 
+      <input
+        pInputText
+        type="text"
         [(ngModel)]="username"
         name="username"
         class="form-control w-100 login-input"
         placeholder="أدخل اسم المستخدم"
         autocomplete="username"
+        [ngClass]="{ 'ng-dirty ng-invalid': errorMessage }"
       />
     </div>
-    <div class="mb-4">
-      <label for="password" class="form-label fw-semibold text-secondary">كلمة المرور</label>
-      <p-password 
+    <div class="mb-2">
+      <label for="password" class="form-label fw-semibold text-secondary"
+        >كلمة المرور</label
+      >
+      <p-password
         [(ngModel)]="password"
         name="password"
-        [inputStyle]="{'width':'100%'}"
-        [style]="{'width': '100%'}"
+        [inputStyle]="{ width: '100%' }"
+        [style]="{ width: '100%' }"
         [feedback]="false"
         [toggleMask]="true"
         placeholder="أدخل كلمة المرور"
         autocomplete="current-password"
         inputId="password"
         size="large"
+        [ngClass]="{ 'ng-dirty ng-invalid': errorMessage }"
       ></p-password>
     </div>
-    
+
     <!-- Fixed height container for error message -->
-    <div class="error-container mb-3">
-      <div class="alert alert-danger mb-0" *ngIf="errorMessage" role="alert">
-        <i class="pi pi-exclamation-triangle"></i> {{ errorMessage }}
-      </div>
-    </div>
-    
+    <small class="error-message">
+      <span *ngIf="errorMessage"> {{ errorMessage }}</span>
+    </small>
+
     <div class="forget-pass text-end mb-3">
-      <i class="pi pi-question-circle text-success"></i> 
-      <a routerLink="/forgot-password" class="text-success text-decoration-none small">نسيت كلمة المرور؟</a>
+      <i class="pi pi-question-circle text-success"></i>
+      <a
+        routerLink="/forgot-password"
+        class="text-success text-decoration-none small"
+        >نسيت كلمة المرور؟</a
+      >
     </div>
-    <button 
+    <button
       pButton
       type="submit"
       label="تسجيل الدخول"

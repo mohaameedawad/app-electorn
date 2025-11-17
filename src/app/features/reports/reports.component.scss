@@ -9,13 +9,13 @@
   padding: 30px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  // transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
   &:hover {
     background: var(--primary-green);
     color: white;
-    transform: translateY(-5px);
+    // transform: translateY(-5px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
     .report-icon {
@@ -27,7 +27,7 @@
     font-size: 3rem;
     color: var(--primary-green);
     margin-bottom: 15px;
-    transition: color 0.3s ease;
+    // transition: color 0.3s ease;
   }
 
   h4 {
@@ -40,4 +40,9 @@
     font-size: 0.9rem;
     opacity: 0.8;
   }
+  @media print {
+  .p-paginator {
+    display: none !important;
+  }
+}
 }

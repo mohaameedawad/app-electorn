@@ -1,46 +1,49 @@
 <div class="page-header">
   <button class="add-button" (click)="showDialog()">+ إضافة منتج</button>
 </div>
-<app-table 
-  [columns]="columns" 
+<app-table
+  [columns]="columns"
   [data]="products"
   (edit)="onEdit($event)"
   (delete)="onDelete($event)"
 ></app-table>
-
 <app-confirmation-dialog></app-confirmation-dialog>
 
-<p-dialog 
-  [(visible)]="visible" 
-  [modal]="true" 
-  [style]="{width: '600px'}"
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '600px' }"
   [draggable]="false"
   [resizable]="false"
   (onHide)="onDialogHide()"
-  [header]="editingProductId ? 'تعديل منتج' : 'إضافة منتج'">
-  
+  [header]="editingProductId ? 'تعديل منتج' : 'إضافة منتج'"
+>
   <div class="p-4">
     <div class="mb-3">
       <label class="form-label fw-semibold text-secondary">اسم المنتج</label>
-      <input 
-        type="text" 
+      <input
+        type="text"
         pInputText
-        class="w-100" 
+        class="w-100"
         [(ngModel)]="newProduct.name"
-        placeholder="أدخل اسم المنتج" />
+        placeholder="أدخل اسم المنتج"
+      />
     </div>
 
     <div class="row g-3">
       <div class="col-6">
         <div class="mb-3">
-          <label class="form-label fw-semibold text-secondary">سعر الشراء</label>
-          <p-inputnumber 
+          <label class="form-label fw-semibold text-secondary"
+            >سعر الشراء</label
+          >
+          <p-inputnumber
             [(ngModel)]="newProduct.purchase_price"
             mode="decimal"
             locale="en-US"
             [minFractionDigits]="2"
             placeholder="0.00"
-            [style]="{'width': '100%'}">
+            [style]="{ width: '100%' }"
+          >
           </p-inputnumber>
         </div>
       </div>
@@ -48,13 +51,14 @@
       <div class="col-6">
         <div class="mb-3">
           <label class="form-label fw-semibold text-secondary">سعر البيع</label>
-          <p-inputnumber 
+          <p-inputnumber
             [(ngModel)]="newProduct.sale_price"
             mode="decimal"
             locale="en-US"
             [minFractionDigits]="2"
             placeholder="0.00"
-            [style]="{'width': '100%'}">
+            [style]="{ width: '100%' }"
+          >
           </p-inputnumber>
         </div>
       </div>
@@ -64,10 +68,11 @@
       <div class="col-6">
         <div class="mb-3">
           <label class="form-label fw-semibold text-secondary">المخزون</label>
-          <p-inputnumber 
+          <p-inputnumber
             [(ngModel)]="newProduct.stock"
             [showButtons]="true"
-            [style]="{'width': '100%'}">
+            [style]="{ width: '100%' }"
+          >
           </p-inputnumber>
         </div>
       </div>
@@ -82,7 +87,8 @@
             optionLabel="label"
             optionValue="value"
             appendTo="body"
-            [style]="{'width': '100%'}">
+            [style]="{ width: '100%' }"
+          >
           </p-select>
         </div>
       </div>
@@ -90,15 +96,17 @@
   </div>
 
   <div dialog-footer class="dialog-footer">
-      <p-button 
-        label="إلغاء" 
-        severity="secondary" 
-        (onClick)="closeDialog()"
-        [text]="true">
-      </p-button>
-      <p-button 
-        [label]="editingProductId ? 'تعديل' : 'حفظ'"
-        (onClick)="saveProduct()">
-      </p-button>
-    </div>
+    <p-button
+      label="إلغاء"
+      severity="secondary"
+      (onClick)="closeDialog()"
+      [text]="true"
+    >
+    </p-button>
+    <p-button
+      [label]="editingProductId ? 'تعديل' : 'حفظ'"
+      (onClick)="saveProduct()"
+    >
+    </p-button>
+  </div>
 </p-dialog>

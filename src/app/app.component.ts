@@ -5,10 +5,11 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { AuthService } from './services/auth.service';
 import { filter } from 'rxjs/operators';
 import { Permission } from './models/permissions.enum';
+import { ConfirmationDialogComponent } from './shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, HeaderComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, HeaderComponent, ConfirmationDialogComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -25,7 +26,7 @@ export class AppComponent implements OnInit {
     { path: '/suppliers', icon: 'pi-truck', label: 'الموردين', page: Permission.SUPPLIERS },
     { path: '/products', icon: 'pi-box', label: 'المنتجات', page: Permission.PRODUCTS },
     { path: '/employees', icon: 'pi-id-card', label: 'الموظفين', page: Permission.EMPLOYEES },
-    { path: '/payments', icon: 'pi-money-bill', label: 'المدفوعات', page: Permission.PAYMENTS },
+    { path: '/payments', icon: 'pi-money-bill', label: 'الدفعات', page: Permission.PAYMENTS },
     { path: '/expenses', icon: 'pi-wallet', label: 'المصروفات', page: Permission.EXPENSES },
     { path: '/users', icon: 'pi-user-edit', label: 'إدارة المستخدمين', page: Permission.USERS },
     { path: '/reports', icon: 'pi-chart-bar', label: 'التقارير', page: Permission.REPORTS }

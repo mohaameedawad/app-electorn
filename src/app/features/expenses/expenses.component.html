@@ -1,4 +1,3 @@
-<div class="expenses-container">
   <div class="page-header">
     <button class="add-button" (click)="showAddDialog()">
       <i class="pi pi-plus mx-2"></i>
@@ -12,8 +11,8 @@
     (edit)="editExpense($event)"
     (delete)="deleteExpense($event)"
   ></app-table>
-</div>
 
+  
 <app-dialog
   [(visible)]="displayDialog"
   [width]="'500px'"

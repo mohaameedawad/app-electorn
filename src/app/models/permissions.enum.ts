@@ -22,7 +22,7 @@ export const PERMISSION_LABELS: Record<Permission, string> = {
   [Permission.SUPPLIERS]: 'الموردين',
   [Permission.PRODUCTS]: 'المنتجات',
   [Permission.EMPLOYEES]: 'الموظفين',
-  [Permission.PAYMENTS]: 'المدفوعات',
+  [Permission.PAYMENTS]: 'الدفعات',
   [Permission.EXPENSES]: 'المصروفات',
   [Permission.USERS]: 'إدارة المستخدمين',
   [Permission.REPORTS]: 'التقارير'

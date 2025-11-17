@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -11,6 +11,7 @@ import { TableComponent } from '../../shared/components/table/table.component';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogComponent } from '../../shared/components/dialog/dialog.component';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 
 interface Payment {
@@ -35,12 +36,16 @@ interface Payment {
     TableComponent,
     ButtonModule,
     CalendarModule,
-    DialogComponent
+    DialogComponent,
+    ConfirmationDialogComponent
   ],
   templateUrl: './payments.component.html',
   styleUrl: './payments.component.scss'
 })
 export class PaymentsComponent implements OnInit {
+  @ViewChild(ConfirmationDialogComponent)
+  confirmDialog!: ConfirmationDialogComponent;
+  
   payments: Payment[] = [];
   customers: any[] = [];
   displayDialog = false;
@@ -99,14 +104,20 @@ export class PaymentsComponent implements OnInit {
   }
 
   async deletePayment(payment: Payment) {
-    if (confirm('هل أنت متأكد من حذف هذا السند؟')) {
+    this.confirmDialog.show({
+      message: `هل أنت متأكد من حذف سند القبض رقم "${payment.receiptNumber}"؟`,
+      header: 'تأكيد الحذف',
+      acceptLabel: 'حذف',
+      rejectLabel: 'إلغاء',
+      accept: async () => {
       try {
         await this.dbService.deletePayment(payment.id!);
         await this.loadData();
       } catch (error) {
         console.error('Error deleting payment:', error);
       }
-    }
+      },
+    });
   }
 
   async savePayment() {
