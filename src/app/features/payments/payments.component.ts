@@ -13,7 +13,6 @@ import { CalendarModule } from 'primeng/calendar';
 import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
-
 interface Payment {
   id?: number;
   receiptNumber: string;
@@ -37,15 +36,15 @@ interface Payment {
     ButtonModule,
     CalendarModule,
     DialogComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
   ],
   templateUrl: './payments.component.html',
-  styleUrl: './payments.component.scss'
+  styleUrl: './payments.component.scss',
 })
 export class PaymentsComponent implements OnInit {
   @ViewChild(ConfirmationDialogComponent)
   confirmDialog!: ConfirmationDialogComponent;
-  
+
   payments: Payment[] = [];
   customers: any[] = [];
   displayDialog = false;
@@ -57,7 +56,12 @@ export class PaymentsComponent implements OnInit {
     { field: 'customerName', header: 'اسم العميل' },
     { field: 'date', header: 'التاريخ', type: 'date' },
     { field: 'amount', header: 'المبلغ' },
-    { field: 'actions', header: 'الإجراءات', type: 'actions', actions: ['edit', 'delete'] }
+    {
+      field: 'actions',
+      header: 'الإجراءات',
+      type: 'actions',
+      actions: ['edit', 'delete'],
+    },
   ];
 
   constructor(private dbService: DatabaseService) {}
@@ -81,12 +85,15 @@ export class PaymentsComponent implements OnInit {
       receiptNumber: nextNumber,
       customerName: '',
       date: new Date(),
-      amount: 0
+      amount: 0,
     };
   }
 
   generateReceiptNumber(): string {
-    const maxId = this.payments.length > 0 ? Math.max(...this.payments.map(p => p.id || 0)) : 0;
+    const maxId =
+      this.payments.length > 0
+        ? Math.max(...this.payments.map((p) => p.id || 0))
+        : 0;
     const nextId = maxId + 1;
     return String(nextId);
   }
@@ -110,12 +117,12 @@ export class PaymentsComponent implements OnInit {
       acceptLabel: 'حذف',
       rejectLabel: 'إلغاء',
       accept: async () => {
-      try {
-        await this.dbService.deletePayment(payment.id!);
-        await this.loadData();
-      } catch (error) {
-        console.error('Error deleting payment:', error);
-      }
+        try {
+          await this.dbService.deletePayment(payment.id!);
+          await this.loadData();
+        } catch (error) {
+          console.error('Error deleting payment:', error);
+        }
       },
     });
   }

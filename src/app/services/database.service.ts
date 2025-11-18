@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DatabaseService {
   private get api() {
@@ -173,7 +173,10 @@ export class DatabaseService {
   async getPayments() {
     if (!this.api) return [];
     try {
-      return await this.api.getPayments();
+      const result = await this.api.getPayments();
+      // 🔹 دمج received و made في array واحدة
+      const allPayments = [...(result.received || []), ...(result.made || [])];
+      return allPayments;
     } catch (error) {
       console.error('Error getting payments:', error);
       return [];
@@ -182,7 +185,13 @@ export class DatabaseService {
 
   async addPayment(payment: any) {
     if (!this.api) return null;
-    return await this.api.addPayment(payment);
+    try {
+      // 🔹 استخدم addPayment العادية فقط
+      return await this.api.addPayment(payment);
+    } catch (error) {
+      console.error('Error adding payment:', error);
+      return null;
+    }
   }
 
   async updatePayment(id: number, payment: any) {
@@ -219,6 +228,16 @@ export class DatabaseService {
   async deleteExpense(id: number) {
     if (!this.api) return null;
     return await this.api.deleteExpense(id);
+  }
+
+  async getExpenseStats() {
+    if (!this.api) return null;
+    return await this.api.getExpenseStats();
+  }
+
+  async getExpensesByDateRange(startDate: string, endDate: string) {
+    if (!this.api) return [];
+    return await this.api.getExpensesByDateRange(startDate, endDate);
   }
 
   // المستخدمين
