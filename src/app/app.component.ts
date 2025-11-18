@@ -20,16 +20,16 @@ export class AppComponent implements OnInit {
 
   allNavItems = [
     { path: '/dashboard', icon: 'pi-home', label: 'لوحة التحكم', page: Permission.DASHBOARD },
-    { path: '/sales', icon: 'pi-shopping-cart', label: 'فواتير البيع', page: Permission.SALES },
-    { path: '/purchases', icon: 'pi-shopping-bag', label: 'فواتير المشتريات', page: Permission.PURCHASES },
+    // { path: '/sales', icon: 'pi-shopping-cart', label: 'فواتير البيع', page: Permission.SALES },
+    // { path: '/purchases', icon: 'pi-shopping-bag', label: 'فواتير المشتريات', page: Permission.PURCHASES },
     { path: '/customers', icon: 'pi-users', label: 'العملاء', page: Permission.CUSTOMERS },
     { path: '/suppliers', icon: 'pi-truck', label: 'الموردين', page: Permission.SUPPLIERS },
-    { path: '/products', icon: 'pi-box', label: 'المنتجات', page: Permission.PRODUCTS },
-    { path: '/employees', icon: 'pi-id-card', label: 'الموظفين', page: Permission.EMPLOYEES },
-    { path: '/payments', icon: 'pi-money-bill', label: 'الدفعات', page: Permission.PAYMENTS },
-    { path: '/expenses', icon: 'pi-wallet', label: 'المصروفات', page: Permission.EXPENSES },
+    // { path: '/products', icon: 'pi-box', label: 'المنتجات', page: Permission.PRODUCTS },
+    // { path: '/employees', icon: 'pi-id-card', label: 'الموظفين', page: Permission.EMPLOYEES },
+    // { path: '/payments', icon: 'pi-money-bill', label: 'الدفعات', page: Permission.PAYMENTS },
+    // { path: '/expenses', icon: 'pi-wallet', label: 'المصروفات', page: Permission.EXPENSES },
     { path: '/users', icon: 'pi-user-edit', label: 'إدارة المستخدمين', page: Permission.USERS },
-    { path: '/reports', icon: 'pi-chart-bar', label: 'التقارير', page: Permission.REPORTS }
+    // { path: '/reports', icon: 'pi-chart-bar', label: 'التقارير', page: Permission.REPORTS }
   ];
 
   navItems: any[] = [];

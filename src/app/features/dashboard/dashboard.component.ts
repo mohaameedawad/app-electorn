@@ -46,16 +46,16 @@ export class DashboardComponent implements OnInit {
 
   async loadCounts() {
     try {
-      const products = await this.dbService.getProducts();
-      const customers = await this.dbService.getCustomers();
-      const suppliers = await this.dbService.getSuppliers();
+      // const products = await this.dbService.getAllProducts();
+      const customers = await this.dbService.getAllCustomers();
+      const suppliers = await this.dbService.getAllSuppliers();
 
-      this.productsCount = products.length;
+      // this.productsCount = products.length;
       this.customersCount = customers.length;
       this.suppliersCount = suppliers.length;
 
       // Update cards array
-      this.cards[0].count = this.productsCount;
+      // this.cards[0].count = this.productsCount;
       this.cards[1].count = this.customersCount;
       this.cards[2].count = this.suppliersCount;
     } catch (error) {

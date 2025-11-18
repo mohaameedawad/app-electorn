@@ -49,17 +49,25 @@ export class CustomersComponent implements OnInit {
     balanceType: 'debit',
   };
 
-  constructor(
-    private dbService: DatabaseService,
-  ) {}
+  constructor(private dbService: DatabaseService) {}
 
   async ngOnInit() {
     this.columns = [
       { header: 'رقم', field: 'id' },
       { header: 'الاسم', field: 'name' },
       { header: 'التليفون', field: 'phone' },
-      { header: 'له (دائن)', field: 'credit' },
-      { header: 'عليه (مدين)', field: 'debit' },
+      { 
+        header: 'له (دائن)', 
+        field: 'credit',
+        valueGetter: (row: any) => (row.balance < 0 ? Math.abs(row.balance) : 0),
+        formatter: (value: number) => value > 0 ? value.toFixed(2) : '0'
+      },
+      { 
+        header: 'عليه (مدين)', 
+        field: 'debit',
+        valueGetter: (row: any) => (row.balance > 0 ? row.balance : 0),
+        formatter: (value: number) => value > 0 ? value.toFixed(2) : '0'
+      },
       {
         header: 'إجراءات',
         field: 'actions',
@@ -73,7 +81,13 @@ export class CustomersComponent implements OnInit {
 
   async loadCustomers() {
     try {
-      this.data = await this.dbService.getCustomers();
+      const customers = await this.dbService.getAllCustomers();
+      this.data = customers.map((customer: any) => ({
+        ...customer,
+        credit: customer.balance < 0 ? Math.abs(customer.balance) : 0,
+        debit: customer.balance > 0 ? customer.balance : 0,
+      }));
+      console.log('Loaded customers:', this.data);
     } catch (error) {
       console.error('Error loading customers:', error);
     }
@@ -85,19 +99,17 @@ export class CustomersComponent implements OnInit {
   }
 
   onEdit(customer: any) {
-    // Determine balance type and amount from existing data
-    const hasCredit = customer.credit && customer.credit > 0;
-    const hasDebit = customer.debit && customer.debit > 0;
-
+    console.log('Editing customer:', customer);
+    
+    // تحديد نوع الرصيد من قيمة ال balance
+    const balanceType = customer.balance < 0 ? 'credit' : 'debit';
+    const balanceAmount = Math.abs(customer.balance || 0);
+    
     this.newCustomer = {
       name: customer.name || '',
       phone: customer.phone || '',
-      balanceAmount: hasCredit
-        ? customer.credit
-        : hasDebit
-        ? customer.debit
-        : 0,
-      balanceType: hasCredit ? 'credit' : 'debit',
+      balanceAmount: balanceAmount,
+      balanceType: balanceType,
     };
     this.editingCustomerId = customer.id;
     this.visible = true;
@@ -141,24 +153,16 @@ export class CustomersComponent implements OnInit {
 
       this.phoneError = '';
 
+      // إرسال البيانات بالشكل الجديد
       const customerData = {
         name: this.newCustomer.name,
         phone: this.newCustomer.phone,
-        debit:
-          this.newCustomer.balanceType === 'debit'
-            ? this.newCustomer.balanceAmount
-            : 0,
-        credit:
-          this.newCustomer.balanceType === 'credit'
-            ? this.newCustomer.balanceAmount
-            : 0,
+        balanceType: this.newCustomer.balanceType,
+        balanceAmount: this.newCustomer.balanceAmount
       };
 
       if (this.editingCustomerId) {
-        await this.dbService.updateCustomer(
-          this.editingCustomerId,
-          customerData
-        );
+        await this.dbService.updateCustomer(this.editingCustomerId, customerData);
       } else {
         await this.dbService.addCustomer(customerData);
       }
@@ -171,7 +175,6 @@ export class CustomersComponent implements OnInit {
   }
 
   validateEgyptianPhone(phone: string): boolean {
-    // Egyptian phone number: 11 digits starting with 01
     const phoneRegex = /^01[0-9]{9}$/;
     return phoneRegex.test(phone);
   }

@@ -35,7 +35,7 @@ export class ForgotPasswordComponent {
     }
 
     try {
-      const users = await this.dbService.getUsers();
+      const users = await this.dbService.getAllUsers();
       const user = users.find((u: any) => 
         u.username === this.username && u.fullName === this.fullName
       );
@@ -72,7 +72,7 @@ export class ForgotPasswordComponent {
     }
 
     try {
-      const users = await this.dbService.getUsers();
+      const users = await this.dbService.getAllUsers();
       const user = users.find((u: any) => u.username === this.username);
 
       if (user) {

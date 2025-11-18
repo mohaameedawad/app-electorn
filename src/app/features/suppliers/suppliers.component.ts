@@ -1,114 +1,114 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { TableComponent } from '../../shared/components/table/table.component';
-import { DialogComponent } from '../../shared/components/dialog/dialog.component';
-import { DatabaseService } from '../../services/database.service';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { ButtonModule } from 'primeng/button';
-import { SelectModule } from 'primeng/select';
+// import { Component, OnInit } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import { FormsModule } from '@angular/forms';
+// import { TableComponent } from '../../shared/components/table/table.component';
+// import { DialogComponent } from '../../shared/components/dialog/dialog.component';
+// import { DatabaseService } from '../../services/database.service';
+// import { InputTextModule } from 'primeng/inputtext';
+// import { InputNumberModule } from 'primeng/inputnumber';
+// import { ButtonModule } from 'primeng/button';
+// import { SelectModule } from 'primeng/select';
 
-@Component({
-  selector: 'app-suppliers',
-  imports: [
-    CommonModule,
-    FormsModule,
-    TableComponent,
-    DialogComponent,
-    InputTextModule,
-    InputNumberModule,
-    ButtonModule,
-    SelectModule
-  ],
-  templateUrl: './suppliers.component.html',
-  styleUrl: './suppliers.component.scss'
-})
-export class SuppliersComponent implements OnInit {
-  columns = [
-    { header: 'رقم', field: 'id' },
-    { header: 'اسم المورد', field: 'name' },
-    { header: 'التليفون', field: 'phone' },
-    { header: 'العنوان', field: 'address' },
-    { header: 'له (دائن)', field: 'credit' },
-    { header: 'عليه (مدين)', field: 'debit' },
-  ];
+// @Component({
+//   selector: 'app-suppliers',
+//   imports: [
+//     CommonModule,
+//     FormsModule,
+//     TableComponent,
+//     DialogComponent,
+//     InputTextModule,
+//     InputNumberModule,
+//     ButtonModule,
+//     SelectModule
+//   ],
+//   templateUrl: './suppliers.component.html',
+//   styleUrl: './suppliers.component.scss'
+// })
+// export class SuppliersComponent implements OnInit {
+//   columns = [
+//     { header: 'رقم', field: 'id' },
+//     { header: 'اسم المورد', field: 'name' },
+//     { header: 'التليفون', field: 'phone' },
+//     { header: 'العنوان', field: 'address' },
+//     { header: 'له (دائن)', field: 'credit' },
+//     { header: 'عليه (مدين)', field: 'debit' },
+//   ];
 
-  data: any[] = [];
-  visible: boolean = false;
-  phoneError: string = '';
+//   data: any[] = [];
+//   visible: boolean = false;
+//   phoneError: string = '';
   
-  balanceTypes = [
-    { label: 'له (دائن)', value: 'credit' },
-    { label: 'عليه (مدين)', value: 'debit' }
-  ];
+//   balanceTypes = [
+//     { label: 'له (دائن)', value: 'credit' },
+//     { label: 'عليه (مدين)', value: 'debit' }
+//   ];
   
-  newSupplier = {
-    name: '',
-    phone: '',
-    address: '',
-    balanceAmount: 0,
-    balanceType: 'credit'
-  };
+//   newSupplier = {
+//     name: '',
+//     phone: '',
+//     address: '',
+//     balanceAmount: 0,
+//     balanceType: 'credit'
+//   };
 
-  constructor(private dbService: DatabaseService) {}
+//   constructor(private dbService: DatabaseService) {}
 
-  async ngOnInit() {
-    await this.loadSuppliers();
-  }
+//   async ngOnInit() {
+//     await this.loadSuppliers();
+//   }
 
-  async loadSuppliers() {
-    this.data = await this.dbService.getSuppliers();
-  }
+//   async loadSuppliers() {
+//     this.data = await this.dbService.getAllSuppliers();
+//   }
 
-  showDialog() {
-    this.visible = true;
-  }
+//   showDialog() {
+//     this.visible = true;
+//   }
 
-  closeDialog() {
-    this.visible = false;
-    this.phoneError = '';
-    this.resetForm();
-  }
+//   closeDialog() {
+//     this.visible = false;
+//     this.phoneError = '';
+//     this.resetForm();
+//   }
 
-  async saveSupplier() {
-    try {
-      // Validate Egyptian phone number
-      if (!this.validateEgyptianPhone(this.newSupplier.phone)) {
-        this.phoneError = 'يجب إدخال رقم مصري مكون من 11 رقم يبدأ بـ 01';
-        return;
-      }
+//   async saveSupplier() {
+//     try {
+//       // Validate Egyptian phone number
+//       if (!this.validateEgyptianPhone(this.newSupplier.phone)) {
+//         this.phoneError = 'يجب إدخال رقم مصري مكون من 11 رقم يبدأ بـ 01';
+//         return;
+//       }
 
-      this.phoneError = '';
+//       this.phoneError = '';
       
-      const supplierData = {
-        name: this.newSupplier.name,
-        phone: this.newSupplier.phone,
-        address: this.newSupplier.address,
-        debit: this.newSupplier.balanceType === 'debit' ? this.newSupplier.balanceAmount : 0,
-        credit: this.newSupplier.balanceType === 'credit' ? this.newSupplier.balanceAmount : 0
-      };
+//       const supplierData = {
+//         name: this.newSupplier.name,
+//         phone: this.newSupplier.phone,
+//         address: this.newSupplier.address,
+//         debit: this.newSupplier.balanceType === 'debit' ? this.newSupplier.balanceAmount : 0,
+//         credit: this.newSupplier.balanceType === 'credit' ? this.newSupplier.balanceAmount : 0
+//       };
       
-      await this.dbService.addSupplier(supplierData);
-      await this.loadSuppliers();
-      this.closeDialog();
-    } catch (error) {
-      console.error('Error saving supplier:', error);
-    }
-  }
+//       await this.dbService.addSupplier(supplierData);
+//       await this.loadSuppliers();
+//       this.closeDialog();
+//     } catch (error) {
+//       console.error('Error saving supplier:', error);
+//     }
+//   }
 
-  validateEgyptianPhone(phone: string): boolean {
-    const phoneRegex = /^01[0-9]{9}$/;
-    return phoneRegex.test(phone);
-  }
+//   validateEgyptianPhone(phone: string): boolean {
+//     const phoneRegex = /^01[0-9]{9}$/;
+//     return phoneRegex.test(phone);
+//   }
 
-  resetForm() {
-    this.newSupplier = {
-      name: '',
-      phone: '',
-      address: '',
-      balanceAmount: 0,
-      balanceType: 'credit'
-    };
-  }
-}
+//   resetForm() {
+//     this.newSupplier = {
+//       name: '',
+//       phone: '',
+//       address: '',
+//       balanceAmount: 0,
+//       balanceType: 'credit'
+//     };
+//   }
+// }

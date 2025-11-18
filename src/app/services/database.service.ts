@@ -1,249 +1,382 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DatabaseService {
+  reportsChanged$ = new BehaviorSubject<void>(undefined);
+
   private get api() {
-    const electronAPI = (window as any).electronAPI;
-    if (!electronAPI) {
-      console.error('Electron API not available!');
-      return null;
-    }
-    return electronAPI;
+    return (window as any).electronAPI || null;
   }
 
-  // العملاء
-  async getCustomers() {
-    if (!this.api) return [];
-    try {
-      return await this.api.getCustomers();
-    } catch (error) {
-      console.error('Error getting customers:', error);
-      return [];
-    }
+  // ============================================
+  // CUSTOMERS
+  // ============================================
+  async getAllCustomers() {
+    return this.api?.getAllCustomers() || [];
   }
-
-  async addCustomer(customer: any) {
-    if (!this.api) return null;
-    return await this.api.addCustomer(customer);
+  async addCustomer(c: any) {
+    const r = await this.api?.addCustomer(c);
+    this.reportsChanged$.next();
+    return r;
   }
-
-  async updateCustomer(id: number, customer: any) {
-    if (!this.api) return null;
-    return await this.api.updateCustomer(id, customer);
+  async updateCustomer(id: number, c: any) {
+    const r = await this.api?.updateCustomer(id, c);
+    this.reportsChanged$.next();
+    return r;
   }
-
   async deleteCustomer(id: number) {
-    if (!this.api) return null;
-    return await this.api.deleteCustomer(id);
+    const r = await this.api?.deleteCustomer(id);
+    this.reportsChanged$.next();
+    return r;
   }
 
-  // الموردين
-  async getSuppliers() {
-    if (!this.api) return [];
-    try {
-      return await this.api.getSuppliers();
-    } catch (error) {
-      console.error('Error getting suppliers:', error);
-      return [];
-    }
+  // ============================================
+  // SUPPLIERS
+  // ============================================
+  async getAllSuppliers() {
+    return this.api?.getAllSuppliers() || [];
   }
-
-  async addSupplier(supplier: any) {
-    if (!this.api) return null;
-    return await this.api.addSupplier(supplier);
+  async addSupplier(s: any) {
+    const r = await this.api?.addSupplier(s);
+    this.reportsChanged$.next();
+    return r;
   }
-
-  async updateSupplier(id: number, supplier: any) {
-    if (!this.api) return null;
-    return await this.api.updateSupplier(id, supplier);
+  async updateSupplier(id: number, s: any) {
+    const r = await this.api?.updateSupplier(id, s);
+    this.reportsChanged$.next();
+    return r;
   }
-
   async deleteSupplier(id: number) {
-    if (!this.api) return null;
-    return await this.api.deleteSupplier(id);
+    const r = await this.api?.deleteSupplier(id);
+    this.reportsChanged$.next();
+    return r;
   }
 
-  // المنتجات
-  async getProducts() {
-    if (!this.api) return [];
-    try {
-      return await this.api.getProducts();
-    } catch (error) {
-      console.error('Error getting products:', error);
-      return [];
-    }
-  }
+//   // ============================================
+//   // PRODUCTS
+//   // ============================================
+// async getAllProducts() {
+//   return this.api?.getAllProducts() || [];
+// }
 
-  async addProduct(product: any) {
-    if (!this.api) return null;
-    return await this.api.addProduct(product);
-  }
+// async addProduct(p: any) {
+//   const r = await this.api?.addProduct(p);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  async updateProduct(id: number, product: any) {
-    if (!this.api) return null;
-    return await this.api.updateProduct(id, product);
-  }
+// async updateProduct(id: number, p: any) {
+//   const r = await this.api?.updateProduct(id, p);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  async deleteProduct(id: number) {
-    if (!this.api) return null;
-    return await this.api.deleteProduct(id);
-  }
+// async deleteProduct(id: number) {
+//   const r = await this.api?.deleteProduct(id);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  // المبيعات
-  async getSales() {
-    if (!this.api) return [];
-    try {
-      return await this.api.getSales();
-    } catch (error) {
-      console.error('Error getting sales:', error);
-      return [];
-    }
-  }
+// async getProductById(id: number) {
+//   return this.api?.getProductById(id);
+// }
 
-  async addSale(sale: any) {
-    if (!this.api) return null;
-    return await this.api.addSale(sale);
-  }
+// async calculateStock(productId: number) {
+//   return this.api?.calculateProductStock(productId);
+// }
 
-  async updateSale(id: number, sale: any) {
-    if (!this.api) return null;
-    return await this.api.updateSale(id, sale);
-  }
+// async validateStockForSale(items: any[]) {
+//   return this.api?.validateStockForSale(items);
+// }
 
-  async deleteSale(id: number) {
-    if (!this.api) return null;
-    return await this.api.deleteSale(id);
-  }
+// async adjustStock(productId: number, newStock: number, reason: string) {
+//   return this.api?.adjustStock(productId, newStock, reason);
+// }
 
-  // الموظفين
-  async getEmployees() {
-    if (!this.api) return [];
-    try {
-      return await this.api.getEmployees();
-    } catch (error) {
-      console.error('Error getting employees:', error);
-      return [];
-    }
-  }
+// // ============================================
+// // CATEGORIES
+// // ============================================
+// async getAllCategories() {
+//   return this.api?.getAllCategories() || [];
+// }
 
-  async addEmployee(employee: any) {
-    if (!this.api) return null;
-    return await this.api.addEmployee(employee);
-  }
+// async addCategory(category: any) {
+//   const r = await this.api?.addCategory(category);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  async updateEmployee(id: number, employee: any) {
-    if (!this.api) return null;
-    return await this.api.updateEmployee(id, employee);
-  }
+// async updateCategory(id: number, category: any) {
+//   const r = await this.api?.updateCategory(id, category);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  async deleteEmployee(id: number) {
-    if (!this.api) return null;
-    return await this.api.deleteEmployee(id);
-  }
+// async deleteCategory(id: number) {
+//   const r = await this.api?.deleteCategory(id);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  // المشتريات
-  async getPurchases() {
-    if (!this.api) return [];
-    try {
-      return await this.api.getPurchases();
-    } catch (error) {
-      console.error('Error getting purchases:', error);
-      return [];
-    }
-  }
+//   // ============================================
+//   // SALES (فاتورة بيع)
+//   // ============================================
+//   async getAllSales() {
+//     return this.api?.getAllSales() || [];
+//   }
+//   async addSale(sale: any) {
+//     const r = await this.api?.addSale(sale);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+//   async updateSale(id: number, sale: any) {
+//     const r = await this.api?.updateSale(id, sale);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+//   async deleteSale(id: number) {
+//     const r = await this.api?.deleteSale(id);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+//   async getSaleItems() {
+//     return this.api?.getSaleItems?.() || [];
+//   }
 
-  async addPurchase(purchase: any) {
-    if (!this.api) return null;
-    return await this.api.addPurchase(purchase);
-  }
+  
+//   // ============================================
+//   // PURCHASES (فاتورة شراء)
+//   // ============================================
 
-  async updatePurchase(id: number, purchase: any) {
-    if (!this.api) return null;
-    return await this.api.updatePurchase(id, purchase);
-  }
+// async deletePurchase(id: number) {
+//   const r = await this.api?.deletePurchase(id);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  async deletePurchase(id: number) {
-    if (!this.api) return null;
-    return await this.api.deletePurchase(id);
-  }
+// // ============================================
+// // PURCHASE ITEMS - عناصر المشتريات (محدث)
+// // ============================================
 
-  // الدفعات
-  async getPayments() {
-    if (!this.api) return [];
-    try {
-      return await this.api.getPayments();
-    } catch (error) {
-      console.error('Error getting payments:', error);
-      return [];
-    }
-  }
 
-  async addPayment(payment: any) {
-    if (!this.api) return null;
-    return await this.api.addPayment(payment);
-  }
+// async getAllPurchases() {
+//   return this.api?.getAllPurchases?.() || [];
+// }
 
-  async updatePayment(id: number, payment: any) {
-    if (!this.api) return null;
-    return await this.api.updatePayment(id, payment);
-  }
+// async addPurchase(purchase: any) {
+//   const r = await this.api?.addPurchase?.(purchase);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  async deletePayment(id: number) {
-    if (!this.api) return null;
-    return await this.api.deletePayment(id);
-  }
+// async updatePurchase(id: number, purchase: any) {
+//   const r = await this.api?.updatePurchase?.(id, purchase);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  // المصروفات
-  async getExpenses() {
-    if (!this.api) return [];
-    try {
-      return await this.api.getExpenses();
-    } catch (error) {
-      console.error('Error getting expenses:', error);
-      return [];
-    }
-  }
 
-  async addExpense(expense: any) {
-    if (!this.api) return null;
-    return await this.api.addExpense(expense);
-  }
 
-  async updateExpense(id: number, expense: any) {
-    if (!this.api) return null;
-    return await this.api.updateExpense(id, expense);
-  }
+// async getPurchaseItems() {
+//   return this.api?.getPurchaseItems?.() || [];
+// }
 
-  async deleteExpense(id: number) {
-    if (!this.api) return null;
-    return await this.api.deleteExpense(id);
-  }
+// async getPurchaseItemsByPurchaseId(purchaseId: number) {
+//   return this.api?.getPurchaseItemsByPurchaseId?.(purchaseId) || [];
+// }
 
-  // المستخدمين
-  async getUsers() {
-    if (!this.api) return [];
-    try {
-      return await this.api.getUsers();
-    } catch (error) {
-      console.error('Error getting users:', error);
-      return [];
-    }
-  }
+// async addPurchaseItem(item: any) {
+//   const r = await this.api?.addPurchaseItem?.(item);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  async addUser(user: any) {
-    if (!this.api) return null;
-    return await this.api.addUser(user);
-  }
+// async updatePurchaseItem(id: number, item: any) {
+//   const r = await this.api?.updatePurchaseItem?.(id, item);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
-  async updateUser(id: number, user: any) {
-    if (!this.api) return null;
-    return await this.api.updateUser(id, user);
-  }
+// async deletePurchaseItems(purchaseId: number) {
+//   const r = await this.api?.deletePurchaseItems?.(purchaseId);
+//   this.reportsChanged$.next();
+//   return r;
+// }
 
+// async clearPurchaseItems(purchaseId: number) {
+//   const r = await this.api?.clearPurchaseItems?.(purchaseId);
+//   this.reportsChanged$.next();
+//   return r;
+// }
+
+// // ============================================
+// // SUPPLIER BALANCES - أرصدة الموردين (جديد)
+// // ============================================
+// async calculateSupplierBalance(supplierId: number): Promise<number> {
+//   return this.api?.calculateSupplierBalance?.(supplierId) || 0;
+// }
+
+// async getSupplierWithBalance(supplierId: number): Promise<any> {
+//   return this.api?.getSupplierWithBalance?.(supplierId) || null;
+// }
+
+// async getAllSuppliersWithBalances(): Promise<any[]> {
+//   return this.api?.getAllSuppliersWithBalances?.() || [];
+// }
+
+//   // ============================================
+//   // PAYMENTS RECEIVED (قبض من عميل)
+//   // ============================================
+//   async getPaymentsReceived() {
+//     return this.api?.getPaymentsReceived?.() || [];
+//   }
+
+//   async addPaymentReceived(p: any) {
+//     const r = await this.api?.addPaymentReceived?.(p);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+
+//   async updatePaymentReceived(id: number, p: any) {
+//     const r = await this.api?.updatePaymentReceived?.(id, p);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+
+//   async deletePaymentReceived(id: number) {
+//     const r = await this.api?.deletePaymentReceived?.(id);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+
+//   // ============================================
+//   // SUPPLIER PAYMENTS (سند صرف)
+//   // ============================================
+//   async getSupplierPayments() {
+//     return this.api?.getSupplierPayments?.() || [];
+//   }
+
+//   async addSupplierPayment(p: any) {
+//     const r = await this.api?.addSupplierPayment?.(p);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+
+//   async updateSupplierPayment(id: number, p: any) {
+//     const r = await this.api?.updateSupplierPayment?.(id, p);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+
+//   async deleteSupplierPayment(id: number) {
+//     const r = await this.api?.deleteSupplierPayment?.(id);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+
+//   // ============================================
+//   // EXPENSES
+//   // ============================================
+//   async getExpenses() {
+//     return this.api?.getExpenses() || [];
+//   }
+//   async addExpense(e: any) {
+//     const r = await this.api?.addExpense(e);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+//   async updateExpense(id: number, e: any) {
+//     const r = await this.api?.updateExpense(id, e);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+//   async deleteExpense(id: number) {
+//     const r = await this.api?.deleteExpense(id);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+
+//   // ============================================
+//   // SALES RETURNS (مرتجعات بيع)
+//   // ============================================
+//   async addSalesReturn(data: any) {
+//     const r = await this.api?.addSalesReturn?.(data);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+
+//   async getAllSalesReturns() {
+//     return this.api?.getAllSalesReturns?.() || [];
+//   }
+
+//   // ============================================
+//   // STOCK MOVEMENTS
+//   // ============================================
+//   async getStockMovements() {
+//     return this.api?.getStockMovements?.() || [];
+//   }
+
+//   // ============================================
+//   // EMPLOYEES
+//   // ============================================
+//   async getAllEmployees() {
+//     return this.api?.getAllEmployees() || [];
+//   }
+
+//   async addEmployee(employee: any) {
+//     return this.api?.addEmployee(employee);
+//   }
+
+//   async updateEmployee(id: number, employee: any) {
+//     return this.api?.updateEmployee(id, employee);
+//   }
+
+//   async deleteEmployee(id: number) {
+//     return this.api?.deleteEmployee(id);
+//   }
+
+//   // ============================================
+//   // USERS
+//   // ============================================
+  async getAllUsers() {
+    return this.api?.getAllUsers() || [];
+  }
+  async addUser(u: any) {
+    const r = await this.api?.addUser(u);
+    this.reportsChanged$.next();
+    return r;
+  }
+  async updateUser(id: number, u: any) {
+    const r = await this.api?.updateUser(id, u);
+    this.reportsChanged$.next();
+    return r;
+  }
   async deleteUser(id: number) {
-    if (!this.api) return null;
-    return await this.api.deleteUser(id);
+    const r = await this.api?.deleteUser(id);
+    this.reportsChanged$.next();
+    return r;
   }
+
+
+//   async addStockMovement(movement: any) {
+//     const r = await this.api?.addStockMovement?.(movement);
+//     this.reportsChanged$.next();
+//     return r;
+//   }
+
+//   // في DatabaseService
+//   calculateCustomerBalance(customerId: number): Promise<number> {
+//     return this.api.calculateCustomerBalance(customerId);
+//   }
+
+//   getCustomerWithBalance(customerId: number): Promise<any> {
+//     return this.api.getCustomerWithBalance(customerId);
+//   }
+
+//   getAllCustomersWithBalances(): Promise<any[]> {
+//     return this.api.getAllCustomersWithBalances();
+//   }
 }

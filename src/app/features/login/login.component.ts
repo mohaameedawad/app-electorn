@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
     }
 
     try {
-      const usersData = await this.dbService.getUsers();
+      const usersData = await this.dbService.getAllUsers();
       console.log('Raw users data from DB:', usersData);
       
       // Sanitize the data received from Electron IPC

@@ -83,7 +83,7 @@ export class UsersComponent implements OnInit {
 
   async loadData() {
     try {
-      this.users = await this.dbService.getUsers();
+      this.users = await this.dbService.getAllUsers();
     } catch (error) {
       console.error('Error loading data:', error);
     }
