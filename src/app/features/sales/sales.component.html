@@ -259,6 +259,20 @@
           <label class="mb-2 col">الإجمالي (بعد الخصم): </label>
           <span class="mx-2">{{ newSale.total }}</span>
         </div>
+
+        <div class="col-4" *ngIf="newSale.customer_id">
+          <label class="mb-2 col">المديونية المتوقعة: </label>
+          <span class="mx-2" [class.text-danger]="getExpectedDebt() > 0">
+            {{ getExpectedDebt() }}
+          </span>
+        </div>
+      </div>
+      <div class="row mt-2" *ngIf="showCreditWarning">
+        <div class="col-12">
+          <div class="alert alert-warning">
+            ⚠️ تنبيه: هذا البيع سيتجاوز الحد الائتماني للعميل!
+          </div>
+        </div>
       </div>
     </div>
   </div>

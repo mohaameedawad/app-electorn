@@ -102,14 +102,27 @@ export class DatabaseService {
     }
   }
 
-  async addSale(sale: any) {
+ async addSale(sale: any) {
     if (!this.api) return null;
-    return await this.api.addSale(sale);
+  try {
+    const result = await this.api.addSale(sale);
+    return result;
+  } catch (error) {
+    console.error('❌ خطأ في إضافة الفاتورة من service:', error);
+    return null;
   }
+}
+
 
   async updateSale(id: number, sale: any) {
     if (!this.api) return null;
-    return await this.api.updateSale(id, sale);
+    try {
+      const result = await this.api.updateSale(id, sale);
+      return result;
+    } catch (error) {
+      console.error('Error getting employees:', error);
+      return [];
+    }
   }
 
   async deleteSale(id: number) {

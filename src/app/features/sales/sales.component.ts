@@ -60,6 +60,9 @@ export class SalesComponent implements OnInit {
   // Company information for invoice
   companyName: string = 'Luvi';
   companyPhone: string = '01070121737';
+  showCreditWarning: boolean = false;
+  customerCreditLimit: number = 0;
+  currentCustomerBalance: number = 0;
 
   // بيانات الفاتورة الجديدة
   newSale = {
@@ -372,7 +375,36 @@ export class SalesComponent implements OnInit {
     this.currentItem.total = this.currentItem.quantity * this.currentItem.price;
   }
 
-  addItem() {
+  // addItem() {
+  //   // Validate inputs
+  //   if (
+  //     !this.currentItem.product_id ||
+  //     !this.currentItem.quantity ||
+  //     this.currentItem.quantity <= 0 ||
+  //     !this.currentItem.price ||
+  //     this.currentItem.price <= 0
+  //   ) {
+  //     this.showValidationErrors = true;
+  //     return;
+  //   }
+
+  //   this.showValidationErrors = false;
+  //   const product = this.products.find(
+  //     (p) => p.value === this.currentItem.product_id
+  //   );
+  //   this.newSale.items.push({
+  //     product_id: this.currentItem.product_id,
+  //     product_name: product?.label || '',
+  //     quantity: this.currentItem.quantity,
+  //     price: this.currentItem.price,
+  //     total: this.currentItem.total,
+  //   });
+
+  //   this.calculateInvoiceTotal();
+  //   this.resetCurrentItem();
+  // }
+
+  async addItem() {
     // Validate inputs
     if (
       !this.currentItem.product_id ||
@@ -385,10 +417,31 @@ export class SalesComponent implements OnInit {
       return;
     }
 
-    this.showValidationErrors = false;
+    // 🔹 التحقق من توفر المخزون
     const product = this.products.find(
       (p) => p.value === this.currentItem.product_id
     );
+
+    // في تطبيق حقيقي، يمكنك إضافة API call للتحقق من المخزون
+    // const stockCheck = await this.dbService.checkStockAvailability(this.currentItem.product_id, this.currentItem.quantity);
+
+    // للآن، سنتحقق من المخزون المحلي
+    if (
+      product &&
+      product.stock !== undefined &&
+      product.stock < this.currentItem.quantity
+    ) {
+      this.confirmDialog.show({
+        message: `المخزون غير كافٍ! المتوفر: ${product.stock}، المطلوب: ${this.currentItem.quantity}`,
+        header: 'تنبيه المخزون',
+        acceptLabel: 'موافق',
+        showReject: false,
+      });
+      return;
+    }
+
+    this.showValidationErrors = false;
+
     this.newSale.items.push({
       product_id: this.currentItem.product_id,
       product_name: product?.label || '',
@@ -434,58 +487,145 @@ export class SalesComponent implements OnInit {
     this.showValidationErrors = false;
   }
 
-  async saveSale() {
-    try {
-      if (this.newSale.items.length === 0) {
-        this.confirmDialog.show({
-          message: 'يجب إضافة صنف واحد على الأقل',
-          header: 'تنبيه',
-          acceptLabel: 'إلغاء',
-          showReject: false,
-        });
-        return;
-      }
+  // async saveSale() {
+  //   try {
+  //     if (this.newSale.items.length === 0) {
+  //       this.confirmDialog.show({
+  //         message: 'يجب إضافة صنف واحد على الأقل',
+  //         header: 'تنبيه',
+  //         acceptLabel: 'إلغاء',
+  //         showReject: false,
+  //       });
+  //       return;
+  //     }
 
-      const customer = this.customers.find(
-        (c: any) => c.value === this.newSale.customer_id
-      );
-      const saleData = {
-        invoice_no: this.newSale.invoice_no,
-        customer_id: this.newSale.customer_id,
-        customer: customer?.label || '',
-        items: JSON.stringify(this.newSale.items),
-        subtotal: this.newSale.subtotal,
-        discount: this.newSale.discount,
-        tax: this.newSale.tax,
-        total: this.newSale.total,
-        paid_amount: this.newSale.paid_amount,
-        sale_date: this.formatDate(this.newSale.sale_date),
-      };
+  //     const customer = this.customers.find(
+  //       (c: any) => c.value === this.newSale.customer_id
+  //     );
+  //     const saleData = {
+  //       invoice_no: this.newSale.invoice_no,
+  //       customer_id: this.newSale.customer_id,
+  //       customer: customer?.label || '',
+  //       items: JSON.stringify(this.newSale.items),
+  //       subtotal: this.newSale.subtotal,
+  //       discount: this.newSale.discount,
+  //       tax: this.newSale.tax,
+  //       total: this.newSale.total,
+  //       paid_amount: this.newSale.paid_amount,
+  //       sale_date: this.formatDate(this.newSale.sale_date),
+  //     };
 
-      if (this.editingSaleId) {
-        // update existing
-        await this.dbService.updateSale(this.editingSaleId, saleData);
-      } else {
-        await this.dbService.addSale(saleData);
-      }
-      await this.loadSales();
+  //     if (this.editingSaleId) {
+  //       // update existing
+  //       await this.dbService.updateSale(this.editingSaleId, saleData);
+  //     } else {
+  //       await this.dbService.addSale(saleData);
+  //     }
+  //     await this.loadSales();
 
-      // Save current sale data for preview
-      this.previewSale = { ...this.newSale };
+  //     // Save current sale data for preview
+  //     this.previewSale = { ...this.newSale };
 
-      // Close main dialog
-      this.visible = false;
+  //     // Close main dialog
+  //     this.visible = false;
 
-      // Reset form
-      this.resetForm();
-      this.editingSaleId = null;
+  //     // Reset form
+  //     this.resetForm();
+  //     this.editingSaleId = null;
 
-      // Open preview dialog for printing
-      this.previewVisible = true;
-    } catch (error) {
-      console.error('Error saving sale:', error);
+  //     // Open preview dialog for printing
+  //     this.previewVisible = true;
+  //   } catch (error) {
+  //     console.error('Error saving sale:', error);
+  //   }
+  // }
+async saveSale() {
+  try {
+    if (this.newSale.items.length === 0) {
+      this.confirmDialog.show({
+        message: 'يجب إضافة صنف واحد على الأقل',
+        header: 'تنبيه',
+        acceptLabel: 'إلغاء',
+        showReject: false,
+      });
+      return;
     }
+
+    // 🔹 التحقق من الحد الائتماني النهائي
+    if (this.showCreditWarning) {
+      const confirm = await new Promise<boolean>((resolve) => {
+        this.confirmDialog.show({
+          message: `هذا البيع سيتجاوز الحد الائتماني للعميل. الحد: ${this.customerCreditLimit}, الرصيد المتوقع: ${this.currentCustomerBalance + this.getExpectedDebt()}`,
+          header: 'تنبيه تجاوز الحد الائتماني',
+          acceptLabel: 'متابعة',
+          rejectLabel: 'إلغاء',
+          accept: () => resolve(true),
+          reject: () => resolve(false),
+        });
+      });
+
+      if (!confirm) return;
+    }
+
+    const customer = this.customers.find(
+      (c: any) => c.value === this.newSale.customer_id
+    );
+    
+    // 🔹 تحضير بيانات الفاتورة
+    const saleData = {
+      invoice_no: this.newSale.invoice_no,
+      customer_id: this.newSale.customer_id,
+      customer: customer?.label || '',
+      employee_id: this.newSale.employee_id,
+      items: this.newSale.items,
+      subtotal: this.newSale.subtotal,
+      discount: this.newSale.discount,
+      tax: this.newSale.tax,
+      total: this.newSale.total,
+      paid_amount: this.newSale.paid_amount,
+      sale_date: this.formatDate(this.newSale.sale_date),
+      status: this.newSale.status || 'معلقة'
+    };
+
+    console.log('💾 حفظ بيانات الفاتورة:', {
+      editingSaleId: this.editingSaleId,
+      items: saleData.items.length,
+      saleData: saleData
+    });
+
+    // 🔹 حفظ البيانات
+    if (this.editingSaleId) {
+      // تحديث الفاتورة الحالية
+      console.log('✏️ تحديث الفاتورة رقم:', this.editingSaleId);
+      const result = await this.dbService.updateSale(this.editingSaleId, saleData);
+      console.log('✅ نتيجة التحديث:', result);
+    } else {
+      // إضافة فاتورة جديدة
+      console.log('➕ إضافة فاتورة جديدة');
+      const result = await this.dbService.addSale(saleData);
+      console.log('✅ نتيجة الإضافة:', result);
+    }
+
+    // 🔹 إعادة تحميل البيانات
+    await this.loadSales();
+
+    // حفظ بيانات المعاينة
+    this.previewSale = { ...this.newSale };
+
+    // إغلاق النافذة
+    this.visible = false;
+
+    // إعادة تعيين النموذج
+    this.resetForm();
+    this.editingSaleId = null;
+
+    // فتح نافذة المعاينة
+    this.previewVisible = true;
+
+  } catch (error) {
+    console.error('❌ خطأ في حفظ الفاتورة:', error);
   }
+}
 
   closeDialog() {
     this.visible = false;
@@ -519,5 +659,46 @@ export class SalesComponent implements OnInit {
       status: 'معلقة',
     };
     this.editingSaleId = null;
+  }
+  getExpectedDebt(): number {
+    const total = this.newSale.total || 0;
+    const paid = this.newSale.paid_amount || 0;
+    return Math.max(0, total - paid);
+  }
+
+  // 🔹 دالة للتحقق من الحد الائتماني عند تغيير العميل
+  onCustomerChange() {
+    this.checkCreditLimit();
+  }
+
+  // 🔹 دالة للتحقق من الحد الائتماني
+  async checkCreditLimit() {
+    if (!this.newSale.customer_id) {
+      this.showCreditWarning = false;
+      return;
+    }
+
+    try {
+      const customer = this.customers.find(
+        (c: any) => c.value === this.newSale.customer_id
+      );
+      if (customer) {
+        this.customerCreditLimit = customer.credit_limit || 0;
+        this.currentCustomerBalance = customer.balance || 0;
+
+        const expectedDebt = this.getExpectedDebt();
+        const newBalance = this.currentCustomerBalance + expectedDebt;
+
+        this.showCreditWarning =
+          this.customerCreditLimit > 0 && newBalance > this.customerCreditLimit;
+      }
+    } catch (error) {
+      console.error('Error checking credit limit:', error);
+    }
+  }
+
+  onPaidAmountChange() {
+    this.calculateInvoiceTotal();
+    this.checkCreditLimit();
   }
 }

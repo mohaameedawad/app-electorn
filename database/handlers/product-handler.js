@@ -50,14 +50,42 @@ class ProductHandler extends BaseHandler {
     return { changes: initialLength - this.getAllProducts().length };
   }
 
+  // 🔹 دالة للتحقق من توفر المخزون
+  checkStockAvailability(productId, requestedQuantity) {
+    const product = this.getProductById(productId);
+    if (!product) return { available: false, message: 'المنتج غير موجود' };
+    
+    const currentStock = product.stock || 0;
+    if (currentStock >= requestedQuantity) {
+      return { available: true, currentStock };
+    } else {
+      return { 
+        available: false, 
+        currentStock,
+        message: `المخزون غير كافٍ. المتوفر: ${currentStock}، المطلوب: ${requestedQuantity}`
+      };
+    }
+  }
+
   updateStock(productId, quantity) {
     const product = this.getProductById(productId);
     if (product) {
-      product.stock = (product.stock || 0) + quantity;
+      product.stock = Math.max(0, (product.stock || 0) + quantity);
       this.saveData();
       return true;
     }
     return false;
+  }
+
+  // 🔹 دالة للحصول على منتجات منخفضة المخزون
+  getLowStockProducts(threshold = 5) {
+    return this.getAllProducts().filter(p => (p.stock || 0) <= threshold);
+  }
+
+  // 🔹 دالة للحصول على حركات المخزون لمنتج معين
+  getProductStockMovements(productId) {
+    if (!this.data.stock_movements) return [];
+    return this.data.stock_movements.filter(movement => movement.product_id === productId);
   }
 }
 

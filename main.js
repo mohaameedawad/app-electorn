@@ -91,12 +91,24 @@ function setupIPCHandlers() {
     return db.sales.getAllSales();
   });
 
-  ipcMain.handle("db:addSale", async (event, sale) => {
-    return db.sales.addSale(sale);
-  });
+ipcMain.handle('db:addSale', async (event, sale) => {
+  try {
+    const result = await db.sales.addSale(sale);
+    return result;
+  } catch (error) {
+    console.error('❌ IPC: خطأ في إضافة الفاتورة:', error);
+    return { changes: 0 };
+  }
+});
 
   ipcMain.handle("db:updateSale", async (event, id, sale) => {
-    return db.sales.updateSale(id, sale);
+    try {
+      const result = await db.sales.updateSale(id, sale);
+      return result;
+    } catch (error) {
+      console.error("❌ IPC: خطأ في تحديث الفاتورة:", error);
+      return { changes: 0 };
+    }
   });
 
   ipcMain.handle("db:deleteSale", async (event, id) => {
