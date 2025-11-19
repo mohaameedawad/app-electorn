@@ -28,7 +28,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   addSale: (sale) => ipcRenderer.invoke("db:addSale", sale),
   updateSale: (id, sale) => ipcRenderer.invoke("db:updateSale", id, sale),
   deleteSale: (id) => ipcRenderer.invoke("db:deleteSale", id),
-
+  getSaleById : (id) => ipcRenderer.invoke("db:getSaleById", id),
   // الموظفين
   getEmployees: () => ipcRenderer.invoke("db:getEmployees"),
   addEmployee: (employee) => ipcRenderer.invoke("db:addEmployee", employee),

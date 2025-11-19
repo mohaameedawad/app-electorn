@@ -455,7 +455,7 @@ export class PurchasesComponent implements OnInit {
         supplier_id: this.newPurchase.supplier_id,
         supplier: supplier?.label || '',
         employee_id: this.newPurchase.employee_id,
-        items: JSON.stringify(this.newPurchase.items),
+        items: this.newPurchase.items,
         subtotal: this.newPurchase.subtotal,
         discount: this.newPurchase.discount,
         tax: this.newPurchase.tax,
@@ -466,7 +466,6 @@ export class PurchasesComponent implements OnInit {
       };
 
       if (this.editingPurchaseId) {
-        // update existing
         await this.dbService.updatePurchase(
           this.editingPurchaseId,
           purchaseData
@@ -476,13 +475,10 @@ export class PurchasesComponent implements OnInit {
       }
       await this.loadPurchases();
 
-      // Save current purchase data for preview
       this.previewPurchase = { ...this.newPurchase };
 
-      // Close main dialog
       this.visible = false;
 
-      // Reset form
       this.resetForm();
       this.editingPurchaseId = null;
 

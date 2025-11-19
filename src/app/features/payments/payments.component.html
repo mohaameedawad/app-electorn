@@ -33,10 +33,10 @@
     <div class="mb-4">
       <label class="form-label fw-semibold text-secondary">اسم العميل</label>
       <p-select
-        [(ngModel)]="payment.customerName"
+        [(ngModel)]="payment.customerId"
         [options]="customers"
         optionLabel="name"
-        optionValue="name"
+        optionValue="id"
         placeholder="اختر العميل"
         class="w-100"
         [style.width]="'100%'"

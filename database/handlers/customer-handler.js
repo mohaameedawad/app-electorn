@@ -1,72 +1,76 @@
 const BaseHandler = require('./base-handler');
 
 class CustomerHandler extends BaseHandler {
-  getAllCustomers() {
+  getCustomers() {
     return this.data.customers || [];
   }
 
   getCustomerById(id) {
-    return this.getAllCustomers().find(c => c.id === id);
+    return this.getCustomers().find(c => c.id === id);
   }
 
-  addCustomer(customer) {
-    if (!this.data.customers) this.data.customers = [];
-    
+   addCustomer(customer) {
+    if (!this.data.customers) {
+      this.data.customers = [];
+    }
+
+    // 🔹 حساب balance من credit و debit
+    const balance = (customer.debit || 0) - (customer.credit || 0);
+
     const newCustomer = {
-      id: this._getNextId('customers'),
+      id: this._getNextId("customers"),
       ...customer,
+      balance: balance, // 🔹 إضافة حقل balance
       createdAt: new Date().toISOString(),
-      balance: customer.balance || 0,
-      credit_limit: customer.credit_limit || 0,
-      total_purchases: customer.total_purchases || 0
     };
-    
+
     this.data.customers.push(newCustomer);
     this.saveData();
-    return { lastInsertRowid: newCustomer.id, changes: 1 };
+    return newCustomer;
   }
 
   updateCustomer(id, customer) {
-    const index = this.getAllCustomers().findIndex(c => c.id === id);
+    const index = this.getCustomers().findIndex((c) => c.id === id);
     if (index !== -1) {
-      this.data.customers[index] = { 
-        ...this.data.customers[index], 
+      const balance = (customer.debit || 0) - (customer.credit || 0);
+
+      this.data.customers[index] = {
+        ...this.data.customers[index],
         ...customer,
-        updatedAt: new Date().toISOString()
+        balance: balance, // 🔹 تحديث balance
+        updatedAt: new Date().toISOString(),
       };
+
       this.saveData();
-      return { changes: 1 };
+      return this.data.customers[index];
     }
-    return { changes: 0 };
+    return null;
   }
 
-  deleteCustomer(id) {
-    const initialLength = this.getAllCustomers().length;
-    this.data.customers = this.getAllCustomers().filter(c => c.id !== id);
+   deleteCustomer(id) {
+    const initialLength = this.getCustomers().length;
+    this.data.customers = this.getCustomers().filter((c) => c.id !== id);
     this.saveData();
-    return { changes: initialLength - this.getAllCustomers().length };
+    return { changes: initialLength - this.getCustomers().length };
   }
 
-  // 🔹 دالة لتحديث رصيد العميل
-  updateCustomerBalance(id, amount) {
-    const customer = this.getCustomerById(id);
+  // 🔹 دالة لتحديث رصيد العميل (ممكن تضيفها لو محتاج)
+  updateCustomerBalance(customerId, amount) {
+    const customer = this.getCustomerById(customerId);
     if (customer) {
       customer.balance = (customer.balance || 0) + amount;
-      customer.updatedAt = new Date().toISOString();
       this.saveData();
-      return true;
     }
-    return false;
   }
 
   // 🔹 دالة للحصول على عملاء مدينين
   getDebtors() {
-    return this.getAllCustomers().filter(customer => (customer.balance || 0) > 0);
+    return this.getCustomers().filter(customer => (customer.balance || 0) > 0);
   }
 
   // 🔹 دالة للحصول على إحصائيات المديونية
   getDebtStatistics() {
-    const customers = this.getAllCustomers();
+    const customers = this.getCustomers();
     const totalDebt = customers.reduce((sum, customer) => sum + (customer.balance || 0), 0);
     const debtorsCount = customers.filter(c => (c.balance || 0) > 0).length;
     

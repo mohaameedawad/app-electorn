@@ -23,8 +23,8 @@ class SaleHandler extends BaseHandler {
       id: this._getNextId("sales"),
       ...sale,
       createdAt: new Date().toISOString(),
-      status: sale.status || "completed",
-      remaining_amount: (sale.total || 0) - (sale.paid_amount || 0), // 🔹 إضافة المبلغ المتبقي
+      status: sale.status || "معلقة",
+      remaining_amount: (sale.total || 0) - (sale.paid_amount || 0),
     };
 
     this.data.sales.push(newSale);
@@ -56,10 +56,8 @@ class SaleHandler extends BaseHandler {
 
   updateSale(id, sale) {
     const index = this.getAllSales().findIndex((s) => s.id === id);
-    console.log("🔍 البحث عن الفاتورة للتحديث:", { id, index });
-    if (index !== -1) {
-      console.log("🔄 بدء تحديث الفاتورة:", { id, sale });
 
+    if (index !== -1) {
       // 🔹 الحصول على الفاتورة القديمة
       const oldSale = this.data.sales[index];
 
@@ -85,9 +83,6 @@ class SaleHandler extends BaseHandler {
         console.error("❌ خطأ في تحليل items الجديدة:", error);
         newItems = sale.items || [];
       }
-
-      console.log("📦 مقارنة العناصر:", { oldItems, newItems });
-
       // 🔹 تحديث المخزون بناءً على التغير في الكميات
       this.updateStockOnEdit(oldItems, newItems);
 
@@ -238,7 +233,7 @@ class SaleHandler extends BaseHandler {
       const diff = newQty - oldQty;
 
       if (diff !== 0) {
-    this.updateProductStockOnSale(productId, Math.abs(diff));
+    this.updateProductStockOnSale(productId, diff);
       }
     });
   }
@@ -316,6 +311,8 @@ class SaleHandler extends BaseHandler {
       return saleDate >= new Date(startDate) && saleDate <= new Date(endDate);
     });
   }
+
+
 }
 
 module.exports = SaleHandler;

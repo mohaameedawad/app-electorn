@@ -102,17 +102,16 @@ export class DatabaseService {
     }
   }
 
- async addSale(sale: any) {
+  async addSale(sale: any) {
     if (!this.api) return null;
-  try {
-    const result = await this.api.addSale(sale);
-    return result;
-  } catch (error) {
-    console.error('❌ خطأ في إضافة الفاتورة من service:', error);
-    return null;
+    try {
+      const result = await this.api.addSale(sale);
+      return result;
+    } catch (error) {
+      console.error('❌ خطأ في إضافة الفاتورة من service:', error);
+      return null;
+    }
   }
-}
-
 
   async updateSale(id: number, sale: any) {
     if (!this.api) return null;
@@ -128,6 +127,16 @@ export class DatabaseService {
   async deleteSale(id: number) {
     if (!this.api) return null;
     return await this.api.deleteSale(id);
+  }
+
+  async getSaleById(id: number) {
+    if (!this.api) return null;
+    try {
+      return await this.api.getSaleById(id);
+    } catch (error) {
+      console.error('Error getting sale by ID:', error);
+      return null;
+    }
   }
 
   // الموظفين
@@ -277,5 +286,36 @@ export class DatabaseService {
   async deleteUser(id: number) {
     if (!this.api) return null;
     return await this.api.deleteUser(id);
+  }
+
+  async checkProductStock(
+    productId: number,
+    requestedQuantity: number
+  ): Promise<any> {
+    try {
+      const products = await this.getProducts();
+      const product = products.find((p: any) => p.id === productId);
+
+      if (!product) {
+        return {
+          available: false,
+          productName: 'منتج غير معروف',
+          availableStock: 0,
+          requestedQuantity,
+        };
+      }
+
+      const availableStock = parseFloat(product.stock) || 0;
+
+      return {
+        available: availableStock >= requestedQuantity,
+        productName: product.name,
+        availableStock,
+        requestedQuantity,
+      };
+    } catch (error) {
+      console.error('Error in checkProductStock:', error);
+      throw error;
+    }
   }
 }

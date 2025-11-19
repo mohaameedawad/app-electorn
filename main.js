@@ -37,7 +37,7 @@ app.whenReady().then(() => {
 function setupIPCHandlers() {
   // العملاء
   ipcMain.handle("db:getCustomers", async () => {
-    return db.customers.getAllCustomers();
+    return db.customers.getCustomers();
   });
 
   ipcMain.handle("db:addCustomer", async (event, customer) => {
@@ -115,6 +115,10 @@ ipcMain.handle('db:addSale', async (event, sale) => {
     return db.sales.deleteSale(id);
   });
 
+  ipcMain.handle("db:getSaleById", async (event, id) => {
+    return db.sales.getSaleById(id);
+  });
+  
   // الموظفين
   ipcMain.handle("db:getEmployees", async () => {
     return db.employees.getEmployees();

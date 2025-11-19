@@ -49,9 +49,7 @@ export class CustomersComponent implements OnInit {
     balanceType: 'debit',
   };
 
-  constructor(
-    private dbService: DatabaseService,
-  ) {}
+  constructor(private dbService: DatabaseService) {}
 
   async ngOnInit() {
     this.columns = [
@@ -73,7 +71,17 @@ export class CustomersComponent implements OnInit {
 
   async loadCustomers() {
     try {
-      this.data = await this.dbService.getCustomers();
+      const customers = await this.dbService.getCustomers();
+
+      this.data = customers.map((customer: any) => {
+        const balance = customer.balance || 0;
+
+        return {
+          ...customer,
+          credit: balance < 0 ? Math.abs(balance) : 0,
+          debit: balance > 0 ? balance : 0,
+        };
+      });
     } catch (error) {
       console.error('Error loading customers:', error);
     }
@@ -121,54 +129,49 @@ export class CustomersComponent implements OnInit {
   }
 
   async saveCustomer() {
-    try {
-      if (!this.newCustomer.name) {
-        this.confirmDialog.show({
-          message: 'الرجاء إدخال اسم العميل',
-          header: 'تنبيه',
-          acceptLabel: 'إلغاء',
-          rejectLabel: '',
-          showReject: false,
-        });
-        return;
-      }
-
-      // Validate Egyptian phone number
-      if (!this.validateEgyptianPhone(this.newCustomer.phone)) {
-        this.phoneError = 'يجب إدخال رقم مصري مكون من 11 رقم يبدأ بـ 01';
-        return;
-      }
-
-      this.phoneError = '';
-
-      const customerData = {
-        name: this.newCustomer.name,
-        phone: this.newCustomer.phone,
-        debit:
-          this.newCustomer.balanceType === 'debit'
-            ? this.newCustomer.balanceAmount
-            : 0,
-        credit:
-          this.newCustomer.balanceType === 'credit'
-            ? this.newCustomer.balanceAmount
-            : 0,
-      };
-
-      if (this.editingCustomerId) {
-        await this.dbService.updateCustomer(
-          this.editingCustomerId,
-          customerData
-        );
-      } else {
-        await this.dbService.addCustomer(customerData);
-      }
-
-      await this.loadCustomers();
-      this.closeDialog();
-    } catch (error) {
-      console.error('Error saving customer:', error);
+  try {
+    if (!this.newCustomer.name) {
+      // ... existing validation
     }
+
+    // Validate Egyptian phone number
+    if (!this.validateEgyptianPhone(this.newCustomer.phone)) {
+      this.phoneError = 'يجب إدخال رقم مصري مكون من 11 رقم يبدأ بـ 01';
+      return;
+    }
+
+    this.phoneError = '';
+
+    // 🔹 حساب balance من النوع والمبلغ
+    const balance = this.newCustomer.balanceType === 'debit' 
+      ? this.newCustomer.balanceAmount 
+      : -this.newCustomer.balanceAmount;
+
+    const customerData = {
+      name: this.newCustomer.name,
+      phone: this.newCustomer.phone,
+      debit: this.newCustomer.balanceType === 'debit' ? this.newCustomer.balanceAmount : 0,
+      credit: this.newCustomer.balanceType === 'credit' ? this.newCustomer.balanceAmount : 0,
+      balance: balance // 🔹 إضافة balance
+    };
+
+    console.log('💾 حفظ بيانات العميل:', {
+      editingCustomerId: this.editingCustomerId,
+      customerData: customerData
+    });
+
+    if (this.editingCustomerId) {
+      await this.dbService.updateCustomer(this.editingCustomerId, customerData);
+    } else {
+      await this.dbService.addCustomer(customerData);
+    }
+
+    await this.loadCustomers();
+    this.closeDialog();
+  } catch (error) {
+    console.error('Error saving customer:', error);
   }
+}
 
   validateEgyptianPhone(phone: string): boolean {
     // Egyptian phone number: 11 digits starting with 01

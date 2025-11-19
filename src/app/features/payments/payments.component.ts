@@ -16,7 +16,7 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
 interface Payment {
   id?: number;
   receiptNumber: string;
-  customerName: string;
+  customerId?: number;
   date: Date;
   amount: number;
 }
@@ -53,7 +53,7 @@ export class PaymentsComponent implements OnInit {
 
   columns = [
     { field: 'receiptNumber', header: 'رقم سند القبض' },
-    { field: 'customerName', header: 'اسم العميل' },
+    { field: 'customerId', header: 'اسم العميل', type: 'customer' },
     { field: 'date', header: 'التاريخ', type: 'date' },
     { field: 'amount', header: 'المبلغ' },
     {
@@ -83,7 +83,7 @@ export class PaymentsComponent implements OnInit {
     const nextNumber = this.generateReceiptNumber();
     return {
       receiptNumber: nextNumber,
-      customerName: '',
+      customerId: undefined,
       date: new Date(),
       amount: 0,
     };
