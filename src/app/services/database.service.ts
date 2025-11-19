@@ -19,7 +19,7 @@ export class DatabaseService {
     try {
       return await this.api.getCustomers();
     } catch (error) {
-      console.error('Error getting customers:', error);
+      console.error('Error getting getCustomers:', error);
       return [];
     }
   }

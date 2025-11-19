@@ -1,6 +1,11 @@
 const BaseHandler = require("./base-handler");
 
 class PaymentHandler extends BaseHandler {
+  constructor(filePath, customerHandler) {
+    super(filePath);
+    this.customerHandler = customerHandler; // 🔹 إضافة reference للـ CustomerHandler
+  }
+
   getPayments() {
     if (!this.data.payments_received) {
       this.data.payments_received = [];
@@ -25,6 +30,12 @@ class PaymentHandler extends BaseHandler {
     };
 
     this.data.payments_received.push(newPayment);
+
+    // 🔹 تحديث رصيد العميل تلقائياً
+    if (payment.customerId) {
+      this.updateCustomerBalance(payment.customerId, -payment.amount, true);
+    }
+
     this.saveData();
     return newPayment;
   }
@@ -47,15 +58,28 @@ class PaymentHandler extends BaseHandler {
   }
 
   updatePayment(id, payment, type = "received") {
-    const collection =
-      type === "received" ? "payments_received" : "payments_made";
+    const collection = type === "received" ? "payments_received" : "payments_made";
     const index = (this.data[collection] || []).findIndex((p) => p.id === id);
+    
     if (index !== -1) {
+      const oldPayment = this.data[collection][index];
+      
+      // 🔹 استعادة الرصيد القديم أولاً
+      if (oldPayment.customerId && oldPayment.amount) {
+        this.updateCustomerBalance(oldPayment.customerId, oldPayment.amount, false);
+      }
+
       this.data[collection][index] = {
         ...this.data[collection][index],
         ...payment,
         updatedAt: new Date().toISOString(),
       };
+
+      // 🔹 تطبيق الرصيد الجديد
+      if (payment.customerId && payment.amount) {
+        this.updateCustomerBalance(payment.customerId, -payment.amount, true);
+      }
+
       this.saveData();
       return this.data[collection][index];
     }
@@ -63,19 +87,60 @@ class PaymentHandler extends BaseHandler {
   }
 
   deletePayment(id, type = "received") {
-    const collection =
-      type === "received" ? "payments_received" : "payments_made";
-    const initialLength = (this.data[collection] || []).length;
-    this.data[collection] = (this.data[collection] || []).filter(
-      (p) => p.id !== id
-    );
-    this.saveData();
-    return { changes: initialLength - this.data[collection].length };
+    const collection = type === "received" ? "payments_received" : "payments_made";
+    const payments = this.data[collection] || [];
+    const paymentIndex = payments.findIndex((p) => p.id === id);
+    
+    if (paymentIndex !== -1) {
+      const payment = payments[paymentIndex];
+      
+      // 🔹 استعادة رصيد العميل عند الحذف
+      if (payment.customerId && payment.amount) {
+        this.updateCustomerBalance(payment.customerId, payment.amount, false);
+      }
+
+      this.data[collection] = payments.filter((p) => p.id !== id);
+      this.saveData();
+      return { changes: 1 };
+    }
+    return { changes: 0 };
+  }
+
+  // 🔹 دالة محدثة لتحديث رصيد العميل
+  updateCustomerBalance(customerId, amount, isPaymentReceived = true) {
+    if (!this.customerHandler) {
+      console.warn('CustomerHandler not available');
+      return 0;
+    }
+
+    try {
+      // استخدام الـ CustomerHandler لتحديث الرصيد
+      const customer = this.customerHandler.getCustomerById(customerId);
+      if (customer) {
+        // amount بيكون سالب علشان نخفض المديونية
+        // payment received -> amount سالب -> balance بيتنقص
+        const newBalance = (customer.balance || 0) + amount;
+        customer.balance = newBalance;
+        customer.updatedAt = new Date().toISOString();
+        
+        console.log(`💰 تحديث رصيد العميل ${customerId}: ${customer.balance - amount} → ${newBalance}`);
+        
+        // حفظ التغييرات في الـ CustomerHandler
+        this.customerHandler.saveData();
+        return newBalance;
+      } else {
+        console.warn(`Customer ${customerId} not found`);
+        return 0;
+      }
+    } catch (error) {
+      console.error('Error updating customer balance:', error);
+      return 0;
+    }
   }
 
   getCustomerPayments(customerId) {
     return (this.data.payments_received || []).filter(
-      (p) => p.customerId === customerId
+      (p) => p.customer_id === customerId || p.customerId === customerId
     );
   }
 
@@ -85,36 +150,36 @@ class PaymentHandler extends BaseHandler {
     );
   }
 
-  updateCustomerBalance(customerId, amount, isPaymentReceived = true) {
-    if (!this.data.customers) {
-      this.data.customers = [];
-    }
-
-    let customer = this.data.customers.find((c) => c.id === customerId);
-    if (!customer) {
-      console.warn(`Customer ${customerId} not found`);
-      return;
-    }
-
-    if (customer.balance === undefined) {
-      customer.balance = 0;
-    }
-    if (isPaymentReceived) {
-      customer.balance += amount; 
-    } else {
-      customer.balance -= amount; 
-    }
-
-    customer.updatedAt = new Date().toISOString();
-    this.saveData();
-    return customer.balance;
+  getCustomerBalance(customerId) {
+    if (!this.customerHandler) return 0;
+    
+    const customer = this.customerHandler.getCustomerById(customerId);
+    return customer ? customer.balance || 0 : 0;
   }
 
-  getCustomerBalance(customerId) {
-    const customer = (this.data.customers || []).find(
-      (c) => c.id === customerId
-    );
-    return customer ? customer.balance || 0 : 0;
+  // 🔹 دالة للحصول على إحصائيات المدفوعات
+  getPaymentStatistics(startDate, endDate) {
+    const received = this.data.payments_received || [];
+    const made = this.data.payments_made || [];
+
+    const filteredReceived = received.filter(p => {
+      const paymentDate = new Date(p.date || p.createdAt);
+      return paymentDate >= new Date(startDate) && paymentDate <= new Date(endDate);
+    });
+
+    const filteredMade = made.filter(p => {
+      const paymentDate = new Date(p.date || p.createdAt);
+      return paymentDate >= new Date(startDate) && paymentDate <= new Date(endDate);
+    });
+
+    return {
+      totalReceived: filteredReceived.reduce((sum, p) => sum + (p.amount || 0), 0),
+      totalMade: filteredMade.reduce((sum, p) => sum + (p.amount || 0), 0),
+      receivedCount: filteredReceived.length,
+      madeCount: filteredMade.length,
+      netCashFlow: filteredReceived.reduce((sum, p) => sum + (p.amount || 0), 0) - 
+                   filteredMade.reduce((sum, p) => sum + (p.amount || 0), 0)
+    };
   }
 }
 

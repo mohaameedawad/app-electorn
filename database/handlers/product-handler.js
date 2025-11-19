@@ -1,16 +1,16 @@
 const BaseHandler = require('./base-handler');
 
 class ProductHandler extends BaseHandler {
-  getAllProducts() {
+  getProducts() {
     return this.data.products || [];
   }
 
   getProductById(id) {
-    return this.getAllProducts().find(p => p.id === id);
+    return this.getProducts().find(p => p.id === id);
   }
 
   getProductsByCategory(categoryId) {
-    return this.getAllProducts().filter(p => p.category_id === categoryId);
+    return this.getProducts().filter(p => p.category_id === categoryId);
   }
 
   addProduct(product) {
@@ -30,7 +30,7 @@ class ProductHandler extends BaseHandler {
   }
 
   updateProduct(id, product) {
-    const index = this.getAllProducts().findIndex(p => p.id === id);
+    const index = this.getProducts().findIndex(p => p.id === id);
     if (index !== -1) {
       this.data.products[index] = { 
         ...this.data.products[index], 
@@ -44,10 +44,10 @@ class ProductHandler extends BaseHandler {
   }
 
   deleteProduct(id) {
-    const initialLength = this.getAllProducts().length;
-    this.data.products = this.getAllProducts().filter(p => p.id !== id);
+    const initialLength = this.getProducts().length;
+    this.data.products = this.getProducts().filter(p => p.id !== id);
     this.saveData();
-    return { changes: initialLength - this.getAllProducts().length };
+    return { changes: initialLength - this.getProducts().length };
   }
 
   // 🔹 دالة للتحقق من توفر المخزون
@@ -79,7 +79,7 @@ class ProductHandler extends BaseHandler {
 
   // 🔹 دالة للحصول على منتجات منخفضة المخزون
   getLowStockProducts(threshold = 5) {
-    return this.getAllProducts().filter(p => (p.stock || 0) <= threshold);
+    return this.getProducts().filter(p => (p.stock || 0) <= threshold);
   }
 
   // 🔹 دالة للحصول على حركات المخزون لمنتج معين

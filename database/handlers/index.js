@@ -35,7 +35,7 @@ class DatabaseService {
     return {
       totalCustomers: this.customers.getAllCustomers().length,
       totalSuppliers: this.suppliers.getAllSuppliers().length,
-      totalProducts: this.products.getAllProducts().length,
+      totalProducts: this.products.getProducts().length,
       totalSales: this.sales.getAllSales().length,
       totalEmployees: this.employees.getEmployees().length,
       totalPurchases: this.purchases.getPurchases().length,

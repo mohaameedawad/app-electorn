@@ -17,6 +17,7 @@ interface Payment {
   id?: number;
   receiptNumber: string;
   customerId?: number;
+  customer_name?: string;
   date: Date;
   amount: number;
 }
@@ -53,7 +54,7 @@ export class PaymentsComponent implements OnInit {
 
   columns = [
     { field: 'receiptNumber', header: 'رقم سند القبض' },
-    { field: 'customerId', header: 'اسم العميل', type: 'customer' },
+    { field: 'customer_name', header: 'اسم العميل' },
     { field: 'date', header: 'التاريخ', type: 'date' },
     { field: 'amount', header: 'المبلغ' },
     {
@@ -74,6 +75,19 @@ export class PaymentsComponent implements OnInit {
     try {
       this.payments = await this.dbService.getPayments();
       this.customers = await this.dbService.getCustomers();
+
+      this.payments = this.payments.map((payment) => {
+        if (payment.customerId) {
+          const customer = this.customers.find(
+            (c) => c.id === payment.customerId
+          );
+          return {
+            ...payment,
+            customer_name: customer ? customer.name : 'غير معروف',
+          };
+        }
+        return payment;
+      });
     } catch (error) {
       console.error('Error loading data:', error);
     }
@@ -129,16 +143,38 @@ export class PaymentsComponent implements OnInit {
 
   async savePayment() {
     try {
+      // التحقق من البيانات
+      if (!this.payment.customerId || this.payment.amount <= 0) {
+        alert('يرجى اختيار عميل وإدخال مبلغ صحيح');
+        return;
+      }
+
+      const paymentData = {
+        receiptNumber: this.payment.receiptNumber,
+        customerId: this.payment.customerId,
+        date: this.formatDate(this.payment.date),
+        amount: this.payment.amount,
+        type: 'received',
+      };
+
       if (this.isEditMode) {
-        await this.dbService.updatePayment(this.payment.id!, this.payment);
+        await this.dbService.updatePayment(this.payment.id!, paymentData);
       } else {
-        await this.dbService.addPayment(this.payment);
+        await this.dbService.addPayment(paymentData);
       }
       this.displayDialog = false;
       await this.loadData();
     } catch (error) {
       console.error('Error saving payment:', error);
+      alert('حدث خطأ أثناء حفظ سند القبض');
     }
+  }
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   hideDialog() {

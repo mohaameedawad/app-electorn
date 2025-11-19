@@ -71,7 +71,7 @@ function setupIPCHandlers() {
 
   // المنتجات
   ipcMain.handle("db:getProducts", async () => {
-    return db.products.getAllProducts();
+    return db.products.getProducts();
   });
 
   ipcMain.handle("db:addProduct", async (event, product) => {
