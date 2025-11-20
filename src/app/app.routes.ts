@@ -8,7 +8,7 @@ import { SuppliersComponent } from './features/suppliers/suppliers.component';
 import { ProductsComponent } from './features/products/products.component';
 import { EmployeesComponent } from './features/employees/employees.component';
 import { ReportsComponent } from './features/reports/reports.component';
-import { CustomersPaymentsComponent } from './features/payments/customers-payments.component';
+import { CustomersPaymentsComponent } from './features/customers-payments/customers-payments.component';
 import { ExpensesComponent } from './features/expenses/expenses.component';
 import { UsersComponent } from './features/users/users.component';
 import { ForgotPasswordComponent } from './features/forgot-password/forgot-password.component';
