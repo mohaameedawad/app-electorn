@@ -5,7 +5,8 @@ const ProductHandler = require("./product-handler");
 const SaleHandler = require("./sale-handler");
 const EmployeeHandler = require("./employee-handler");
 const PurchaseHandler = require("./purchase-handler");
-const PaymentHandler = require("./payment-handler");
+const CustomerPaymentHandler = require("./customers-payment-handler");
+const SupplierPaymentHandler = require("./suppliers-payment-handler");
 const ExpenseHandler = require("./expense-handler");
 const UsersHandler = require("./users-handler");
 
@@ -22,7 +23,8 @@ class DatabaseService {
     this.sales = new SaleHandler(sharedData);
     this.employees = new EmployeeHandler(sharedData);
     this.purchases = new PurchaseHandler(sharedData);
-    this.customerPayments = new PaymentHandler(sharedData, this.customers);
+    this.customerPayments = new CustomerPaymentHandler(sharedData, this.customers);
+    this.supplierPayments = new SupplierPaymentHandler(sharedData, this.suppliers);
     this.expenses = new ExpenseHandler(sharedData);
     this.users = new UsersHandler(sharedData);
 

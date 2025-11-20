@@ -192,46 +192,66 @@ export class DatabaseService {
   }
 
   // دفعات العملاء
-async getCustomerPayments() {
-  if (!this.api) return [];
-  try {
-    return await this.api.getCustomerPayments();
-  } catch (error) {
-    console.error('Error getting customer payments:', error);
-    return [];
+  async getCustomerPayments() {
+    if (!this.api) return [];
+    try {
+      return await this.api.getCustomerPayments();
+    } catch (error) {
+      console.error('Error getting customer payments:', error);
+      return [];
+    }
   }
-}
 
-async addCustomerPayment(payment: any) {
-  if (!this.api) return null;
-  try {
-    return await this.api.addCustomerPayment(payment);
-  } catch (error) {
-    console.error('Error adding customer payment:', error);
-    return null;
+  async addCustomerPayment(payment: any) {
+    if (!this.api) return null;
+    try {
+      return await this.api.addCustomerPayment(payment);
+    } catch (error) {
+      console.error('Error adding customer payment:', error);
+      return null;
+    }
   }
-}
 
-async updateCustomerPayment(id: number, payment: any) {
-  if (!this.api) return null;
-  try {
-    return await this.api.updateCustomerPayment(id, payment);
-  } catch (error) {
-    console.error('Error updating customer payment:', error);
-    return null;
+  async updateCustomerPayment(id: number, payment: any) {
+    if (!this.api) return null;
+    try {
+      return await this.api.updateCustomerPayment(id, payment);
+    } catch (error) {
+      console.error('Error updating customer payment:', error);
+      return null;
+    }
   }
-}
 
-async deleteCustomerPayment(id: number) {
-  if (!this.api) return null;
-  try {
-    return await this.api.deleteCustomerPayment(id);
-  } catch (error) {
-    console.error('Error deleting customer payment:', error);
-    return null;
+  async deleteCustomerPayment(id: number) {
+    if (!this.api) return null;
+    try {
+      return await this.api.deleteCustomerPayment(id);
+    } catch (error) {
+      console.error('Error deleting customer payment:', error);
+      return null;
+    }
   }
-}
 
+  // Supplier Payments
+  async getSupplierPayments() {
+     if (!this.api) return [];
+    return await this.api.getSupplierPayments();
+  }
+
+  async addSupplierPayment(payment: any) {
+    if (!this.api) return null;
+    return await this.api.addSupplierPayment(payment);
+  }
+
+  async updateSupplierPayment(id: number, payment: any) {
+    if (!this.api) return null;
+    return await this.api.updateSupplierPayment(id, payment);
+  }
+
+  async deleteSupplierPayment(id: number) {
+    if (!this.api) return null;
+    return await this.api.deleteSupplierPayment(id);
+  }
 
   // المصروفات
   async getExpenses() {

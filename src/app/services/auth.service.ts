@@ -82,6 +82,7 @@ export class AuthService {
         Permission.PRODUCTS,
         Permission.EMPLOYEES,
         Permission.CUSTOMERS_PAYMENTS,
+        Permission.SUPPLIERS_PAYMENTS,
         Permission.EXPENSES,
         Permission.REPORTS,
         Permission.USERS
@@ -93,6 +94,7 @@ export class AuthService {
         Permission.CUSTOMERS,
         Permission.SUPPLIERS,
         Permission.CUSTOMERS_PAYMENTS,
+        Permission.SUPPLIERS_PAYMENTS,
         Permission.EXPENSES,
         Permission.REPORTS
       ],

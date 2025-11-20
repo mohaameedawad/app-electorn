@@ -14,6 +14,7 @@ import { UsersComponent } from './features/users/users.component';
 import { ForgotPasswordComponent } from './features/forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './features/change-password/change-password.component';
 import { AuthGuard } from './guards/auth.guard';
+import { SuppliersPaymentsComponent } from './features/suppliers-payments/suppliers-payments.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -28,6 +29,7 @@ export const routes: Routes = [
   { path: 'products', component: ProductsComponent, canActivate: [AuthGuard], data: { title: 'المنتجات' } },
   { path: 'employees', component: EmployeesComponent, canActivate: [AuthGuard], data: { title: 'الموظفين' } },
   { path: 'customers_payments', component: CustomersPaymentsComponent, canActivate: [AuthGuard], data: { title: 'دفعات العملاء' } },
+  { path: 'suppliers_payments', component: SuppliersPaymentsComponent, canActivate: [AuthGuard], data: { title: 'دفعات الموردين' }},
   { path: 'expenses', component: ExpensesComponent, canActivate: [AuthGuard], data: { title: 'المصروفات' } },
   { path: 'users', component: UsersComponent, canActivate: [AuthGuard], data: { title: 'إدارة المستخدمين' } },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard], data: { title: 'التقارير' } },

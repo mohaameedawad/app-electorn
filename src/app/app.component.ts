@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
     { path: '/products', icon: 'pi-box', label: 'المنتجات', page: Permission.PRODUCTS },
     { path: '/employees', icon: 'pi-id-card', label: 'الموظفين', page: Permission.EMPLOYEES },
     { path: '/customers_payments', icon: 'pi-money-bill', label: 'دفعات العملاء', page: Permission.CUSTOMERS_PAYMENTS },
+    { path: '/suppliers_payments', icon: 'pi-money-bill', label: 'دفعات الموردين', page: Permission.SUPPLIERS_PAYMENTS },
     { path: '/expenses', icon: 'pi-wallet', label: 'المصروفات', page: Permission.EXPENSES },
     { path: '/users', icon: 'pi-user-edit', label: 'إدارة المستخدمين', page: Permission.USERS },
     { path: '/reports', icon: 'pi-chart-bar', label: 'التقارير', page: Permission.REPORTS }

@@ -153,7 +153,7 @@ function setupIPCHandlers() {
     return db.purchases.deletePurchase(id);
   });
 
-  // الدفعات
+  // العملاءدفعات
   ipcMain.handle("db:getCustomerPayments", async () => {
     return await db.customerPayments.getAllCustomerPayments();
   });
@@ -168,6 +168,24 @@ function setupIPCHandlers() {
   ipcMain.handle("db:deleteCustomerPayment", async (event, id) => {
     return await db.customerPayments.deleteCustomerPayment(id);
   });
+
+// دفعات الموردين
+  ipcMain.handle("db:getSupplierPayments", async () => {
+  return await db.customerPayments.getSupplierPayments();
+});
+
+ipcMain.handle("db:addSupplierPayment", async (event, payment) => {
+  return await db.customerPayments.addPaymentMade(payment);
+});
+
+ipcMain.handle("db:updateSupplierPayment", async (event, id, payment) => {
+  return await db.customerPayments.updateSupplierPayment(id, payment);
+});
+
+ipcMain.handle("db:deleteSupplierPayment", async (event, id) => {
+  return await db.customerPayments.deleteSupplierPayment(id);
+});
+
 
   // المصروفات
   ipcMain.handle("db:getExpenses", async () => {

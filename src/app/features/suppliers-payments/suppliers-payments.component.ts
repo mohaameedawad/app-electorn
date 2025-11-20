@@ -6,24 +6,25 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
-import { DatabaseService } from '../../services/database.service';
-import { TableComponent } from '../../shared/components/table/table.component';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
+
+import { DatabaseService } from '../../services/database.service';
+import { TableComponent } from '../../shared/components/table/table.component';
 import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
-interface Payment {
+interface SupplierPayment {
   id?: number;
   receiptNumber: string;
-  customerId?: number;
-  customer_name?: string;
+  supplierId?: number;
+  supplier_name?: string;
   date: Date;
   amount: number;
 }
 
 @Component({
-  selector: 'app-customers-payments',
+  selector: 'app-suppliers-payments',
   standalone: true,
   imports: [
     CommonModule,
@@ -39,22 +40,22 @@ interface Payment {
     DialogComponent,
     ConfirmationDialogComponent,
   ],
-  templateUrl: './customers-payments.component.html',
-  styleUrls: ['./customers-payments.component.scss'],
+  templateUrl: './suppliers-payments.component.html',
+  styleUrl: './suppliers-payments.component.scss',
 })
-export class CustomersPaymentsComponent implements OnInit {
+export class SuppliersPaymentsComponent implements OnInit {
   @ViewChild(ConfirmationDialogComponent)
   confirmDialog!: ConfirmationDialogComponent;
 
-  customerPayments: Payment[] = [];
-  customers: any[] = [];
+  payments: SupplierPayment[] = [];
+  suppliers: any[] = [];
   displayDialog = false;
-  payment: Payment = this.getEmptyPayment();
+  payment: SupplierPayment = this.getEmptyPayment();
   isEditMode = false;
 
   columns = [
-    { field: 'receiptNumber', header: 'رقم سند القبض' },
-    { field: 'customer_name', header: 'اسم العميل' },
+    { field: 'receiptNumber', header: 'رقم سند الدفع' },
+    { field: 'supplier_name', header: 'اسم المورد' },
     { field: 'date', header: 'التاريخ', type: 'date' },
     { field: 'amount', header: 'المبلغ' },
     {
@@ -73,31 +74,31 @@ export class CustomersPaymentsComponent implements OnInit {
 
   async loadData() {
     try {
-      this.customerPayments = await this.dbService.getCustomerPayments();
-      this.customers = await this.dbService.getCustomers();
+      this.payments = await this.dbService.getSupplierPayments();
+      this.suppliers = await this.dbService.getSuppliers();
 
-      this.customerPayments = this.customerPayments.map((payment) => {
-        if (payment.customerId) {
-          const customer = this.customers.find(
-            (c) => c.id === payment.customerId
+      this.payments = this.payments.map((payment) => {
+        if (payment.supplierId) {
+          const supplier = this.suppliers.find(
+            (s) => s.id === payment.supplierId
           );
           return {
             ...payment,
-            customer_name: customer ? customer.name : 'غير معروف',
+            supplier_name: supplier ? supplier.name : 'غير معروف',
           };
         }
         return payment;
       });
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error('Error loading supplier payments:', error);
     }
   }
 
-  getEmptyPayment(): Payment {
+  getEmptyPayment(): SupplierPayment {
     const nextNumber = this.generateReceiptNumber();
     return {
       receiptNumber: nextNumber,
-      customerId: undefined,
+      supplierId: undefined,
       date: new Date(),
       amount: 0,
     };
@@ -105,11 +106,10 @@ export class CustomersPaymentsComponent implements OnInit {
 
   generateReceiptNumber(): string {
     const maxId =
-      this.customerPayments.length > 0
-        ? Math.max(...this.customerPayments.map((p) => p.id || 0))
+      this.payments.length > 0
+        ? Math.max(...this.payments.map((p) => p.id || 0))
         : 0;
-    const nextId = maxId + 1;
-    return String(nextId);
+    return String(maxId + 1);
   }
 
   showAddDialog() {
@@ -118,24 +118,24 @@ export class CustomersPaymentsComponent implements OnInit {
     this.displayDialog = true;
   }
 
-  editPayment(payment: Payment) {
+  editPayment(payment: SupplierPayment) {
     this.payment = { ...payment };
     this.isEditMode = true;
     this.displayDialog = true;
   }
 
-  async deletePayment(payment: Payment) {
+  async deletePayment(payment: SupplierPayment) {
     this.confirmDialog.show({
-      message: `هل أنت متأكد من حذف سند القبض رقم "${payment.receiptNumber}"؟`,
+      message: `هل أنت متأكد من حذف سند الدفع رقم "${payment.receiptNumber}"؟`,
       header: 'تأكيد الحذف',
       acceptLabel: 'حذف',
       rejectLabel: 'إلغاء',
       accept: async () => {
         try {
-          await this.dbService.deleteCustomerPayment(payment.id!);
+          await this.dbService.deleteSupplierPayment(payment.id!);
           await this.loadData();
         } catch (error) {
-          console.error('Error deleting payment:', error);
+          console.error('Error deleting supplier payment:', error);
         }
       },
     });
@@ -143,38 +143,37 @@ export class CustomersPaymentsComponent implements OnInit {
 
   async savePayment() {
     try {
-      // التحقق من البيانات
-      if (!this.payment.customerId || this.payment.amount <= 0) {
-        alert('يرجى اختيار عميل وإدخال مبلغ صحيح');
+      if (!this.payment.supplierId || this.payment.amount <= 0) {
+        alert('يرجى اختيار مورد وإدخال مبلغ صحيح');
         return;
       }
 
-      const paymentData = {
+      const data = {
         receiptNumber: this.payment.receiptNumber,
-        customerId: this.payment.customerId,
+        supplierId: this.payment.supplierId,
         date: this.formatDate(this.payment.date),
         amount: this.payment.amount,
-        type: 'received',
+        type: 'paid',
       };
 
       if (this.isEditMode) {
-        await this.dbService.updateCustomerPayment(this.payment.id!, paymentData);
+        await this.dbService.updateSupplierPayment(this.payment.id!, data);
       } else {
-        await this.dbService.addCustomerPayment(paymentData);
+        await this.dbService.addSupplierPayment(data);
       }
+
       this.displayDialog = false;
       await this.loadData();
     } catch (error) {
-      console.error('Error saving payment:', error);
-      alert('حدث خطأ أثناء حفظ سند القبض');
+      console.error('Error saving supplier payment:', error);
     }
   }
 
   formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 
   hideDialog() {
