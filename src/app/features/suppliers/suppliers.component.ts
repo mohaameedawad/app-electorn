@@ -19,10 +19,10 @@ import { SelectModule } from 'primeng/select';
     InputTextModule,
     InputNumberModule,
     ButtonModule,
-    SelectModule
+    SelectModule,
   ],
   templateUrl: './suppliers.component.html',
-  styleUrl: './suppliers.component.scss'
+  styleUrl: './suppliers.component.scss',
 })
 export class SuppliersComponent implements OnInit {
   columns = [
@@ -37,18 +37,18 @@ export class SuppliersComponent implements OnInit {
   data: any[] = [];
   visible: boolean = false;
   phoneError: string = '';
-  
+
   balanceTypes = [
     { label: 'له (دائن)', value: 'credit' },
-    { label: 'عليه (مدين)', value: 'debit' }
+    { label: 'عليه (مدين)', value: 'debit' },
   ];
-  
+
   newSupplier = {
     name: '',
     phone: '',
     address: '',
     balanceAmount: 0,
-    balanceType: 'credit'
+    balanceType: 'credit',
   };
 
   constructor(private dbService: DatabaseService) {}
@@ -58,7 +58,12 @@ export class SuppliersComponent implements OnInit {
   }
 
   async loadSuppliers() {
-    this.data = await this.dbService.getSuppliers();
+    const suppliers = await this.dbService.getSuppliers();
+    this.data = suppliers.map((s: any) => ({
+      ...s,
+      credit: s.balance > 0 ? s.balance : 0,
+      debit: s.balance < 0 ? Math.abs(s.balance) : 0,
+    }));
   }
 
   showDialog() {
@@ -80,15 +85,17 @@ export class SuppliersComponent implements OnInit {
       }
 
       this.phoneError = '';
-      
+
       const supplierData = {
         name: this.newSupplier.name,
         phone: this.newSupplier.phone,
         address: this.newSupplier.address,
-        debit: this.newSupplier.balanceType === 'debit' ? this.newSupplier.balanceAmount : 0,
-        credit: this.newSupplier.balanceType === 'credit' ? this.newSupplier.balanceAmount : 0
+        balance:
+          this.newSupplier.balanceType === 'credit'
+            ? this.newSupplier.balanceAmount
+            : -this.newSupplier.balanceAmount,
       };
-      
+
       await this.dbService.addSupplier(supplierData);
       await this.loadSuppliers();
       this.closeDialog();
@@ -108,7 +115,7 @@ export class SuppliersComponent implements OnInit {
       phone: '',
       address: '',
       balanceAmount: 0,
-      balanceType: 'credit'
+      balanceType: 'credit',
     };
   }
 }

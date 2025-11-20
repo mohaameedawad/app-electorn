@@ -3,7 +3,7 @@ const BaseHandler = require("./base-handler");
 class SupplierPaymentHandler extends BaseHandler {
   constructor(filePath, supplierHandler) {
     super(filePath);
-    this.supplierHandler = supplierHandler; // ⭐ ربط الموردين
+    this.supplierHandler = supplierHandler;
   }
 
   getAllSupplierPayments() {
@@ -13,7 +13,10 @@ class SupplierPaymentHandler extends BaseHandler {
     return this.data.payments_made;
   }
 
-  // ⭐ 2) إضافة دفعة جديدة للمورد
+  // -------------------------------
+  // ADD PAYMENT (PAY TO SUPPLIER)
+  // -------------------------------
+
   addSupplierPayment(payment) {
     if (!this.data.payments_made) {
       this.data.payments_made = [];
@@ -28,38 +31,45 @@ class SupplierPaymentHandler extends BaseHandler {
 
     this.data.payments_made.push(newPayment);
 
-    // ⭐ تحديث رصيد المورد ← المورد رصيده بيزيد لما أدفع له
+    // الدفع للمورد → تقليل الرصيد
     if (payment.supplierId && payment.amount) {
-      this.updateSupplierBalance(payment.supplierId, payment.amount, true);
+      this.updateSupplierBalance(payment.supplierId, payment.amount, "pay");
     }
 
     this.saveData();
     return newPayment;
   }
 
-  // ⭐ 3) تعديل دفعة مورد
+  // -------------------------------
+  // UPDATE PAYMENT
+  // -------------------------------
+
   updateSupplierPayment(id, payment) {
     const collection = "payments_made";
-
-    const index = (this.data[collection] || []).findIndex(p => p.id === id);
+    const index = (this.data[collection] || []).findIndex((p) => p.id === id);
 
     if (index !== -1) {
       const oldPayment = this.data[collection][index];
 
-      // استرجاع الرصيد القديم
+      // STEP 1: Rollback old payment → تعويضها
       if (oldPayment.supplierId && oldPayment.amount) {
-        this.updateSupplierBalance(oldPayment.supplierId, -oldPayment.amount, false);
+        this.updateSupplierBalance(
+          oldPayment.supplierId,
+          oldPayment.amount,
+          "rollback"
+        );
       }
 
+      // STEP 2: Apply new update
       this.data[collection][index] = {
-        ...this.data[collection][index],
+        ...oldPayment,
         ...payment,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
-      // تطبيق التعديل الجديد
+      // STEP 3: Apply new payment amount
       if (payment.supplierId && payment.amount) {
-        this.updateSupplierBalance(payment.supplierId, payment.amount, true);
+        this.updateSupplierBalance(payment.supplierId, payment.amount, "pay");
       }
 
       this.saveData();
@@ -69,22 +79,23 @@ class SupplierPaymentHandler extends BaseHandler {
     return null;
   }
 
-  // ⭐ 4) حذف دفعة مورد
+
   deleteSupplierPayment(id) {
     const collection = "payments_made";
     const payments = this.data[collection] || [];
 
-    const paymentIndex = payments.findIndex(p => p.id === id);
+    const paymentIndex = payments.findIndex((p) => p.id === id);
 
     if (paymentIndex !== -1) {
       const payment = payments[paymentIndex];
 
-      // استرجاع الأموال عند الحذف
+      // حذف الدفعة → رجّع المبلغ (يزوّد الرصيد)
       if (payment.supplierId && payment.amount) {
-        this.updateSupplierBalance(payment.supplierId, -payment.amount, false);
+        this.updateSupplierBalance(payment.supplierId, payment.amount, "rollback");
       }
 
-      this.data[collection] = payments.filter(p => p.id !== id);
+      // حذف من القائمة
+      this.data[collection] = payments.filter((p) => p.id !== id);
 
       this.saveData();
       return { changes: 1 };
@@ -93,41 +104,35 @@ class SupplierPaymentHandler extends BaseHandler {
     return { changes: 0 };
   }
 
-  // ⭐ تحديث رصيد المورد
-  updateSupplierBalance(supplierId, amount, isPaymentMade = true) {
-    if (!this.supplierHandler) {
-      console.warn("SupplierHandler not available");
-      return 0;
-    }
+
+  updateSupplierBalance(supplierId, amount, mode = "pay") {
+    if (!this.supplierHandler) return 0;
 
     try {
       const supplier = this.supplierHandler.getSupplierById(supplierId);
 
       if (supplier) {
-        // دفعة للمورد → رصيده بيزيد
-        const newBalance = (supplier.balance || 0) + amount;
-        supplier.balance = newBalance;
+        if (mode === "pay") {
+          supplier.balance = (supplier.balance || 0) - amount; // تقليل الدين
+        } else {
+          supplier.balance = (supplier.balance || 0) + amount; // رجوع الدين
+        }
+
         supplier.updatedAt = new Date().toISOString();
-
-        console.log(`💸 تحديث رصيد المورد ${supplierId}: ${supplier.balance - amount} → ${newBalance}`);
-
         this.supplierHandler.saveData();
-        return newBalance;
-      } else {
-        console.warn(`Supplier ${supplierId} not found`);
-        return 0;
+        return supplier.balance;
       }
 
-    } catch (error) {
-      console.error("Error updating supplier balance:", error);
+      return 0;
+    } catch {
       return 0;
     }
   }
 
-  // ⭐ كل دفعات مورد واحد
+
   getSupplierPayments(supplierId) {
     return (this.data.payments_made || []).filter(
-      p => p.supplierId === supplierId || p.supplier_id === supplierId
+      (p) => p.supplierId === supplierId || p.supplier_id === supplierId
     );
   }
 }

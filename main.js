@@ -170,20 +170,24 @@ function setupIPCHandlers() {
   });
 
 // دفعات الموردين
-  ipcMain.handle("db:getSupplierPayments", async () => {
-  return await db.customerPayments.getSupplierPayments();
+ipcMain.handle("db:getSupplierPayments", async () => {
+  return await db.supplierPayments.getAllSupplierPayments();
+});
+
+ipcMain.handle("db:getSupplierPaymentsBySupplierId", async (event, supplierId) => {
+    return await db.supplierPayments.getSupplierPayments(supplierId);
 });
 
 ipcMain.handle("db:addSupplierPayment", async (event, payment) => {
-  return await db.customerPayments.addPaymentMade(payment);
+  return await db.supplierPayments.addSupplierPayment(payment);
 });
 
 ipcMain.handle("db:updateSupplierPayment", async (event, id, payment) => {
-  return await db.customerPayments.updateSupplierPayment(id, payment);
+  return await db.supplierPayments.updateSupplierPayment(id, payment);
 });
 
 ipcMain.handle("db:deleteSupplierPayment", async (event, id) => {
-  return await db.customerPayments.deleteSupplierPayment(id);
+  return await db.supplierPayments.deleteSupplierPayment(id);
 });
 
 

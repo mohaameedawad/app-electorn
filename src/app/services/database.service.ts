@@ -234,7 +234,7 @@ export class DatabaseService {
 
   // Supplier Payments
   async getSupplierPayments() {
-     if (!this.api) return [];
+    if (!this.api) return [];
     return await this.api.getSupplierPayments();
   }
 
@@ -251,6 +251,11 @@ export class DatabaseService {
   async deleteSupplierPayment(id: number) {
     if (!this.api) return null;
     return await this.api.deleteSupplierPayment(id);
+  }
+  
+  async getSupplierPaymentsBySupplierId(supplierId: number) {
+    if (!this.api) return [];
+    return await this.api.getSupplierPaymentsBySupplierId(supplierId);
   }
 
   // المصروفات

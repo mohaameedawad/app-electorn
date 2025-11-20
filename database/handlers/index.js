@@ -43,6 +43,7 @@ class DatabaseService {
       totalPurchases: this.purchases.getPurchases().length,
       totalExpenses: this.expenses.getExpenses().length,
       totalCustomerPayments: this.customerPayments.getAllCustomerPayments().length,
+      totalSupplierPayments: this.supplierPayments.getAllSupplierPayments().length,
     };
   }
 

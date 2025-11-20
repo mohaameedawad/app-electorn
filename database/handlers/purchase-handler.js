@@ -31,12 +31,11 @@ addPurchase(purchase) {
     ...purchase,
     createdAt: new Date().toISOString(),
     status: purchase.status || "completed",
-    items: purchase.items || [] // 🔹 تخزين الـ items في الفاتورة
+    items: purchase.items || [],
   };
 
-  this.data.purchases.push(newPurchase); // 🔹 إضافة الفاتورة كاملة
+  this.data.purchases.push(newPurchase);
 
-  // Add purchase items
   if (purchase.items && Array.isArray(purchase.items)) {
     purchase.items.forEach((item) => {
       const newItem = {
@@ -46,12 +45,16 @@ addPurchase(purchase) {
       };
       this.data.purchase_items.push(newItem);
 
-      console.log(`🔄 [شراء] تحديث مخزون المنتج ${item.product_id}: +${item.quantity}`);
       this.updateProductStock(
         item.product_id,
         parseFloat(item.quantity) || 0
       );
     });
+  }
+
+  if (purchase.supplier_id) {
+    const net = (purchase.total || 0) - (purchase.paid_amount || 0);
+    this.updateSupplierBalance(purchase.supplier_id, net);
   }
 
   this.saveData();
@@ -61,18 +64,15 @@ addPurchase(purchase) {
   updatePurchase(id, purchase) {
     const index = this.getPurchases().findIndex((p) => p.id === id);
     if (index !== -1) {
-      // 🔹 الحصول على الفاتورة القديمة
       const oldPurchase = this.data.purchases[index];
 
-      // 🔹 معالجة items
       let oldItems = [];
       try {
         oldItems =
           typeof oldPurchase.items === "string"
             ? JSON.parse(oldPurchase.items)
             : oldPurchase.items || [];
-      } catch (error) {
-        console.error("❌ خطأ في تحليل items القديمة:", error);
+      } catch {
         oldItems = oldPurchase.items || [];
       }
 
@@ -82,21 +82,29 @@ addPurchase(purchase) {
           typeof purchase.items === "string"
             ? JSON.parse(purchase.items)
             : purchase.items || [];
-      } catch (error) {
-        console.error("❌ خطأ في تحليل items الجديدة:", error);
+      } catch {
         newItems = purchase.items || [];
       }
 
-      console.log("📦 [شراء] مقارنة العناصر:", { oldItems, newItems });
-
-      // 🔹 تحديث المخزون بناءً على التغير في الكميات
       this.updateStockOnEdit(oldItems, newItems);
 
+      if (oldPurchase.supplier_id) {
+        const oldNet =
+          (oldPurchase.total || 0) - (oldPurchase.paid_amount || 0);
+        this.updateSupplierBalance(oldPurchase.supplier_id, -oldNet);
+      }
+
       this.data.purchases[index] = {
-        ...this.data.purchases[index],
+        ...oldPurchase,
         ...purchase,
         updatedAt: new Date().toISOString(),
       };
+
+      if (purchase.supplier_id) {
+        const newNet = (purchase.total || 0) - (purchase.paid_amount || 0);
+        this.updateSupplierBalance(purchase.supplier_id, newNet);
+      }
+
       this.saveData();
       return this.data.purchases[index];
     }
@@ -104,130 +112,106 @@ addPurchase(purchase) {
   }
 
   deletePurchase(id) {
-    const initialLength = this.getPurchases().length;
     const purchaseToDelete = this.getPurchaseById(id);
 
     if (purchaseToDelete) {
-      // 🔹 استعادة المخزون عند حذف الفاتورة (خصم الكميات)
       const items =
         typeof purchaseToDelete.items === "string"
           ? JSON.parse(purchaseToDelete.items)
           : purchaseToDelete.items || [];
 
       items.forEach((item) => {
-        console.log(
-          `🔄 [شراء] استعادة مخزون المنتج ${item.product_id}: -${item.quantity}`
-        );
         this.updateProductStock(
           item.product_id,
           -parseFloat(item.quantity) || 0
         );
       });
+
+      if (purchaseToDelete.supplier_id) {
+        const net =
+          (purchaseToDelete.total || 0) - (purchaseToDelete.paid_amount || 0);
+        this.updateSupplierBalance(purchaseToDelete.supplier_id, -net);
+      }
     }
 
     this.data.purchases = this.getPurchases().filter((p) => p.id !== id);
-    // Also delete related purchase items
     this.data.purchase_items = (this.data.purchase_items || []).filter(
       (item) => item.purchase_id !== id
     );
     this.saveData();
-    return { changes: initialLength - this.getPurchases().length };
+    return { success: true };
   }
 
-  // 🔹 إصلاح دالة تحديث مخزون المنتج
   updateProductStock(productId, quantity) {
     if (!this.data.products) return;
 
-    const productIndex = this.data.products.findIndex(
-      (p) => p.id === productId
-    );
-    if (productIndex !== -1) {
-      const currentStock =
-        parseFloat(this.data.products[productIndex].stock) || 0;
-      const newStock = Math.max(0, currentStock + quantity);
+    const index = this.data.products.findIndex((p) => p.id === productId);
+    if (index === -1) return;
 
-      this.data.products[productIndex].stock = newStock;
+    const currentStock = parseFloat(this.data.products[index].stock) || 0;
+    const newStock = Math.max(0, currentStock + quantity);
 
-      // 🔹 تسجيل حركة المخزون
-      this.addStockMovement({
-        product_id: productId,
-        type: quantity > 0 ? "purchase" : "purchase_cancel",
-        quantity: quantity,
-        reference_id: productId,
-        note:
-          quantity > 0
-            ? `إضافة مخزون من فاتورة شراء (${quantity})`
-            : `خصم مخزون لفاتورة شراء ملغاة (${Math.abs(quantity)})`,
-      });
-    } else {
-      console.log(`❌ المنتج ${productId} غير موجود`);
-    }
+    this.data.products[index].stock = newStock;
+
+    this.addStockMovement({
+      product_id: productId,
+      type: quantity > 0 ? "purchase" : "purchase_cancel",
+      quantity,
+      reference_id: productId,
+      note:
+        quantity > 0
+          ? `إضافة مخزون (${quantity})`
+          : `خصم مخزون (${Math.abs(quantity)})`,
+    });
+
     this.saveData();
   }
 
-  // 🔹 إصلاح دالة تحديث المخزون عند التعديل
   updateStockOnEdit(oldItems, newItems) {
-    const oldItemsMap = new Map();
-    const newItemsMap = new Map();
+    const oldMap = new Map();
+    const newMap = new Map();
 
-    oldItems.forEach((item) => {
-      const productId = item.product_id;
-      const quantity = parseFloat(item.quantity) || 0;
-      oldItemsMap.set(productId, (oldItemsMap.get(productId) || 0) + quantity);
-    });
+    oldItems.forEach((i) =>
+      oldMap.set(
+        i.product_id,
+        (oldMap.get(i.product_id) || 0) + (parseFloat(i.quantity) || 0)
+      )
+    );
 
-    newItems.forEach((item) => {
-      const productId = item.product_id;
-      const quantity = parseFloat(item.quantity) || 0;
-      newItemsMap.set(productId, (newItemsMap.get(productId) || 0) + quantity);
-    });
+    newItems.forEach((i) =>
+      newMap.set(
+        i.product_id,
+        (newMap.get(i.product_id) || 0) + (parseFloat(i.quantity) || 0)
+      )
+    );
 
-    // حساب الفروق وتحديث المخزون
-    const allProductIds = new Set([
-      ...oldItemsMap.keys(),
-      ...newItemsMap.keys(),
-    ]);
+    const all = new Set([...oldMap.keys(), ...newMap.keys()]);
 
-    allProductIds.forEach((productId) => {
-      const oldQty = oldItemsMap.get(productId) || 0;
-      const newQty = newItemsMap.get(productId) || 0;
-      const diff = newQty - oldQty;
-
-      if (diff !== 0) {
-        console.log(
-          `🔄 [شراء] تعديل مخزون المنتج ${productId}: ${oldQty} → ${newQty} (فرق: ${diff})`
-        );
-        this.updateProductStock(productId, diff); // موجب لأن الشراء يضيف للمخزون
-      }
+    all.forEach((productId) => {
+      const diff = (newMap.get(productId) || 0) - (oldMap.get(productId) || 0);
+      if (diff !== 0) this.updateProductStock(productId, diff);
     });
   }
 
-  // 🔹 دالة لإضافة حركة مخزون
   addStockMovement(movement) {
-    if (!this.data.stock_movements) {
-      this.data.stock_movements = [];
-    }
+    if (!this.data.stock_movements) this.data.stock_movements = [];
 
-    const newMovement = {
+    this.data.stock_movements.push({
       id: this._getNextId("stock_movements"),
       ...movement,
       createdAt: new Date().toISOString(),
-    };
-
-    this.data.stock_movements.push(newMovement);
+    });
   }
 
-  // 🔹 دالة إضافية: طباعة حالة المخزون
-  printStockStatus() {
-    if (!this.data.products) {
-      console.log("❌ لا توجد منتجات");
-      return;
-    }
+  updateSupplierBalance(supplier_id, amount) {
+    if (!this.data.suppliers) return;
 
-    console.log("📊 [شراء] تقرير المخزون الحالي:");
-    this.data.products.forEach((product) => {
-      console.log(`   ${product.id}. ${product.name}: ${product.stock || 0}`);
-    });
+    const supplier = this.data.suppliers.find((s) => s.id === supplier_id);
+    if (!supplier) return;
+
+    supplier.balance = (supplier.balance || 0) + amount;
+
+    this.saveData();
   }
 }
 

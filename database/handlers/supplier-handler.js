@@ -1,4 +1,4 @@
-const BaseHandler = require('./base-handler');
+const BaseHandler = require("./base-handler");
 
 class SupplierHandler extends BaseHandler {
   getAllSuppliers() {
@@ -6,7 +6,7 @@ class SupplierHandler extends BaseHandler {
   }
 
   getSupplierById(id) {
-    return this.getAllSuppliers().find(s => s.id === id);
+    return this.getAllSuppliers().find((s) => s.id === id);
   }
 
   addSupplier(supplier) {
@@ -16,7 +16,7 @@ class SupplierHandler extends BaseHandler {
       id: this._getNextId('suppliers'),
       ...supplier,
       createdAt: new Date().toISOString(),
-      balance: supplier.balance || 0
+      balance: supplier.balance || 0,
     };
     
     this.data.suppliers.push(newSupplier);
@@ -25,12 +25,12 @@ class SupplierHandler extends BaseHandler {
   }
 
   updateSupplier(id, supplier) {
-    const index = this.getAllSuppliers().findIndex(s => s.id === id);
+    const index = this.getAllSuppliers().findIndex((s) => s.id === id);
     if (index !== -1) {
-      this.data.suppliers[index] = { 
-        ...this.data.suppliers[index], 
+      this.data.suppliers[index] = {
+        ...this.data.suppliers[index],
         ...supplier,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
       this.saveData();
       return { changes: 1 };
@@ -39,20 +39,49 @@ class SupplierHandler extends BaseHandler {
   }
 
   deleteSupplier(id) {
-    const initialLength = this.getAllSuppliers().length;
-    this.data.suppliers = this.getAllSuppliers().filter(s => s.id !== id);
+    const before = this.getAllSuppliers().length;
+    this.data.suppliers = this.getAllSuppliers().filter((s) => s.id !== id);
     this.saveData();
-    return { changes: initialLength - this.getAllSuppliers().length };
+    return { changes: before - this.getAllSuppliers().length };
   }
 
+  // تحديث الرصيد (يستخدمه: PurchaseHandler + SupplierPaymentHandler)
   updateSupplierBalance(id, amount) {
     const supplier = this.getSupplierById(id);
-    if (supplier) {
-      supplier.balance = (supplier.balance || 0) + amount;
-      this.saveData();
-      return true;
-    }
-    return false;
+    if (!supplier) return false;
+
+    supplier.balance = (supplier.balance || 0) + amount;
+    this.saveData();
+    return true;
+  }
+
+  // حساب رصيد المورد النهائي
+  calculateSupplierBalance(id) {
+    if (!this.data.purchases) this.data.purchases = [];
+    if (!this.data.payments_made) this.data.payments_made = [];
+
+    const purchases = this.data.purchases.filter(
+      (p) => p.supplier_id === id
+    );
+
+    const payments = this.data.payments_made.filter(
+      (pm) => pm.supplierId === id
+    );
+
+    const totalPurchases = purchases.reduce(
+      (sum, p) => sum + (p.total || 0) - (p.paid_amount || 0),
+      0
+    );
+
+    const totalPayments = payments.reduce(
+      (sum, pm) => sum + (pm.amount || 0),
+      0
+    );
+
+    return {
+      credit: Math.max(totalPurchases - totalPayments, 0), // له
+      debit: Math.max(totalPayments - totalPurchases, 0),  // عليه
+    };
   }
 }
 

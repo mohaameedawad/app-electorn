@@ -51,9 +51,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.invoke("db:updateCustomerPayment", id, payment),
   deleteCustomerPayment: (id) =>
     ipcRenderer.invoke("db:deleteCustomerPayment", id),
-
   // دفعات الموردين
   getSupplierPayments: () => ipcRenderer.invoke("db:getSupplierPayments"),
+
+  getSupplierPaymentsBySupplierId: (supplierId) =>
+    ipcRenderer.invoke("db:getSupplierPaymentsBySupplierId", supplierId),
+  
   addSupplierPayment: (payment) =>
     ipcRenderer.invoke("db:addSupplierPayment", payment),
   updateSupplierPayment: (id, payment) =>

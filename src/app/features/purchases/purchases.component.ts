@@ -463,6 +463,7 @@ export class PurchasesComponent implements OnInit {
         paid_amount: this.newPurchase.paid_amount,
         status: this.newPurchase.status,
         purchase_date: this.formatDate(this.newPurchase.purchase_date),
+        remaining: this.newPurchase.total - this.newPurchase.paid_amount,
       };
 
       if (this.editingPurchaseId) {
@@ -474,7 +475,7 @@ export class PurchasesComponent implements OnInit {
         await this.dbService.addPurchase(purchaseData);
       }
       await this.loadPurchases();
-
+      await this.loadSuppliers();
       this.previewPurchase = { ...this.newPurchase };
 
       this.visible = false;
