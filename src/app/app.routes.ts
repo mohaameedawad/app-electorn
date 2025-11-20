@@ -8,7 +8,7 @@ import { SuppliersComponent } from './features/suppliers/suppliers.component';
 import { ProductsComponent } from './features/products/products.component';
 import { EmployeesComponent } from './features/employees/employees.component';
 import { ReportsComponent } from './features/reports/reports.component';
-import { PaymentsComponent } from './features/payments/payments.component';
+import { CustomersPaymentsComponent } from './features/payments/customers-payments.component';
 import { ExpensesComponent } from './features/expenses/expenses.component';
 import { UsersComponent } from './features/users/users.component';
 import { ForgotPasswordComponent } from './features/forgot-password/forgot-password.component';
@@ -27,7 +27,7 @@ export const routes: Routes = [
   { path: 'suppliers', component: SuppliersComponent, canActivate: [AuthGuard], data: { title: 'الموردين' } },
   { path: 'products', component: ProductsComponent, canActivate: [AuthGuard], data: { title: 'المنتجات' } },
   { path: 'employees', component: EmployeesComponent, canActivate: [AuthGuard], data: { title: 'الموظفين' } },
-  { path: 'payments', component: PaymentsComponent, canActivate: [AuthGuard], data: { title: 'الدفعات' } },
+  { path: 'customers_payments', component: CustomersPaymentsComponent, canActivate: [AuthGuard], data: { title: 'دفعات العملاء' } },
   { path: 'expenses', component: ExpensesComponent, canActivate: [AuthGuard], data: { title: 'المصروفات' } },
   { path: 'users', component: UsersComponent, canActivate: [AuthGuard], data: { title: 'إدارة المستخدمين' } },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard], data: { title: 'التقارير' } },

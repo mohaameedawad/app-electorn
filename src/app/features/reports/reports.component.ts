@@ -781,7 +781,7 @@ export class ReportsComponent implements OnInit {
     this.customers = await this.db.getCustomers();
     this.suppliers = await this.db.getSuppliers();
     this.expenses = await this.db.getExpenses();
-    this.payments = await this.db.getPayments();
+    this.payments = await this.db.getCustomerPayments();
     this.purchases = await this.db.getPurchases();
     this.sales = await this.db.getSales();
   }
@@ -874,7 +874,7 @@ export class ReportsComponent implements OnInit {
     }
 
     const sales = await this.db.getSales();
-    const payments = await this.db.getPayments();
+    const payments = await this.db.getCustomerPayments();
 
     const result: any[] = [];
 

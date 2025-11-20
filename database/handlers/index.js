@@ -1,13 +1,13 @@
-const BaseHandler = require('./base-handler');
-const CustomerHandler = require('./customer-handler');
-const SupplierHandler = require('./supplier-handler');
-const ProductHandler = require('./product-handler');
-const SaleHandler = require('./sale-handler');
-const EmployeeHandler = require('./employee-handler');
-const PurchaseHandler = require('./purchase-handler');
-const PaymentHandler = require('./payment-handler');
-const ExpenseHandler = require('./expense-handler');
-const UsersHandler = require('./users-handler');
+const BaseHandler = require("./base-handler");
+const CustomerHandler = require("./customer-handler");
+const SupplierHandler = require("./supplier-handler");
+const ProductHandler = require("./product-handler");
+const SaleHandler = require("./sale-handler");
+const EmployeeHandler = require("./employee-handler");
+const PurchaseHandler = require("./purchase-handler");
+const PaymentHandler = require("./payment-handler");
+const ExpenseHandler = require("./expense-handler");
+const UsersHandler = require("./users-handler");
 
 class DatabaseService {
   constructor() {
@@ -22,7 +22,7 @@ class DatabaseService {
     this.sales = new SaleHandler(sharedData);
     this.employees = new EmployeeHandler(sharedData);
     this.purchases = new PurchaseHandler(sharedData);
-    this.payments = new PaymentHandler(sharedData);
+    this.customerPayments = new PaymentHandler(sharedData, this.customers);
     this.expenses = new ExpenseHandler(sharedData);
     this.users = new UsersHandler(sharedData);
 
@@ -40,18 +40,22 @@ class DatabaseService {
       totalEmployees: this.employees.getEmployees().length,
       totalPurchases: this.purchases.getPurchases().length,
       totalExpenses: this.expenses.getExpenses().length,
+      totalCustomerPayments: this.customerPayments.getAllCustomerPayments().length,
     };
   }
 
   // Backup method
   backupData() {
     try {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const backupPath = path.join(app.getPath('userData'), `backup-${timestamp}.json`);
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const backupPath = path.join(
+        app.getPath("userData"),
+        `backup-${timestamp}.json`
+      );
       fs.writeFileSync(backupPath, JSON.stringify(this.sharedData, null, 2));
       return backupPath;
     } catch (error) {
-      console.error('Backup failed:', error);
+      console.error("Backup failed:", error);
       return null;
     }
   }

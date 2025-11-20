@@ -91,15 +91,15 @@ function setupIPCHandlers() {
     return db.sales.getAllSales();
   });
 
-ipcMain.handle('db:addSale', async (event, sale) => {
-  try {
-    const result = await db.sales.addSale(sale);
-    return result;
-  } catch (error) {
-    console.error('❌ IPC: خطأ في إضافة الفاتورة:', error);
-    return { changes: 0 };
-  }
-});
+  ipcMain.handle("db:addSale", async (event, sale) => {
+    try {
+      const result = await db.sales.addSale(sale);
+      return result;
+    } catch (error) {
+      console.error("❌ IPC: خطأ في إضافة الفاتورة:", error);
+      return { changes: 0 };
+    }
+  });
 
   ipcMain.handle("db:updateSale", async (event, id, sale) => {
     try {
@@ -118,7 +118,7 @@ ipcMain.handle('db:addSale', async (event, sale) => {
   ipcMain.handle("db:getSaleById", async (event, id) => {
     return db.sales.getSaleById(id);
   });
-  
+
   // الموظفين
   ipcMain.handle("db:getEmployees", async () => {
     return db.employees.getEmployees();
@@ -154,40 +154,19 @@ ipcMain.handle('db:addSale', async (event, sale) => {
   });
 
   // الدفعات
-  ipcMain.handle("db:getPayments", async () => {
-    return await db.payments.getPayments();
+  ipcMain.handle("db:getCustomerPayments", async () => {
+    return await db.customerPayments.getAllCustomerPayments();
   });
 
-  ipcMain.handle("db:addPayment", async (event, payment) => {
-    // 🔹 تحديد النوع تلقائياً بناءً على البيانات
-    if (payment.type === "made") {
-      return await db.payments.addPaymentMade(payment);
-    } else {
-      // النوع الافتراضي received
-      return await db.payments.addPaymentReceived(payment);
-    }
+  ipcMain.handle("db:addCustomerPayment", async (event, payment) => {
+    return await db.customerPayments.addCustomerPaymentReceived(payment);
   });
 
-  ipcMain.handle("db:updatePayment", async (event, id, payment) => {
-    return await db.payments.updatePayment(
-      id,
-      payment,
-      payment.type || "received"
-    );
+  ipcMain.handle("db:updateCustomerPayment", async (event, id, payment) => {
+    return await db.customerPayments.updateCustomerPayment(id, payment);
   });
-
-  ipcMain.handle("db:deletePayment", async (event, id) => {
-    // 🔹 يمكنك تمرير النوع إذا لزم الأمر، أو استخدام received كافتراضي
-    return await db.payments.deletePayment(id, "received");
-  });
-
-  // 🔹 أو أضف handlers منفصلة إذا أردت
-  ipcMain.handle("db:addPaymentReceived", async (event, payment) => {
-    return await db.payments.addPaymentReceived(payment);
-  });
-
-  ipcMain.handle("db:addPaymentMade", async (event, payment) => {
-    return await db.payments.addPaymentMade(payment);
+  ipcMain.handle("db:deleteCustomerPayment", async (event, id) => {
+    return await db.customerPayments.deleteCustomerPayment(id);
   });
 
   // المصروفات

@@ -39,10 +39,10 @@ interface Payment {
     DialogComponent,
     ConfirmationDialogComponent,
   ],
-  templateUrl: './payments.component.html',
-  styleUrl: './payments.component.scss',
+  templateUrl: './customers-payments.component.html',
+  styleUrls: ['./customers-payments.component.scss'],
 })
-export class PaymentsComponent implements OnInit {
+export class CustomersPaymentsComponent implements OnInit {
   @ViewChild(ConfirmationDialogComponent)
   confirmDialog!: ConfirmationDialogComponent;
 
@@ -73,7 +73,7 @@ export class PaymentsComponent implements OnInit {
 
   async loadData() {
     try {
-      this.payments = await this.dbService.getPayments();
+      this.payments = await this.dbService.getCustomerPayments();
       this.customers = await this.dbService.getCustomers();
 
       this.payments = this.payments.map((payment) => {
@@ -132,7 +132,7 @@ export class PaymentsComponent implements OnInit {
       rejectLabel: 'إلغاء',
       accept: async () => {
         try {
-          await this.dbService.deletePayment(payment.id!);
+          await this.dbService.deleteCustomerPayment(payment.id!);
           await this.loadData();
         } catch (error) {
           console.error('Error deleting payment:', error);
@@ -158,9 +158,9 @@ export class PaymentsComponent implements OnInit {
       };
 
       if (this.isEditMode) {
-        await this.dbService.updatePayment(this.payment.id!, paymentData);
+        await this.dbService.updateCustomerPayment(this.payment.id!, paymentData);
       } else {
-        await this.dbService.addPayment(paymentData);
+        await this.dbService.addCustomerPayment(paymentData);
       }
       this.displayDialog = false;
       await this.loadData();

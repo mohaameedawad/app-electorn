@@ -6,7 +6,7 @@ export enum Permission {
   SUPPLIERS = 'suppliers',
   PRODUCTS = 'products',
   EMPLOYEES = 'employees',
-  PAYMENTS = 'payments',
+  CUSTOMERS_PAYMENTS = 'customers_payments',
   EXPENSES = 'expenses',
   USERS = 'users',
   REPORTS = 'reports'
@@ -22,7 +22,7 @@ export const PERMISSION_LABELS: Record<Permission, string> = {
   [Permission.SUPPLIERS]: 'الموردين',
   [Permission.PRODUCTS]: 'المنتجات',
   [Permission.EMPLOYEES]: 'الموظفين',
-  [Permission.PAYMENTS]: 'الدفعات',
+  [Permission.CUSTOMERS_PAYMENTS]: 'دفعات العملاء',
   [Permission.EXPENSES]: 'المصروفات',
   [Permission.USERS]: 'إدارة المستخدمين',
   [Permission.REPORTS]: 'التقارير'

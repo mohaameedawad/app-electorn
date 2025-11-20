@@ -28,7 +28,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   addSale: (sale) => ipcRenderer.invoke("db:addSale", sale),
   updateSale: (id, sale) => ipcRenderer.invoke("db:updateSale", id, sale),
   deleteSale: (id) => ipcRenderer.invoke("db:deleteSale", id),
-  getSaleById : (id) => ipcRenderer.invoke("db:getSaleById", id),
+  getSaleById: (id) => ipcRenderer.invoke("db:getSaleById", id),
   // الموظفين
   getEmployees: () => ipcRenderer.invoke("db:getEmployees"),
   addEmployee: (employee) => ipcRenderer.invoke("db:addEmployee", employee),
@@ -43,12 +43,14 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.invoke("db:updatePurchase", id, purchase),
   deletePurchase: (id) => ipcRenderer.invoke("db:deletePurchase", id),
 
-  // الدفعات
-  getPayments: () => ipcRenderer.invoke("db:getPayments"),
-  addPayment: (payment) => ipcRenderer.invoke("db:addPayment", payment), // دالة واحدة لجميع الأنواع
-  updatePayment: (id, payment) =>
-    ipcRenderer.invoke("db:updatePayment", id, payment),
-  deletePayment: (id) => ipcRenderer.invoke("db:deletePayment", id),
+  // دفعات العملاء
+  getCustomerPayments: () => ipcRenderer.invoke("db:getCustomerPayments"),
+  addCustomerPayment: (payment) =>
+    ipcRenderer.invoke("db:addCustomerPayment", payment),
+  updateCustomerPayment: (id, payment) =>
+    ipcRenderer.invoke("db:updateCustomerPayment", id, payment),
+  deleteCustomerPayment: (id) =>
+    ipcRenderer.invoke("db:deleteCustomerPayment", id),
 
   // المصروفات
   getExpenses: () => ipcRenderer.invoke("db:getExpenses"),

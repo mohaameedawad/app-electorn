@@ -191,40 +191,47 @@ export class DatabaseService {
     return await this.api.deletePurchase(id);
   }
 
-  // الدفعات
-  async getPayments() {
-    if (!this.api) return [];
-    try {
-      const result = await this.api.getPayments();
-      // 🔹 دمج received و made في array واحدة
-      const allPayments = [...(result.received || []), ...(result.made || [])];
-      return allPayments;
-    } catch (error) {
-      console.error('Error getting payments:', error);
-      return [];
-    }
+  // دفعات العملاء
+async getCustomerPayments() {
+  if (!this.api) return [];
+  try {
+    return await this.api.getCustomerPayments();
+  } catch (error) {
+    console.error('Error getting customer payments:', error);
+    return [];
   }
+}
 
-  async addPayment(payment: any) {
-    if (!this.api) return null;
-    try {
-      // 🔹 استخدم addPayment العادية فقط
-      return await this.api.addPayment(payment);
-    } catch (error) {
-      console.error('Error adding payment:', error);
-      return null;
-    }
+async addCustomerPayment(payment: any) {
+  if (!this.api) return null;
+  try {
+    return await this.api.addCustomerPayment(payment);
+  } catch (error) {
+    console.error('Error adding customer payment:', error);
+    return null;
   }
+}
 
-  async updatePayment(id: number, payment: any) {
-    if (!this.api) return null;
-    return await this.api.updatePayment(id, payment);
+async updateCustomerPayment(id: number, payment: any) {
+  if (!this.api) return null;
+  try {
+    return await this.api.updateCustomerPayment(id, payment);
+  } catch (error) {
+    console.error('Error updating customer payment:', error);
+    return null;
   }
+}
 
-  async deletePayment(id: number) {
-    if (!this.api) return null;
-    return await this.api.deletePayment(id);
+async deleteCustomerPayment(id: number) {
+  if (!this.api) return null;
+  try {
+    return await this.api.deleteCustomerPayment(id);
+  } catch (error) {
+    console.error('Error deleting customer payment:', error);
+    return null;
   }
+}
+
 
   // المصروفات
   async getExpenses() {
