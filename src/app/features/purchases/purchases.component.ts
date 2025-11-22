@@ -64,7 +64,7 @@ export class PurchasesComponent implements OnInit {
   // بيانات الفاتورة الجديدة
   newPurchase = {
     invoice_no: 0,
-    supplier_id: null,
+    supplierId: null,
     employee_id: null,
     purchase_date: new Date(),
     items: [] as any[],
@@ -87,7 +87,7 @@ export class PurchasesComponent implements OnInit {
   // Preview purchase data
   previewPurchase: any = {
     invoice_no: null,
-    supplier_id: null,
+    supplierId: null,
     purchase_date: new Date(),
     items: [],
     subtotal: 0,
@@ -164,7 +164,7 @@ export class PurchasesComponent implements OnInit {
 
     this.newPurchase = {
       invoice_no: purchaseCopy.invoice_no || 0,
-      supplier_id: purchaseCopy.supplier_id || null,
+      supplierId: purchaseCopy.supplierId || null,
       employee_id: purchaseCopy.employee_id || null,
       purchase_date: purchaseCopy.purchase_date
         ? new Date(purchaseCopy.purchase_date)
@@ -217,7 +217,7 @@ export class PurchasesComponent implements OnInit {
 
     this.previewPurchase = {
       invoice_no: purchaseCopy.invoice_no || 0,
-      supplier_id: purchaseCopy.supplier_id || null,
+      supplierId: purchaseCopy.supplierId || null,
       purchase_date: purchaseCopy.purchase_date
         ? new Date(purchaseCopy.purchase_date)
         : new Date(),
@@ -448,11 +448,11 @@ export class PurchasesComponent implements OnInit {
       }
 
       const supplier = this.suppliers.find(
-        (s: any) => s.value === this.newPurchase.supplier_id
+        (s: any) => s.value === this.newPurchase.supplierId
       );
       const purchaseData = {
         invoice_no: this.newPurchase.invoice_no,
-        supplier_id: this.newPurchase.supplier_id,
+        supplierId: this.newPurchase.supplierId,
         supplier: supplier?.label || '',
         employee_id: this.newPurchase.employee_id,
         items: this.newPurchase.items,
@@ -510,7 +510,7 @@ export class PurchasesComponent implements OnInit {
   resetForm() {
     this.newPurchase = {
       invoice_no: 0,
-      supplier_id: null,
+      supplierId: null,
       employee_id: null,
       purchase_date: new Date(),
       items: [],

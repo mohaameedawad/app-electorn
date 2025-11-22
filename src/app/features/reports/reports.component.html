@@ -76,6 +76,7 @@
           [(ngModel)]="selectedSupplier"
           [options]="suppliers"
           optionLabel="name"
+          optionValue="id"
           placeholder="اختر المورد"
           styleClass="w-100"
           (onChange)="generateReport()"
@@ -121,7 +122,7 @@
 
     <!-- عرض اسم المورد -->
     <h2 *ngIf="currentReport === 'supplier' && selectedSupplier">
-      المورد: {{ selectedSupplier.name }}
+      المورد: {{ selectedSupplier?.name }}
     </h2>
 
     <hr />

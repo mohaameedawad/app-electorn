@@ -56,8 +56,8 @@ export class CustomersComponent implements OnInit {
       { header: 'رقم', field: 'id' },
       { header: 'الاسم', field: 'name' },
       { header: 'التليفون', field: 'phone' },
-      { header: 'له (دائن)', field: 'credit' },
-      { header: 'عليه (مدين)', field: 'debit' },
+      // { header: 'له (دائن)', field: 'credit' },
+      // { header: 'عليه (مدين)', field: 'debit' },
       {
         header: 'إجراءات',
         field: 'actions',

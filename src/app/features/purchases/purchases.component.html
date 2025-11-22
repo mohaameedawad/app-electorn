@@ -28,7 +28,7 @@
         <div class="col-3">
           <label class="mb-2">المورد</label>
           <p-select
-            [(ngModel)]="newPurchase.supplier_id"
+            [(ngModel)]="newPurchase.supplierId"
             [options]="suppliers"
             optionLabel="label"
             optionValue="value"
@@ -295,7 +295,7 @@
         <div class="info-item">
           <span class="label">المورد:</span>
           <span class="value">{{
-            getSupplierName(previewPurchase.supplier_id)
+            getSupplierName(previewPurchase.supplierId)
           }}</span>
         </div>
 

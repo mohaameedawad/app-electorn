@@ -52,9 +52,9 @@ addPurchase(purchase) {
     });
   }
 
-  if (purchase.supplier_id) {
+  if (purchase.supplierId) {
     const net = (purchase.total || 0) - (purchase.paid_amount || 0);
-    this.updateSupplierBalance(purchase.supplier_id, net);
+    this.updateSupplierBalance(purchase.supplierId, net);
   }
 
   this.saveData();
@@ -88,10 +88,10 @@ addPurchase(purchase) {
 
       this.updateStockOnEdit(oldItems, newItems);
 
-      if (oldPurchase.supplier_id) {
+      if (oldPurchase.supplierId) {
         const oldNet =
           (oldPurchase.total || 0) - (oldPurchase.paid_amount || 0);
-        this.updateSupplierBalance(oldPurchase.supplier_id, -oldNet);
+        this.updateSupplierBalance(oldPurchase.supplierId, -oldNet);
       }
 
       this.data.purchases[index] = {
@@ -100,9 +100,9 @@ addPurchase(purchase) {
         updatedAt: new Date().toISOString(),
       };
 
-      if (purchase.supplier_id) {
+      if (purchase.supplierId) {
         const newNet = (purchase.total || 0) - (purchase.paid_amount || 0);
-        this.updateSupplierBalance(purchase.supplier_id, newNet);
+        this.updateSupplierBalance(purchase.supplierId, newNet);
       }
 
       this.saveData();
@@ -127,10 +127,10 @@ addPurchase(purchase) {
         );
       });
 
-      if (purchaseToDelete.supplier_id) {
+      if (purchaseToDelete.supplierId) {
         const net =
           (purchaseToDelete.total || 0) - (purchaseToDelete.paid_amount || 0);
-        this.updateSupplierBalance(purchaseToDelete.supplier_id, -net);
+        this.updateSupplierBalance(purchaseToDelete.supplierId, -net);
       }
     }
 
@@ -203,10 +203,10 @@ addPurchase(purchase) {
     });
   }
 
-  updateSupplierBalance(supplier_id, amount) {
+  updateSupplierBalance(supplierId, amount) {
     if (!this.data.suppliers) return;
 
-    const supplier = this.data.suppliers.find((s) => s.id === supplier_id);
+    const supplier = this.data.suppliers.find((s) => s.id === supplierId);
     if (!supplier) return;
 
     supplier.balance = (supplier.balance || 0) + amount;

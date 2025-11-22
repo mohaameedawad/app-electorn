@@ -206,87 +206,84 @@ export class ReportsComponent implements OnInit {
   // ============================
   // CUSTOMER STATEMENT
   // ============================
-async generateCustomerStatement() {
-  if (!this.selectedCustomer) {
-    this.currentData = [];
-    return;
-  }
-
-  const customerId = this.selectedCustomer.id;
-  const sales = await this.db.getSales();
-  const payments = await this.db.getCustomerPayments();
-
-  let result: any[] = [];
-
-  // 1) فواتير البيع
-  sales
-    .filter((s: any) => s.customer_id === customerId)
-    .forEach((s: any) =>
-      result.push({
-        date: new Date(s.sale_date),
-        type: `فاتورة بيع رقم ${s.invoice_no}`,
-        amount: s.total,
-        paid: s.paid_amount || 0,
-        debit: 0, // يتحدد بعد الحساب
-        credit: 0,
-        order: 1
-      })
-    );
-
-  // 2) سندات القبض
-  payments
-    .filter((p: any) => p.customerId === customerId)
-    .forEach((p: any) =>
-      result.push({
-        date: new Date(p.date),
-        type: `سند قبض رقم ${p.receiptNumber}`,
-        amount: "-",
-        paid: p.amount,
-        debit: 0,
-        credit: 0,
-        order: 2
-      })
-    );
-
-  // ترتيب حسب التاريخ
-  result.sort((a, b) => a.date.getTime() - b.date.getTime());
-
-  // 3) الحساب التراكمي الصح
-  let runningBalance = 0;
-
-  this.currentData = result.map((row) => {
-    let remaining = 0;
-
-    if (row.order === 1) {
-      // فاتورة
-      remaining = row.amount - row.paid;
-    } else {
-      // سند قبض
-      remaining = -row.paid;
+  async generateCustomerStatement() {
+    if (!this.selectedCustomer) {
+      this.currentData = [];
+      return;
     }
 
-    runningBalance += remaining;
+    const customerId = this.selectedCustomer.id;
+    const sales = await this.db.getSales();
+    const payments = await this.db.getCustomerPayments();
 
-    return {
-      ...row,
-      debit: runningBalance > 0 ? runningBalance : 0,
-      credit: runningBalance < 0 ? Math.abs(runningBalance) : 0,
-    };
-  });
+    let result: any[] = [];
 
-  // الكولمنز
-  this.currentColumns = [
-    { field: "date", header: "التاريخ", type: "date" },
-    { field: "type", header: "البيان" },
-    { field: "amount", header: "المبلغ" },
-    { field: "paid", header: "المدفوع" },
-    { field: "debit", header: "مدين" },
-    { field: "credit", header: "دائن" },
-  ];
-}
+    // 1) فواتير البيع
+    sales
+      .filter((s: any) => s.customer_id === customerId)
+      .forEach((s: any) =>
+        result.push({
+          date: new Date(s.sale_date),
+          type: `فاتورة بيع رقم ${s.invoice_no}`,
+          amount: s.total,
+          paid: s.paid_amount || 0,
+          debit: 0, // يتحدد بعد الحساب
+          credit: 0,
+          order: 1,
+        })
+      );
 
+    // 2) سندات القبض
+    payments
+      .filter((p: any) => p.customerId === customerId)
+      .forEach((p: any) =>
+        result.push({
+          date: new Date(p.date),
+          type: `سند قبض رقم ${p.receiptNumber}`,
+          amount: '-',
+          paid: p.amount,
+          debit: 0,
+          credit: 0,
+          order: 2,
+        })
+      );
 
+    // ترتيب حسب التاريخ
+    result.sort((a, b) => a.date.getTime() - b.date.getTime());
 
+    // 3) الحساب التراكمي الصح
+    let runningBalance = 0;
+
+    this.currentData = result.map((row) => {
+      let remaining = 0;
+
+      if (row.order === 1) {
+        // فاتورة
+        remaining = row.amount - row.paid;
+      } else {
+        // سند قبض
+        remaining = -row.paid;
+      }
+
+      runningBalance += remaining;
+
+      return {
+        ...row,
+        debit: runningBalance > 0 ? runningBalance : 0,
+        credit: runningBalance < 0 ? Math.abs(runningBalance) : 0,
+      };
+    });
+
+    // الكولمنز
+    this.currentColumns = [
+      { field: 'date', header: 'التاريخ', type: 'date' },
+      { field: 'type', header: 'البيان' },
+      { field: 'amount', header: 'الفاتورة' },
+      { field: 'paid', header: 'المدفوع' },
+      { field: 'debit', header: 'مدين' },
+      { field: 'credit', header: 'دائن' },
+    ];
+  }
 
   // ============================
   // SUPPLIER STATEMENT
@@ -297,42 +294,81 @@ async generateCustomerStatement() {
       return;
     }
 
-    const purchases = await this.db.getPurchases();
-    const result: any[] = [];
+    const supplierId = typeof this.selectedSupplier === 'number'
+      ? this.selectedSupplier
+      : this.selectedSupplier?.id;
 
+    console.log('Selected Supplier ID:', supplierId);
+    if (typeof supplierId !== 'number') return;
+    const purchases = await this.db.getPurchases();
+    const payments = await this.db.getSupplierPaymentsBySupplierId(supplierId);
+
+    let result: any[] = [];
+
+    // فواتير الشراء
     purchases
-      .filter((p: any) => p.supplierName === this.selectedSupplier?.name)
+      .filter((p: any) => p.supplierId === supplierId)
       .forEach((p: any) =>
+      {
+
+        console.log('Processing Purchase:', p)
         result.push({
-          date: new Date(p.date),
-          type: 'فاتورة شراء',
-          invoiceNumber: p.invoiceNumber,
-          debit: p.totalAmount,
-          credit: 0,
+          date: new Date(p.purchase_date),
+          type: `فاتورة شراء رقم ${p.invoice_no}`,
+          amount: p.total,
+          paid: p.paid_amount || 0,
+          order: 1,
         })
+      }
       );
 
+      
+    // سندات الصرف
+    payments
+      .filter((p: any) => p.supplierId  === supplierId)
+      .forEach((p: any) => {
+        console.log('Processing Payment:', p)
+        result.push({
+          date: new Date(p.date),
+          type: `سند صرف رقم ${p.receiptNumber}`,
+          amount: '-',
+          paid: p.amount,
+          order: 2,
+        })
+      }
+      );
+
+    // ترتيب حسب التاريخ
     result.sort((a, b) => a.date.getTime() - b.date.getTime());
 
-    let balance = 0;
-    this.currentData = result.map((t) => {
-      balance += t.debit - t.credit;
+    // حساب الرصيد التراكمي
+    let running = 0;
+
+    this.currentData = result.map((row) => {
+      let diff = 0;
+
+      if (row.order === 1) {
+        diff = row.amount - row.paid; // دائن
+      } else {
+        diff = -row.paid; // مدين
+      }
+
+      running += diff;
+
       return {
-        date: t.date,
-        type: t.type,
-        invoiceNumber: t.invoiceNumber,
-        debit: t.debit,
-        credit: t.credit,
-        balance,
+        ...row,
+        debit: running < 0 ? Math.abs(running) : 0,
+        credit: running > 0 ? running : 0,
       };
     });
 
     this.currentColumns = [
       { field: 'date', header: 'التاريخ', type: 'date' },
       { field: 'type', header: 'البيان' },
-      { field: 'debit', header: 'مدين', type: 'number' },
-      { field: 'credit', header: 'دائن', type: 'number' },
-      { field: 'balance', header: 'الرصيد', type: 'number' },
+      { field: 'amount', header: 'الفاتورة' },
+      { field: 'paid', header: 'المدفوع' },
+      { field: 'debit', header: 'مدين' },
+      { field: 'credit', header: 'دائن' },
     ];
   }
 
@@ -445,18 +481,22 @@ async generateCustomerStatement() {
         }
 
         // تنسيق الأرقام
-        if (col.type === 'number' && cellValue !== undefined) {
-          if (cellValue === 0) {
+        if (col.type === 'number') {
+          const numericValue = Number(cellValue);
+
+          if (isNaN(numericValue)) {
             cellValue = '0.00';
           } else {
-            cellValue = cellValue.toLocaleString('ar-EG', {
+            cellValue = numericValue.toLocaleString('ar-EG', {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             });
           }
         }
 
-        tableHTML += `<td>${(cellValue !== undefined && cellValue !== null) ? cellValue : ''}</td>`;
+        tableHTML += `<td>${
+          cellValue !== undefined && cellValue !== null ? cellValue : ''
+        }</td>`;
       });
       tableHTML += '</tr>';
     });
@@ -631,11 +671,10 @@ async generateCustomerStatement() {
   }
 
   setDefaultDates() {
-  const now = new Date();
-  this.dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
-  this.dateTo = new Date(); 
-}
-
+    const now = new Date();
+    this.dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
+    this.dateTo = new Date();
+  }
 
   getMonthName(m: number): string {
     return [

@@ -30,8 +30,8 @@ export class SuppliersComponent implements OnInit {
     { header: 'اسم المورد', field: 'name' },
     { header: 'التليفون', field: 'phone' },
     { header: 'العنوان', field: 'address' },
-    { header: 'له (دائن)', field: 'credit' },
-    { header: 'عليه (مدين)', field: 'debit' },
+    // { header: 'له (دائن)', field: 'credit' },
+    // { header: 'عليه (مدين)', field: 'debit' },
   ];
 
   data: any[] = [];

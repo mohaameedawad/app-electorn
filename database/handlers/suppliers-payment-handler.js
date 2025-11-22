@@ -132,7 +132,7 @@ class SupplierPaymentHandler extends BaseHandler {
 
   getSupplierPayments(supplierId) {
     return (this.data.payments_made || []).filter(
-      (p) => p.supplierId === supplierId || p.supplier_id === supplierId
+      (p) => p.supplierId === supplierId
     );
   }
 }
