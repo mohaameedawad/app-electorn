@@ -18,7 +18,7 @@ interface SupplierPayment {
   id?: number;
   receiptNumber: string;
   supplierId?: number;
-  supplier_name?: string;
+  supplierName?: string;
   date: Date;
   amount: number;
 }
@@ -55,7 +55,7 @@ export class SuppliersPaymentsComponent implements OnInit {
 
   columns = [
     { field: 'receiptNumber', header: 'رقم سند الدفع' },
-    { field: 'supplier_name', header: 'اسم المورد' },
+    { field: 'supplierName', header: 'اسم المورد' },
     { field: 'date', header: 'التاريخ', type: 'date' },
     { field: 'amount', header: 'المبلغ' },
     {
@@ -84,7 +84,7 @@ export class SuppliersPaymentsComponent implements OnInit {
           );
           return {
             ...payment,
-            supplier_name: supplier ? supplier.name : 'غير معروف',
+            supplierName: supplier ? supplier.name : 'غير معروف',
           };
         }
         return payment;
@@ -119,7 +119,7 @@ export class SuppliersPaymentsComponent implements OnInit {
   }
 
   editPayment(payment: SupplierPayment) {
-    this.payment = { ...payment };
+    this.payment = { ...payment, date: new Date(payment.date) };
     this.isEditMode = true;
     this.displayDialog = true;
   }
@@ -144,13 +144,19 @@ export class SuppliersPaymentsComponent implements OnInit {
   async savePayment() {
     try {
       if (!this.payment.supplierId || this.payment.amount <= 0) {
-        alert('يرجى اختيار مورد وإدخال مبلغ صحيح');
+        this.confirmDialog.show({
+          message: 'يرجى اختيار مورد وإدخال مبلغ صحيح',
+          header: 'خطأ',
+          acceptLabel: 'موافق',
+          showReject: false,
+        });
         return;
       }
 
       const data = {
         receiptNumber: this.payment.receiptNumber,
         supplierId: this.payment.supplierId,
+        supplierName: this.suppliers.find(s => s.id === this.payment.supplierId)?.name || '',
         date: this.formatDate(this.payment.date),
         amount: this.payment.amount,
         type: 'paid',

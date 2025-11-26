@@ -14,18 +14,16 @@
   </div>
 </div>
 
-<!-- 🟢 Unified Report Dialog -->
+<!-- Unified Report Dialog -->
 <app-dialog
   [(visible)]="displayReportDialog"
   [width]="'80vw'"
   [header]="reportTitles[currentReport]"
 >
   <div class="p-4">
-    <!-- ====== filters per report ====== -->
-
-    <!-- مصروفات / مدفوعات / مشتريات -->
+    <!-- مصروفات / مشتريات / أرباح -->
     <div
-      *ngIf="['expenses', 'payments', 'purchases'].includes(currentReport)"
+      *ngIf="['expenses', 'purchases', 'profits'].includes(currentReport)"
       class="row mb-3"
     >
       <div class="col-md-3">
@@ -35,6 +33,8 @@
           dateFormat="yy-mm-dd"
           [showIcon]="true"
           styleClass="w-100"
+          (onSelect)="generateReport()"
+          appendTo="body"
         ></p-datepicker>
       </div>
 
@@ -45,11 +45,91 @@
           dateFormat="yy-mm-dd"
           [showIcon]="true"
           styleClass="w-100"
+          (onSelect)="generateReport()"
+          appendTo="body"
+        ></p-datepicker>
+      </div>
+    </div>
+
+    <!-- تقرير دفعات العملاء -->
+    <div *ngIf="currentReport === 'customerPayments'" class="row mb-3">
+      <div class="col-md-3">
+        <label class="mb-2">اختر العميل</label>
+        <p-select
+          [(ngModel)]="selectedCustomerPayment"
+          [options]="customers"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="اختر العميل"
+          styleClass="w-100"
+          (onChange)="generateReport()"
+          appendTo="body"
+        ></p-select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="mb-2">من تاريخ</label>
+        <p-datepicker
+          [(ngModel)]="dateFrom"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          styleClass="w-100"
+          (onSelect)="generateReport()"
+          appendTo="body"
         ></p-datepicker>
       </div>
 
-      <div class="col-md-2 mt-4 pt-1">
-        <p-button label="إنشاء التقرير" (onClick)="generateReport()"></p-button>
+      <div class="col-md-3">
+        <label class="mb-2">إلى تاريخ</label>
+        <p-datepicker
+          [(ngModel)]="dateTo"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          styleClass="w-100"
+          (onSelect)="generateReport()"
+          appendTo="body"
+        ></p-datepicker>
+      </div>
+    </div>
+
+    <!-- تقرير دفعات الموردين -->
+    <div *ngIf="currentReport === 'supplierPayments'" class="row mb-3">
+      <div class="col-md-3">
+        <label class="mb-2">اختر المورد</label>
+        <p-select
+          [(ngModel)]="selectedSupplierPayment"
+          [options]="suppliers"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="اختر المورد"
+          styleClass="w-100"
+          (onChange)="generateReport()"
+          appendTo="body"
+        ></p-select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="mb-2">من تاريخ</label>
+        <p-datepicker
+          [(ngModel)]="dateFrom"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          styleClass="w-100"
+          (onSelect)="generateReport()"
+          appendTo="body"
+        ></p-datepicker>
+      </div>
+
+      <div class="col-md-3">
+        <label class="mb-2">إلى تاريخ</label>
+        <p-datepicker
+          [(ngModel)]="dateTo"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          styleClass="w-100"
+          (onSelect)="generateReport()"
+          appendTo="body"
+        ></p-datepicker>
       </div>
     </div>
 
@@ -64,6 +144,7 @@
           placeholder="اختر العميل"
           styleClass="w-100"
           (onChange)="generateReport()"
+          appendTo="body"
         ></p-select>
       </div>
     </div>
@@ -80,21 +161,35 @@
           placeholder="اختر المورد"
           styleClass="w-100"
           (onChange)="generateReport()"
+          appendTo="body"
         ></p-select>
       </div>
     </div>
 
-    <!-- ====== TABLE OUTPUT (Unified Table) ====== -->
+    <!-- TABLE -->
     <div class="report-preview" id="reportPreview">
       <app-table
         [columns]="currentColumns"
         [data]="currentData"
         [showFilter]="false"
-      >
-      </app-table>
+      ></app-table>
+    </div>
+    <div *ngIf="totalSum > 0" class="total-summary-box">
+      <span class="label mx-2">
+        {{
+          currentReport === "purchases"
+            ? "إجمالي المشتريات"
+            : currentReport === "expenses"
+            ? "إجمالي المصروفات"
+            : "الإجمالي"
+        }}
+      </span>
+
+      <span class="value"> {{ totalSum | number : "1.2-2" }} جنيه </span>
     </div>
   </div>
 
+  <!-- Dialog Footer -->
   <div dialog-footer class="dialog-footer">
     <p-button
       label="إغلاق"
@@ -102,6 +197,7 @@
       [text]="true"
       (onClick)="closeReport()"
     ></p-button>
+
     <p-button
       label="طباعة"
       icon="pi pi-print"
@@ -110,17 +206,15 @@
   </div>
 </app-dialog>
 
-<!-- Hidden Print Template -->
+<!-- PRINT TEMPLATE -->
 <div id="reportPrint" style="display: none">
   <div class="print-header">
     <h1>{{ reportTitles[currentReport] }}</h1>
 
-    <!-- عرض اسم العميل -->
     <h2 *ngIf="currentReport === 'customer' && selectedCustomer">
       العميل: {{ selectedCustomer.name }}
     </h2>
 
-    <!-- عرض اسم المورد -->
     <h2 *ngIf="currentReport === 'supplier' && selectedSupplier">
       المورد: {{ selectedSupplier?.name }}
     </h2>
@@ -142,6 +236,20 @@
         </td>
       </tr>
     </tbody>
+    <div *ngIf="totalSum > 0" class="total-summary-box" >
+      <span class="label mx-2">
+        {{
+          currentReport === "purchases"
+            ? "إجمالي المشتريات"
+            : currentReport === "expenses"
+            ? "إجمالي المصروفات"
+            : "الإجمالي"
+        }}
+      </span>
+
+      <span class="value"> {{ totalSum | number : "1.2-2" }} جنيه </span>
+    </div>
   </table>
 </div>
+
 <app-confirmation-dialog></app-confirmation-dialog>

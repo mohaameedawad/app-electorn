@@ -17,7 +17,7 @@ interface Payment {
   id?: number;
   receiptNumber: string;
   customerId?: number;
-  customer_name?: string;
+  customerName?: string;
   date: Date;
   amount: number;
 }
@@ -54,7 +54,7 @@ export class CustomersPaymentsComponent implements OnInit {
 
   columns = [
     { field: 'receiptNumber', header: 'رقم سند القبض' },
-    { field: 'customer_name', header: 'اسم العميل' },
+    { field: 'customerName', header: 'اسم العميل' },
     { field: 'date', header: 'التاريخ', type: 'date' },
     { field: 'amount', header: 'المبلغ' },
     {
@@ -83,7 +83,7 @@ export class CustomersPaymentsComponent implements OnInit {
           );
           return {
             ...payment,
-            customer_name: customer ? customer.name : 'غير معروف',
+            customerName: customer ? customer.name : 'غير معروف',
           };
         }
         return payment;
@@ -119,7 +119,10 @@ export class CustomersPaymentsComponent implements OnInit {
   }
 
   editPayment(payment: Payment) {
-    this.payment = { ...payment };
+    this.payment = {
+      ...payment,
+      date: new Date(payment.date),
+    };
     this.isEditMode = true;
     this.displayDialog = true;
   }
@@ -145,20 +148,29 @@ export class CustomersPaymentsComponent implements OnInit {
     try {
       // التحقق من البيانات
       if (!this.payment.customerId || this.payment.amount <= 0) {
-        alert('يرجى اختيار عميل وإدخال مبلغ صحيح');
+        this.confirmDialog.show({
+          message: 'يرجى اختيار عميل وإدخال مبلغ صحيح',
+          header: 'خطأ',
+          acceptLabel: 'موافق',
+          showReject: false,
+        });
         return;
       }
 
       const paymentData = {
         receiptNumber: this.payment.receiptNumber,
         customerId: this.payment.customerId,
+        customerName: this.payment.customerName,
         date: this.formatDate(this.payment.date),
         amount: this.payment.amount,
         type: 'received',
       };
 
       if (this.isEditMode) {
-        await this.dbService.updateCustomerPayment(this.payment.id!, paymentData);
+        await this.dbService.updateCustomerPayment(
+          this.payment.id!,
+          paymentData
+        );
       } else {
         await this.dbService.addCustomerPayment(paymentData);
       }
@@ -166,7 +178,12 @@ export class CustomersPaymentsComponent implements OnInit {
       await this.loadData();
     } catch (error) {
       console.error('Error saving payment:', error);
-      alert('حدث خطأ أثناء حفظ سند القبض');
+      this.confirmDialog.show({
+        message: 'حدث خطأ أثناء حفظ سند القبض',
+        header: 'خطأ',
+        acceptLabel: 'موافق',
+        showReject: false,
+      });
     }
   }
 

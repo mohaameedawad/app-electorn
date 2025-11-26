@@ -54,9 +54,13 @@ export class ReportsComponent implements OnInit {
   customers: any[] = [];
   suppliers: any[] = [];
   expenses: any[] = [];
-  payments: any[] = [];
+  customerPayments: any[] = [];
   purchases: any[] = [];
   sales: any[] = [];
+  supplierPayments: any[] = [];
+  selectedCustomerPayment: number | null = null;
+  selectedSupplierPayment: number | null = null;
+  totalSum: number = 0;
   selectedCustomer: Customer | null = null;
   selectedSupplier: Supplier | null = null;
   dateFrom = new Date();
@@ -67,7 +71,8 @@ export class ReportsComponent implements OnInit {
 
   reportTitles: any = {
     expenses: 'تقرير المصروفات',
-    payments: 'تقرير الدفعات',
+    customerPayments: 'دفعات العملاء',
+    supplierPayments: 'دفعات الموردين',
     purchases: 'تقرير المشتريات',
     profits: 'تقرير الأرباح الشهرية',
     customer: 'كشف حساب عميل',
@@ -82,10 +87,16 @@ export class ReportsComponent implements OnInit {
       description: 'عرض جميع المصروفات',
     },
     {
-      type: 'payments',
-      icon: 'pi pi-money-bill',
-      title: 'تقرير الدفعات',
-      description: 'عرض الدفعات',
+      type: 'customerPayments',
+      icon: 'pi pi-users',
+      title: 'دفعات العملاء',
+      description: 'عرض الدفعات المستلمة من العملاء',
+    },
+    {
+      type: 'supplierPayments',
+      icon: 'pi pi-truck',
+      title: 'دفعات الموردين',
+      description: 'عرض الدفعات المدفوعة للموردين',
     },
     {
       type: 'purchases',
@@ -120,7 +131,8 @@ export class ReportsComponent implements OnInit {
     this.customers = await this.db.getCustomers();
     this.suppliers = await this.db.getSuppliers();
     this.expenses = await this.db.getExpenses();
-    this.payments = await this.db.getCustomerPayments();
+    this.customerPayments = await this.db.getCustomerPayments();
+    this.supplierPayments = await this.db.getSupplierPayments();
     this.purchases = await this.db.getPurchases();
     this.sales = await this.db.getSales();
   }
@@ -138,11 +150,14 @@ export class ReportsComponent implements OnInit {
     this.generateReport();
   }
 
-  // ============================
-  // CLOSE REPORT
-  // ============================
   closeReport() {
     this.displayReportDialog = false;
+    this.totalSum = 0;
+    this.setDefaultDates();
+    this.selectedCustomerPayment = null;
+    this.selectedSupplierPayment = null;
+    this.selectedCustomer = null;
+    this.selectedSupplier = null;
   }
 
   // ============================
@@ -161,32 +176,112 @@ export class ReportsComponent implements OnInit {
           (e) =>
             new Date(e.date) >= this.dateFrom && new Date(e.date) <= this.dateTo
         );
-        break;
+        this.totalSum = this.currentData.reduce(
+          (sum, row) => sum + row.amount,
+          0
+        );
 
-      case 'payments':
+        break;
+      // case 'customerPayments':
+      //   this.currentColumns = [
+      //     { field: 'receiptNumber', header: 'رقم السند' },
+      //     { field: 'customerName', header: 'اسم العميل' },
+      //     { field: 'amount', header: 'المبلغ', type: 'number' },
+      //     { field: 'date', header: 'التاريخ', type: 'date' },
+      //   ];
+
+      //   this.currentData = this.customerPayments.filter(
+      //     (p) =>
+      //       new Date(p.date) >= this.dateFrom && new Date(p.date) <= this.dateTo
+      //   );
+      //   break;
+
+      case 'customerPayments':
         this.currentColumns = [
           { field: 'receiptNumber', header: 'رقم السند' },
-          { field: 'customerName', header: 'العميل' },
-          { field: 'date', header: 'التاريخ', type: 'date' },
+          { field: 'customerName', header: 'اسم العميل' },
           { field: 'amount', header: 'المبلغ', type: 'number' },
+          { field: 'date', header: 'التاريخ', type: 'date' },
         ];
-        this.currentData = this.payments.filter(
-          (e) =>
-            new Date(e.date) >= this.dateFrom && new Date(e.date) <= this.dateTo
-        );
+
+        this.currentData = this.customerPayments.filter((p) => {
+          const matchCustomer = this.selectedCustomerPayment
+            ? p.customerId === this.selectedCustomerPayment
+            : true;
+
+          const matchDate =
+            new Date(p.date) >= this.dateFrom &&
+            new Date(p.date) <= this.dateTo;
+
+          return matchCustomer && matchDate;
+        });
+        break;
+
+      // case 'supplierPayments':
+      //   this.currentColumns = [
+      //     { field: 'receiptNumber', header: 'رقم السند' },
+      //     { field: 'supplierName', header: 'اسم المورد' },
+      //     { field: 'amount', header: 'المبلغ', type: 'number' },
+      //     { field: 'date', header: 'التاريخ', type: 'date' },
+      //   ];
+
+      //   this.currentData = this.supplierPayments.filter(
+      //     (p) =>
+      //       new Date(p.date) >= this.dateFrom && new Date(p.date) <= this.dateTo
+      //   );
+      //   break;
+
+      case 'supplierPayments':
+        this.currentColumns = [
+          { field: 'receiptNumber', header: 'رقم السند' },
+          { field: 'supplierName', header: 'اسم المورد' },
+          { field: 'amount', header: 'المبلغ', type: 'number' },
+          { field: 'date', header: 'التاريخ', type: 'date' },
+        ];
+
+        this.currentData = this.supplierPayments.filter((p) => {
+          const matchSupplier = this.selectedSupplierPayment
+            ? p.supplierId === this.selectedSupplierPayment
+            : true;
+
+          const matchDate =
+            new Date(p.date) >= this.dateFrom &&
+            new Date(p.date) <= this.dateTo;
+
+          return matchSupplier && matchDate;
+        });
         break;
 
       case 'purchases':
         this.currentColumns = [
-          { field: 'invoiceNumber', header: 'رقم الفاتورة' },
-          { field: 'supplierName', header: 'المورد' },
+          { field: 'invoice_no', header: 'رقم الفاتورة' },
+          { field: 'supplier', header: 'المورد' },
           { field: 'date', header: 'التاريخ', type: 'date' },
-          { field: 'totalAmount', header: 'إجمالي المبلغ', type: 'number' },
+          { field: 'total', header: 'إجمالي المبلغ', type: 'number' },
         ];
-        this.currentData = this.purchases.filter(
-          (e) =>
-            new Date(e.date) >= this.dateFrom && new Date(e.date) <= this.dateTo
+
+        this.currentData = this.purchases
+          .map((purchase) => {
+            return {
+              invoice_no: purchase.invoice_no,
+              supplier: purchase.supplier || '',
+
+              // تحويل التاريخ الصحيح
+              date: new Date(
+                purchase.purchase_date || purchase.date || purchase.createdAt
+              ),
+
+              total: purchase.total,
+            };
+          })
+          .filter(
+            (row) => row.date >= this.dateFrom && row.date <= this.dateTo
+          );
+        this.totalSum = this.currentData.reduce(
+          (sum, row) => sum + row.total,
+          0
         );
+
         break;
 
       case 'profits':
@@ -248,25 +343,19 @@ export class ReportsComponent implements OnInit {
         })
       );
 
-    // ترتيب حسب التاريخ
     result.sort((a, b) => a.date.getTime() - b.date.getTime());
 
-    // 3) الحساب التراكمي الصح
     let runningBalance = 0;
 
     this.currentData = result.map((row) => {
       let remaining = 0;
 
       if (row.order === 1) {
-        // فاتورة
         remaining = row.amount - row.paid;
       } else {
-        // سند قبض
         remaining = -row.paid;
       }
-
       runningBalance += remaining;
-
       return {
         ...row,
         debit: runningBalance > 0 ? runningBalance : 0,
@@ -274,7 +363,6 @@ export class ReportsComponent implements OnInit {
       };
     });
 
-    // الكولمنز
     this.currentColumns = [
       { field: 'date', header: 'التاريخ', type: 'date' },
       { field: 'type', header: 'البيان' },
@@ -285,18 +373,16 @@ export class ReportsComponent implements OnInit {
     ];
   }
 
-  // ============================
-  // SUPPLIER STATEMENT
-  // ============================
   async generateSupplierStatement() {
     if (!this.selectedSupplier) {
       this.currentData = [];
       return;
     }
 
-    const supplierId = typeof this.selectedSupplier === 'number'
-      ? this.selectedSupplier
-      : this.selectedSupplier?.id;
+    const supplierId =
+      typeof this.selectedSupplier === 'number'
+        ? this.selectedSupplier
+        : this.selectedSupplier?.id;
 
     console.log('Selected Supplier ID:', supplierId);
     if (typeof supplierId !== 'number') return;
@@ -308,35 +394,30 @@ export class ReportsComponent implements OnInit {
     // فواتير الشراء
     purchases
       .filter((p: any) => p.supplierId === supplierId)
-      .forEach((p: any) =>
-      {
-
-        console.log('Processing Purchase:', p)
+      .forEach((p: any) => {
+        console.log('Processing Purchase:', p);
         result.push({
           date: new Date(p.purchase_date),
           type: `فاتورة شراء رقم ${p.invoice_no}`,
           amount: p.total,
           paid: p.paid_amount || 0,
           order: 1,
-        })
-      }
-      );
+        });
+      });
 
-      
     // سندات الصرف
     payments
-      .filter((p: any) => p.supplierId  === supplierId)
+      .filter((p: any) => p.supplierId === supplierId)
       .forEach((p: any) => {
-        console.log('Processing Payment:', p)
+        console.log('Processing Payment:', p);
         result.push({
           date: new Date(p.date),
           type: `سند صرف رقم ${p.receiptNumber}`,
           amount: '-',
           paid: p.amount,
           order: 2,
-        })
-      }
-      );
+        });
+      });
 
     // ترتيب حسب التاريخ
     result.sort((a, b) => a.date.getTime() - b.date.getTime());
@@ -372,70 +453,107 @@ export class ReportsComponent implements OnInit {
     ];
   }
 
-  // ============================
-  // PROFITS
-  // ============================
-  generateMonthlyProfits() {
-    const map = new Map<string, any>();
+  // generateMonthlyProfits() {
+  //   let totalSales = 0;
+  //   let totalPurchases = 0;
+  //   let totalExpenses = 0;
 
-    this.sales.forEach((s) => {
-      const d = new Date(s.date);
-      const key = `${d.getFullYear()}-${d.getMonth() + 1}`;
-      if (!map.has(key))
-        map.set(key, {
-          month: this.getMonthName(d.getMonth() + 1),
-          totalSales: 0,
-          totalPurchases: 0,
-          totalExpenses: 0,
-          profit: 0,
-        });
+  //   this.sales.forEach((s) => {
+  //     const d = new Date(s.date);
+  //     if (d >= this.dateFrom && d <= this.dateTo) {
+  //       totalSales += s.totalAmount;
+  //     }
+  //   });
 
-      map.get(key).totalSales += s.totalAmount;
-    });
+  //   this.purchases.forEach((p) => {
+  //     const d = new Date(p.date);
+  //     if (d >= this.dateFrom && d <= this.dateTo) {
+  //       totalPurchases += p.totalAmount;
+  //     }
+  //   });
 
-    this.purchases.forEach((p) => {
-      const d = new Date(p.date);
-      const key = `${d.getFullYear()}-${d.getMonth() + 1}`;
-      if (!map.has(key))
-        map.set(key, {
-          month: this.getMonthName(d.getMonth() + 1),
-          totalSales: 0,
-          totalPurchases: 0,
-          totalExpenses: 0,
-          profit: 0,
-        });
+  //   this.expenses.forEach((e) => {
+  //     const d = new Date(e.date);
+  //     if (d >= this.dateFrom && d <= this.dateTo) {
+  //       totalExpenses += e.amount;
+  //     }
+  //   });
 
-      map.get(key).totalPurchases += p.totalAmount;
-    });
+  //   const profit = totalSales - totalPurchases - totalExpenses;
 
-    this.expenses.forEach((e) => {
-      const d = new Date(e.date);
-      const key = `${d.getFullYear()}-${d.getMonth() + 1}`;
-      if (!map.has(key))
-        map.set(key, {
-          month: this.getMonthName(d.getMonth() + 1),
-          totalSales: 0,
-          totalPurchases: 0,
-          totalExpenses: 0,
-          profit: 0,
-        });
+  //   this.currentData = [
+  //     {
+  //       period: `من ${this.dateFrom.toLocaleDateString(
+  //         'ar-EG'
+  //       )} إلى ${this.dateTo.toLocaleDateString('ar-EG')}`,
+  //       totalSales,
+  //       totalPurchases,
+  //       totalExpenses,
+  //       profit,
+  //     },
+  //   ];
 
-      map.get(key).totalExpenses += e.amount;
-    });
+  //   this.currentColumns = [
+  //     { field: 'period', header: 'الفترة' },
+  //     { field: 'totalSales', header: 'المبيعات', type: 'number' },
+  //     { field: 'totalPurchases', header: 'المشتريات', type: 'number' },
+  //     { field: 'totalExpenses', header: 'المصروفات', type: 'number' },
+  //     { field: 'profit', header: 'صافي الربح', type: 'number' },
+  //   ];
+  // }
+generateMonthlyProfits() {
+  let totalSales = 0;
+  let totalPurchases = 0;
+  let totalExpenses = 0;
 
-    map.forEach(
-      (v) => (v.profit = v.totalSales - v.totalPurchases - v.totalExpenses)
-    );
+  // المبيعات
+  this.sales.forEach((s) => {
+    const d = new Date(s.sale_date || s.date || s.createdAt);
+    if (d >= this.dateFrom && d <= this.dateTo) {
+      const amount = Number(s.totalAmount ?? s.total ?? 0);
+      totalSales += amount;
+    }
+  });
 
-    this.currentData = Array.from(map.values());
-    this.currentColumns = [
-      { field: 'month', header: 'الشهر' },
-      { field: 'totalSales', header: 'المبيعات', type: 'number' },
-      { field: 'totalPurchases', header: 'المشتريات', type: 'number' },
-      { field: 'totalExpenses', header: 'المصروفات', type: 'number' },
-      { field: 'profit', header: 'صافي الربح', type: 'number' },
-    ];
-  }
+  // المشتريات
+  this.purchases.forEach((p) => {
+    const d = new Date(p.purchase_date || p.date || p.createdAt);
+    if (d >= this.dateFrom && d <= this.dateTo) {
+      const amount = Number(p.totalAmount ?? p.total ?? 0);
+      totalPurchases += amount;
+    }
+  });
+
+  // المصروفات
+  this.expenses.forEach((e) => {
+    const d = new Date(e.date);
+    if (d >= this.dateFrom && d <= this.dateTo) {
+      totalExpenses += Number(e.amount || 0);
+    }
+  });
+
+  const profit = totalSales - totalPurchases - totalExpenses;
+
+  this.currentData = [
+    {
+      period: `من ${this.dateFrom.toLocaleDateString(
+        'ar-EG'
+      )} إلى ${this.dateTo.toLocaleDateString('ar-EG')}`,
+      totalSales,
+      totalPurchases,
+      totalExpenses,
+      profit,
+    },
+  ];
+
+  this.currentColumns = [
+    { field: 'period', header: 'الفترة' },
+    { field: 'totalSales', header: 'المبيعات', type: 'number' },
+    { field: 'totalPurchases', header: 'المشتريات', type: 'number' },
+    { field: 'totalExpenses', header: 'المصروفات', type: 'number' },
+    { field: 'profit', header: 'صافي الربح', type: 'number' },
+  ];
+}
 
   // ============================
   // PRINT PREVIEW
@@ -674,22 +792,5 @@ export class ReportsComponent implements OnInit {
     const now = new Date();
     this.dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
     this.dateTo = new Date();
-  }
-
-  getMonthName(m: number): string {
-    return [
-      'يناير',
-      'فبراير',
-      'مارس',
-      'أبريل',
-      'مايو',
-      'يونيو',
-      'يوليو',
-      'أغسطس',
-      'سبتمبر',
-      'أكتوبر',
-      'نوفمبر',
-      'ديسمبر',
-    ][m - 1];
   }
 }

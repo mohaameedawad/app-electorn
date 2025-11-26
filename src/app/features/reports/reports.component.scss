@@ -41,8 +41,28 @@
     opacity: 0.8;
   }
   @media print {
-  .p-paginator {
-    display: none !important;
+    .p-paginator {
+      display: none !important;
+    }
   }
 }
+.total-summary-box {
+  margin-top: 15px;
+  padding: 18px ;
+  border: 1px solid #ccc !important;
+  border-radius: 6px;
+  font-size: 17px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  color: #333;
+  background: transparent !important;
+}
+
+.total-summary-box .label {
+  font-size: 17px;
+}
+
+.total-summary-box .value {
+  font-size: 20px;
 }
