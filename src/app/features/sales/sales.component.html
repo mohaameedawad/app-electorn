@@ -21,7 +21,7 @@
     <div class="invoice-row">
       <div class="invoice-number">
         <span class="invoice-label">رقم الفاتورة:</span>
-        <span class="invoice-value">{{ newSale.invoice_no }}</span>
+        <span class="invoice-value"> {{ newSale.invoice_no }}</span>
       </div>
 
       <div class="row">
@@ -39,6 +39,9 @@
             [style]="{ width: '100%' }"
           >
           </p-select>
+          <small class="error-message" *ngIf="!newSale.customer_id"
+            >هذا الحقل مطلوب</small
+          >
         </div>
 
         <div class="col-3">
@@ -247,7 +250,7 @@
         </p-inputnumber>
       </div>
 
-      <div class="row mt-3">
+      <div class="row">
         <!-- Subtotal (before discount) -->
         <div class="col-4">
           <label class="mb-2 col">الإجمالي (قبل الخصم): </label>

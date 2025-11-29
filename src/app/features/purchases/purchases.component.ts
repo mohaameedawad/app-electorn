@@ -296,6 +296,15 @@ export class PurchasesComponent implements OnInit {
             .totals-table tbody tr td.total-header { background-color: #dddddd; border: 1px solid #000; font-weight: 700; font-size: 1rem; padding: 0.6rem; text-align: center; }
             .totals-table tbody tr td.total-value { background-color: #f9f9f9; font-weight: 600; font-size: 1rem; border: 1px solid #000; padding: 0.6rem; text-align: center; }
             .totals-table .final-total { font-weight: 700; font-size: 1.1rem; }
+              .footer {
+              margin-top: 15px;
+              margin-bottom: 15px;
+              text-align: center;
+              font-size: 11px;
+              color: #666;
+              border-top: 1px solid #ccc;
+              padding-top: 10px;
+            }
             @media print {
               html, body { 
                 width: 210mm; 
@@ -437,9 +446,12 @@ export class PurchasesComponent implements OnInit {
 
   async savePurchase() {
     try {
-      if (this.newPurchase.items.length === 0) {
+      if (this.newPurchase.items.length === 0 || !this.newPurchase.supplierId) {
         this.confirmDialog.show({
-          message: 'يجب إضافة صنف واحد على الأقل',
+          message:
+            this.newPurchase.items.length === 0
+              ? 'يجب إضافة صنف واحد على الأقل'
+              : 'يجب اختيار المورد',
           header: 'تنبيه',
           acceptLabel: 'إلغاء',
           showReject: false,

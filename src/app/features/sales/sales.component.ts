@@ -304,6 +304,15 @@ export class SalesComponent implements OnInit {
             .totals-table tbody tr td.total-header { background-color: #dddddd; border: 1px solid #000; font-weight: 700; font-size: 1rem; padding: 0.6rem; text-align: center; }
             .totals-table tbody tr td.total-value { background-color: #f9f9f9; font-weight: 600; font-size: 1rem; border: 1px solid #000; padding: 0.6rem; text-align: center; }
             .totals-table .final-total { font-weight: 700; font-size: 1.1rem; }
+              .footer {
+              margin-top: 15px;
+              margin-bottom: 15px;
+              text-align: center;
+              font-size: 11px;
+              color: #666;
+              border-top: 1px solid #ccc;
+              padding-top: 10px;
+            }
             @media print {
               html, body { 
                 width: 210mm; 
@@ -325,6 +334,11 @@ export class SalesComponent implements OnInit {
         </head>
         <body>
           ${printContent.innerHTML}
+            <div class="footer">
+            <p>تاريخ الطباعة: ${new Date().toLocaleDateString(
+              'ar-EG'
+            )} - ${new Date().toLocaleTimeString('ar-EG')}</p>
+          </div>
         </body>
       </html>
     `);
@@ -557,9 +571,12 @@ export class SalesComponent implements OnInit {
 
   async saveSale() {
     try {
-      if (this.newSale.items.length === 0) {
+      if (this.newSale.items.length === 0 || !this.newSale.customer_id) {
         this.confirmDialog.show({
-          message: 'يجب إضافة صنف واحد على الأقل',
+          message:
+            this.newSale.items.length === 0
+              ? 'يجب إضافة صنف واحد على الأقل'
+              : 'يجب اختيار العميل',
           header: 'تنبيه',
           acceptLabel: 'إلغاء',
           showReject: false,
@@ -569,7 +586,7 @@ export class SalesComponent implements OnInit {
 
       const stockValid = await this.validateStockBeforeSave();
       if (!stockValid) {
-        return; 
+        return;
       }
 
       // 🔹 التحقق من الحد الائتماني النهائي

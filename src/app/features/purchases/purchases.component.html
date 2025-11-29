@@ -21,7 +21,7 @@
     <div class="invoice-row">
       <div class="invoice-number">
         <span class="invoice-label">رقم الفاتورة:</span>
-        <span class="invoice-value">{{ newPurchase.invoice_no }}</span>
+        <span class="invoice-value"> {{ newPurchase.invoice_no }}</span>
       </div>
 
       <div class="row">
@@ -39,6 +39,11 @@
             [style]="{ width: '100%' }"
           >
           </p-select>
+          <small
+            class="error-message"
+            *ngIf="!newPurchase.supplierId"
+            >هذا الحقل مطلوب</small
+          >
         </div>
 
         <div class="col-3">
@@ -69,10 +74,64 @@
       </div>
     </div>
 
-    <!-- Add Product Section -->
-    <div class="add-product-section">
-      <h4>إضافة صنف</h4>
+    <!-- Items Table -->
+    <div class="items-table">
+      <h4>الأصناف</h4>
 
+      <p-table [value]="newPurchase.items">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>المنتج</th>
+            <th>الكمية</th>
+            <th>السعر</th>
+            <th>الإجمالي</th>
+            <th>حذف</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item let-i="rowIndex">
+          <tr>
+            <td>{{ item.product_name }}</td>
+
+            <td>
+              <p-inputnumber
+                [(ngModel)]="item.quantity"
+                [min]="1"
+                [showButtons]="true"
+                (ngModelChange)="updateItemTotal(i)"
+                [style]="{ width: '100px' }"
+              ></p-inputnumber>
+            </td>
+
+            <td>
+              <p-inputnumber
+                [(ngModel)]="item.price"
+                [min]="0"
+                (ngModelChange)="updateItemTotal(i)"
+                [style]="{ width: '120px' }"
+              ></p-inputnumber>
+            </td>
+
+            <td>{{ item.total }}</td>
+
+            <td>
+              <button class="delete-btn" (click)="removeItem(i)">
+                <i class="pi pi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="empty-message-center">لا توجد سجلات</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+        <!-- Add Product Section -->
+    <div class="add-product-section">
       <div class="row align-items-start">
         <div class="col-md-4 col-12">
           <div class="input-wrapper">
@@ -146,63 +205,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Items Table -->
-    <div class="items-table">
-      <h4>الأصناف</h4>
-
-      <p-table [value]="newPurchase.items">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>المنتج</th>
-            <th>الكمية</th>
-            <th>السعر</th>
-            <th>الإجمالي</th>
-            <th>حذف</th>
-          </tr>
-        </ng-template>
-
-        <ng-template pTemplate="body" let-item let-i="rowIndex">
-          <tr>
-            <td>{{ item.product_name }}</td>
-
-            <td>
-              <p-inputnumber
-                [(ngModel)]="item.quantity"
-                [min]="1"
-                [showButtons]="true"
-                (ngModelChange)="updateItemTotal(i)"
-                [style]="{ width: '100px' }"
-              ></p-inputnumber>
-            </td>
-
-            <td>
-              <p-inputnumber
-                [(ngModel)]="item.price"
-                [min]="0"
-                (ngModelChange)="updateItemTotal(i)"
-                [style]="{ width: '120px' }"
-              ></p-inputnumber>
-            </td>
-
-            <td>{{ item.total }}</td>
-
-            <td>
-              <button class="delete-btn" (click)="removeItem(i)">
-                <i class="pi pi-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </ng-template>
-
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="5" class="empty-message-center">لا توجد سجلات</td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
-
     <!-- Totals Section -->
     <div class="row">
       <div class="col-4">
@@ -241,7 +243,7 @@
     </div>
 
     <!-- Subtotal + Total + Remaining -->
-    <div class="row mt-3">
+    <div class="row">
       <div class="col-4">
         <label class="mb-2 col">الإجمالي (قبل الخصم):</label>
         <span class="mx-2">{{ newPurchase.subtotal }}</span>
