@@ -262,96 +262,364 @@ export class SalesComponent implements OnInit {
   }
 
   // Print from preview dialog
-  printPreview() {
-    // Get the invoice preview element
-    const printContent = document.querySelector('.invoice-preview');
-    if (!printContent) return;
 
-    // Open window with A4 dimensions (210mm x 297mm at 96 DPI ≈ 794px x 1123px)
-    const printWindow = window.open('', '_blank', 'width=850,height=1200');
-    if (!printWindow) return;
+printPreview() {
+  const printContent = document.querySelector('.invoice-preview');
+  if (!printContent) return;
 
-    // Write the content with styles
-    printWindow.document.write(`
-      <html dir="rtl">
-        <head>
-          <title>طباعة الفاتورة</title>
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
+  const printWindow = window.open('', '_blank', 'width=850,height=1200');
+  if (!printWindow) return;
+
+  // Get company info
+  const companyName = this.companyName;
+  const companyPhone = this.companyPhone;
+  const invoiceNo = this.previewSale.invoice_no;
+  const customerName = this.getCustomerName(this.previewSale.customer_id);
+  const saleDate = this.formatPreviewDate(this.previewSale.sale_date);
+  const items = this.previewSale.items;
+  const subtotal = this.previewSale.subtotal;
+  const discount = this.previewSale.discount;
+  const total = this.previewSale.total;
+  
+  // Get current date for print date
+  const now = new Date();
+  const printDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const printTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const printDateTime = `${printDate} ${printTime}`;
+
+  // Build HTML with pagination support
+  let htmlContent = `
+    <html dir="rtl">
+      <head>
+        <title>طباعة الفاتورة</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          html {
+            background: #f5f5f5;
+          }
+          body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: white;
+          }
+          body { 
+            margin: 0 auto;
+            max-width: 210mm;
+          }
+          
+          /* Company Info */
+          .company-info {
+            text-align: right;
+            margin-bottom: 1.5rem;
+            padding-right: 1cm;
+          }
+          .company-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+          }
+          .company-phone {
+            font-size: 0.95rem;
+            color: #333;
+          }
+          
+          .invoice-header { 
+            text-align: center; 
+            margin-bottom: 1.5rem; 
+          }
+          .invoice-header h1 { 
+            font-size: 1.6rem; 
+            font-weight: bold; 
+            margin-bottom: 1rem; 
+            border: 2px solid #000; 
+            padding: 0.6rem;
+            display: inline-block;
+            width: 100%;
+          }
+          
+          .customer-info {
+            background: #f9f9f9;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #333;
+          }
+          
+          .info-row { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 0.5rem; 
+          }
+          .info-item { 
+            flex: 1; 
+            display: flex; 
+            gap: 0.5rem; 
+          }
+          .label { 
+            font-weight: 600; 
+            min-width: 80px; 
+          }
+          
+          /* Table styles */
+          .preview-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 1rem; 
+          }
+          .preview-table thead { 
+            background-color: #dddddd; 
+            color: #000000; 
+          }
+          .preview-table th { 
+            padding: 0.5rem; 
+            text-align: center; 
+            font-weight: 600; 
+            border: 1px solid #000; 
+            font-size: 0.95rem; 
+          }
+          .preview-table tbody tr:nth-child(even) { 
+            background-color: #f9f9f9; 
+          }
+          .preview-table td { 
+            padding: 0.5rem; 
+            text-align: center; 
+            border: 1px solid #ddd; 
+            font-size: 0.9rem; 
+          }
+          
+          /* Totals table */
+          .totals-table { 
+            margin-bottom: 1rem; 
+            margin-top: 0; 
+          }
+          .totals-table tbody tr td.total-header { 
+            background-color: #dddddd; 
+            border: 1px solid #000; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            padding: 0.6rem; 
+            text-align: center; 
+          }
+          .totals-table tbody tr td.total-value { 
+            background-color: #f9f9f9; 
+            font-weight: 600; 
+            font-size: 1rem; 
+            border: 1px solid #000; 
+            padding: 0.6rem; 
+            text-align: center; 
+          }
+          .totals-table .final-total { 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+          }
+          
+          /* Page break handling */
+          .page {
+            page-break-after: always;
+            width: 210mm;
+            min-height: 297mm;
+            position: relative;
+            padding: 1cm;
+            margin-bottom: 2cm;
+            border: 1px solid #ddd;
+            background: white;
+            box-sizing: border-box;
+          }
+          .page:last-child {
+            page-break-after: auto;
+            margin-bottom: 0;
+          }
+          
+          /* Page footer with number and date */
+          .page-footer {
+            position: absolute;
+            bottom: 0.8cm;
+            left: 1.5cm;
+            right: 1.5cm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 0.5rem;
+          }
+          .page-number {
+            font-weight: 500;
+          }
+          .print-date {
+            font-weight: 500;
+          }
+          
+          @media print {
             html, body { 
               width: 210mm; 
-              height: 297mm; 
-              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-              background: white;
             }
             body { 
-              padding: 1.5cm; 
-              margin: 0 auto;
-              max-width: 210mm;
+              padding: 0; 
             }
-            .invoice-header { text-align: center; margin-bottom: 1.5rem; }
-            .invoice-header h1 { font-size: 1.6rem; font-weight: bold; margin-bottom: 1rem; border-bottom: 3px solid #000; padding-bottom: 0.5rem; }
-            .customer-info { margin-bottom: 1.5rem; }
-            .info-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
-            .info-item { flex: 1; display: flex; gap: 0.5rem; }
-            .label { font-weight: 600; min-width: 80px; }
-            .preview-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
-            .preview-table thead { background-color: #dddddd; color: #000000; }
-            .preview-table th { padding: 0.5rem; text-align: center; font-weight: 600; border: 1px solid #000; font-size: 0.95rem; }
-            .preview-table tbody tr:nth-child(even) { background-color: #f9f9f9; }
-            .preview-table td { padding: 0.5rem; text-align: center; border: 1px solid #ddd; font-size: 0.9rem; }
-            .totals-table { margin-bottom: 1rem; margin-top: 0; }
-            .totals-table tbody tr td.total-header { background-color: #dddddd; border: 1px solid #000; font-weight: 700; font-size: 1rem; padding: 0.6rem; text-align: center; }
-            .totals-table tbody tr td.total-value { background-color: #f9f9f9; font-weight: 600; font-size: 1rem; border: 1px solid #000; padding: 0.6rem; text-align: center; }
-            .totals-table .final-total { font-weight: 700; font-size: 1.1rem; }
-              .footer {
-              margin-top: 15px;
-              margin-bottom: 15px;
-              text-align: center;
-              font-size: 11px;
-              color: #666;
-              border-top: 1px solid #ccc;
-              padding-top: 10px;
+            @page { 
+              size: A4; 
+              margin: 0; 
             }
-            @media print {
-              html, body { 
-                width: 210mm; 
-                height: 297mm; 
-              }
-              body { padding: 1cm; }
-              @page { 
-                size: A4; 
-                margin: 0; 
-              }
+            .page {
+              page-break-after: always;
+              margin-bottom: 0;
+              border: none;
+              box-shadow: none;
+              width: 210mm;
+              min-height: 297mm;
             }
-            @media screen {
-              body {
-                box-shadow: 0 0 10px rgba(0,0,0,0.1);
-                margin: 20px auto;
-              }
+            .page:last-child {
+              page-break-after: auto;
             }
-          </style>
-        </head>
-        <body>
-          ${printContent.innerHTML}
-            <div class="footer">
-            <p>تاريخ الطباعة: ${new Date().toLocaleDateString(
-              'ar-EG'
-            )} - ${new Date().toLocaleTimeString('ar-EG')}</p>
+            tbody tr {
+              page-break-inside: avoid;
+            }
+            .page-footer {
+              position: absolute;
+              bottom: 0.8cm;
+            }
+          }
+          
+          @media screen {
+            body {
+              background: #f5f5f5;
+              padding: 2cm 0;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            }
+            .page {
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+          }
+        </style>
+      </head>
+      <body>
+  `;
+
+  // Calculate items per page (approximately 17 items per A4 page)
+  const itemsPerPage = 17;
+  const totalPages = Math.ceil(items.length / itemsPerPage);
+
+  // Generate pages
+  for (let pageNum = 0; pageNum < totalPages; pageNum++) {
+    const startIdx = pageNum * itemsPerPage;
+    const endIdx = Math.min(startIdx + itemsPerPage, items.length);
+    const pageItems = items.slice(startIdx, endIdx);
+    const isLastPage = pageNum === totalPages - 1;
+
+    htmlContent += `
+      <div class="page">
+        <!-- Company Info (on every page) -->
+        <div class="company-info">
+          <h2 class="company-name">${companyName}</h2>
+          <p class="company-phone">رقم الهاتف: ${companyPhone}</p>
+        </div>
+
+        <!-- Invoice Header (on every page) -->
+        <div class="invoice-header">
+          <h1>فاتورة مبيعات</h1>
+        </div>
+
+        <!-- Customer Info (on every page) -->
+        <div class="customer-info">
+          <div class="info-row">
+            <div class="info-item">
+              <span class="label">العميل:</span>
+              <span class="value">${customerName}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">رقم الفاتورة:</span>
+              <span class="value">${invoiceNo}</span>
+            </div>
           </div>
-        </body>
-      </html>
-    `);
+          <div class="info-row">
+            <div class="info-item">
+              <span class="label">التاريخ:</span>
+              <span class="value">${saleDate}</span>
+            </div>
+          </div>
+        </div>
 
-    printWindow.document.close();
+        <!-- Items Table -->
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th>الوصف</th>
+              <th>الكمية</th>
+              <th>السعر</th>
+              <th>الإجمالي</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
 
-    // Wait for content to load then print
-    setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 250);
+    // Add items for this page
+    pageItems.forEach((item: any) => {
+      htmlContent += `
+            <tr>
+              <td>${item.product_name}</td>
+              <td>${item.quantity}</td>
+              <td>${item.price} ج.م</td>
+              <td>${item.total} ج.م</td>
+            </tr>
+      `;
+    });
+
+    htmlContent += `
+          </tbody>
+        </table>
+    `;
+
+    // Add totals on last page only
+    if (isLastPage) {
+      htmlContent += `
+        <table class="preview-table totals-table">
+          <tbody>
+            <tr>
+              <td class="total-header">الإجمالي</td>
+              <td class="total-value">${subtotal} ج.م</td>
+      `;
+      
+      if (discount > 0) {
+        htmlContent += `
+              <td class="total-header">الخصم</td>
+              <td class="total-value">${discount} ج.م</td>
+              <td class="total-header">الصافي</td>
+              <td class="total-value final-total">${total} ج.م</td>
+        `;
+      }
+      
+      htmlContent += `
+            </tr>
+          </tbody>
+        </table>
+      `;
+    }
+
+    // Add page number and print date
+    htmlContent += `
+        <div class="page-footer">
+          <span class="page-number">صفحة ${pageNum + 1} من ${totalPages}</span>
+          <span class="print-date">تاريخ الطباعة: ${printDateTime}</span>
+        </div>
+      </div>
+    `;
   }
 
+  htmlContent += `
+      </body>
+    </html>
+  `;
+
+  printWindow.document.write(htmlContent);
+  printWindow.document.close();
+
+  setTimeout(() => {
+    printWindow.print();
+    // printWindow.close();
+  }, 250);
+}
   // Close preview dialog
   closePreview() {
     this.previewVisible = false;
