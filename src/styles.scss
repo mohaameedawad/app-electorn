@@ -1,7 +1,7 @@
 @import "primeicons/primeicons.css";
 
 /* Cairo Font */
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap");
 
 /* ---------- COLORS ---------- */
 $primary-green: #0b6e3a;
@@ -74,7 +74,7 @@ body {
   &:active {
     transform: scale(0.98);
   }
-  
+
   i {
     margin-left: 0.5rem;
     vertical-align: middle;
@@ -101,7 +101,7 @@ body {
     color: #334155;
     margin-bottom: 0.5rem;
   }
-  
+
   .full-width {
     width: 100%;
   }
@@ -114,21 +114,6 @@ body {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   font-weight: 500;
-}
-
-/* ---------- SHARED DIALOG FOOTER ---------- */
-.dialog-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-top: 1px solid #e5e7eb;
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #fff;
-  z-index: 100;
 }
 
 /* ---------- SIDEBAR ---------- */
@@ -177,12 +162,12 @@ body {
 .p-button:not(.p-button-secondary):not(.p-button-text) {
   background-color: $primary-green !important;
   border-color: $primary-green !important;
-  
+
   &:hover {
     background-color: $primary-green-dark !important;
     border-color: $primary-green-dark !important;
   }
-  
+
   .p-button-icon {
     margin-left: 0.5rem;
   }
@@ -201,11 +186,30 @@ body {
     padding: 1rem 1.5rem;
     font-weight: 600;
   }
-  
+
   .p-dialog-content {
+    position: relative !important;
     padding: 0 !important;
     overflow: auto !important;
   }
+  /* ---------- SHARED DIALOG FOOTER ---------- */
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: #fff;
+    border-radius: 0px 0 10px 10px;
+  }
+}
+.sale-purchase-dialog .p-dialog-content {
+  position: unset !important;
 }
 
 /* ---------- PRIMENG INPUTS ---------- */
@@ -217,7 +221,7 @@ body {
 .p-password {
   display: block;
   width: 100%;
-  
+
   .p-inputtext {
     width: 100%;
   }
@@ -233,7 +237,11 @@ body {
 
 /* ---------- ICONS ---------- */
 .logo-circle {
-  background: linear-gradient(135deg, $primary-green 0%, $primary-green-dark 100%);
+  background: linear-gradient(
+    135deg,
+    $primary-green 0%,
+    $primary-green-dark 100%
+  );
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -241,7 +249,7 @@ body {
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(11, 110, 58, 0.3);
-  
+
   i {
     font-size: 2.25rem !important;
     line-height: 1 !important;

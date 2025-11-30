@@ -453,54 +453,6 @@ export class ReportsComponent implements OnInit {
     ];
   }
 
-  // generateMonthlyProfits() {
-  //   let totalSales = 0;
-  //   let totalPurchases = 0;
-  //   let totalExpenses = 0;
-
-  //   this.sales.forEach((s) => {
-  //     const d = new Date(s.date);
-  //     if (d >= this.dateFrom && d <= this.dateTo) {
-  //       totalSales += s.totalAmount;
-  //     }
-  //   });
-
-  //   this.purchases.forEach((p) => {
-  //     const d = new Date(p.date);
-  //     if (d >= this.dateFrom && d <= this.dateTo) {
-  //       totalPurchases += p.totalAmount;
-  //     }
-  //   });
-
-  //   this.expenses.forEach((e) => {
-  //     const d = new Date(e.date);
-  //     if (d >= this.dateFrom && d <= this.dateTo) {
-  //       totalExpenses += e.amount;
-  //     }
-  //   });
-
-  //   const profit = totalSales - totalPurchases - totalExpenses;
-
-  //   this.currentData = [
-  //     {
-  //       period: `من ${this.dateFrom.toLocaleDateString(
-  //         'ar-EG'
-  //       )} إلى ${this.dateTo.toLocaleDateString('ar-EG')}`,
-  //       totalSales,
-  //       totalPurchases,
-  //       totalExpenses,
-  //       profit,
-  //     },
-  //   ];
-
-  //   this.currentColumns = [
-  //     { field: 'period', header: 'الفترة' },
-  //     { field: 'totalSales', header: 'المبيعات', type: 'number' },
-  //     { field: 'totalPurchases', header: 'المشتريات', type: 'number' },
-  //     { field: 'totalExpenses', header: 'المصروفات', type: 'number' },
-  //     { field: 'profit', header: 'صافي الربح', type: 'number' },
-  //   ];
-  // }
 generateMonthlyProfits() {
   let totalSales = 0;
   let totalPurchases = 0;
@@ -558,37 +510,312 @@ generateMonthlyProfits() {
   // ============================
   // PRINT PREVIEW
   // ============================
-  printPreview() {
-    if (this.currentData.length === 0) {
-      this.confirmDialog.show({
-        message: 'لا يوجد بيانات للطباعة',
-        header: 'تنبيه',
-        acceptLabel: 'إغلاق',
-        showReject: false,
-      });
-      return;
-    }
 
-    const printContent = document.getElementById('reportPrint');
-    if (!printContent) return;
-
-    const printWindow = window.open('', '_blank', 'width=850,height=1200');
-    if (!printWindow) return;
-
-    // إنشاء محتوى الجدول
-    let tableHTML = '';
-
-    // رأس الجدول
-    tableHTML += '<thead><tr>';
-    this.currentColumns.forEach((col) => {
-      tableHTML += `<th>${col.header}</th>`;
+printPreview() {
+  if (this.currentData.length === 0) {
+    this.confirmDialog.show({
+      message: 'لا يوجد بيانات للطباعة',
+      header: 'تنبيه',
+      acceptLabel: 'إغلاق',
+      showReject: false,
     });
-    tableHTML += '</tr></thead>';
+    return;
+  }
 
-    // بيانات الجدول
-    tableHTML += '<tbody>';
-    this.currentData.forEach((row) => {
-      tableHTML += '<tr>';
+  const printContent = document.getElementById('reportPrint');
+  if (!printContent) return;
+
+  const printWindow = window.open('', '_blank', 'width=850,height=1200');
+  if (!printWindow) return;
+
+  // إنشاء محتوى الجدول
+  let tableHTML = '';
+
+  // رأس الجدول
+  tableHTML += '<thead><tr>';
+  this.currentColumns.forEach((col) => {
+    tableHTML += `<th>${col.header}</th>`;
+  });
+  tableHTML += '</tr></thead>';
+
+  // بيانات الجدول
+  tableHTML += '<tbody>';
+  this.currentData.forEach((row) => {
+    tableHTML += '<tr>';
+    this.currentColumns.forEach((col) => {
+      let cellValue = row[col.field];
+
+      // تنسيق التاريخ
+      if (col.type === 'date' && cellValue) {
+        const date = new Date(cellValue);
+        cellValue = date.toLocaleDateString('ar-EG');
+      }
+
+      // تنسيق الأرقام
+      if (col.type === 'number') {
+        const numericValue = Number(cellValue);
+
+        if (isNaN(numericValue)) {
+          cellValue = '0.00';
+        } else {
+          cellValue = numericValue.toLocaleString('ar-EG', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+        }
+      }
+
+      tableHTML += `<td>${
+        cellValue !== undefined && cellValue !== null ? cellValue : ''
+      }</td>`;
+    });
+    tableHTML += '</tr>';
+  });
+  tableHTML += '</tbody>';
+
+  // معلومات إضافية للعميل/المورد
+  let additionalInfo = '';
+  if (this.currentReport === 'customer' && this.selectedCustomer) {
+    additionalInfo = `
+      <div class="customer-info">
+        <div class="info-row">
+          <span><strong>الاسم:</strong> ${this.selectedCustomer.name}</span>
+          <span><strong>الكود:</strong> ${
+            this.selectedCustomer.id || 'غير محدد'
+          }</span>
+        </div>
+        <div class="info-row">
+          <span><strong>رقم التليفون:</strong> ${
+            this.selectedCustomer.phone || 'غير محدد'
+          }</span>
+        </div>
+      </div>
+    `;
+  } else if (this.currentReport === 'supplier' && this.selectedSupplier) {
+    additionalInfo = `
+      <div class="customer-info">
+        <div class="info-row">
+          <span><strong>الاسم:</strong> ${this.selectedSupplier.name}</span>
+          <span><strong>الكود:</strong> ${
+            this.selectedSupplier.code || 'غير محدد'
+          }</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // الحصول على التاريخ الحالي للطباعة
+  const now = new Date();
+  const printDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const printTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const printDateTime = `${printDate} ${printTime}`;
+
+  // حساب عدد الصفوف في كل صفحة (حوالي 25 صف لكل صفحة A4)
+  const rowsPerPage = 25;
+  const totalRows = this.currentData.length;
+  const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+  let htmlContent = `
+    <html dir="rtl">
+      <head>
+        <title>${this.reportTitles[this.currentReport]}</title>
+        <meta charset="UTF-8">
+        <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          
+          body {
+            font-family: 'Segoe UI', 'Tahoma', Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2cm 0;
+          }
+          
+          .page {
+            page-break-after: always;
+            width: 210mm;
+            min-height: 297mm;
+            position: relative;
+            padding: 1cm;
+            margin-bottom: 2cm;
+            border: 1px solid #ddd;
+            background: white;
+            box-sizing: border-box;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          }
+          
+          .page:last-child {
+            page-break-after: auto;
+            margin-bottom: 0;
+          }
+          
+          .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+            padding: 10px;
+            background: white;
+          }
+          
+          .header h1 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+          }
+          
+          .customer-info {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+          }
+          
+          .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 14px;
+          }
+          
+          .info-row span {
+            flex: 1;
+          }
+          
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+          }
+          
+          th {
+            background: #e0e0e0;
+            border: 1px solid #666;
+            padding: 10px 5px;
+            text-align: center;
+            font-weight: bold;
+            color: #000;
+          }
+          
+          td {
+            border: 1px solid #666;
+            padding: 8px 5px;
+            text-align: center;
+            color: #000;
+          }
+          
+          tbody tr:nth-child(even) {
+            background: #f5f5f5;
+          }
+          
+          /* عرض محدد للأعمدة */
+          th:nth-child(1), td:nth-child(1) { width: 12%; } /* التاريخ */
+          th:nth-child(2), td:nth-child(2) { width: 20%; } /* البيان */
+          th:nth-child(3), td:nth-child(3) { width: 15%; } /* رقم الفاتورة */
+          th:nth-child(4), td:nth-child(4) { width: 18%; } /* مدين */
+          th:nth-child(5), td:nth-child(5) { width: 18%; } /* دائن */
+          th:nth-child(6), td:nth-child(6) { width: 17%; } /* الرصيد */
+          
+          .page-footer {
+            position: absolute;
+            bottom: 0.8cm;
+            left: 1.5cm;
+            right: 1.5cm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 0.5rem;
+          }
+          
+          .page-number {
+            font-weight: 500;
+          }
+          
+          .print-date {
+            font-weight: 500;
+          }
+          
+          @media print {
+            html, body { 
+              width: 210mm; 
+              background: white;
+            }
+            
+            body { 
+              padding: 0; 
+            }
+            
+            @page { 
+              size: A4; 
+              margin: 0; 
+            }
+            
+            .page {
+              page-break-after: always;
+              margin-bottom: 0;
+              border: none;
+              box-shadow: none;
+              width: 210mm;
+              min-height: 297mm;
+            }
+            
+            .page:last-child {
+              page-break-after: auto;
+            }
+            
+            thead {
+              display: table-header-group;
+            }
+            
+            tbody tr {
+              page-break-inside: avoid;
+            }
+            
+            .page-footer {
+              position: absolute;
+              bottom: 0.8cm;
+            }
+          }
+        </style>
+      </head>
+      <body>
+  `;
+
+  // إنشاء صفحات متعددة
+  for (let pageNum = 0; pageNum < totalPages; pageNum++) {
+    const startRow = pageNum * rowsPerPage;
+    const endRow = Math.min(startRow + rowsPerPage, totalRows);
+    const pageData = this.currentData.slice(startRow, endRow);
+    const isLastPage = pageNum === totalPages - 1;
+
+    htmlContent += `
+      <div class="page">
+        <div class="header">
+          <h1>${this.reportTitles[this.currentReport]}</h1>
+        </div>
+        
+        ${pageNum === 0 ? additionalInfo : ''}
+        
+        <table>
+          <thead>
+            <tr>
+              ${this.currentColumns.map(col => `<th>${col.header}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    // إضافة بيانات الصفحة الحالية
+    pageData.forEach((row) => {
+      htmlContent += '<tr>';
       this.currentColumns.forEach((col) => {
         let cellValue = row[col.field];
 
@@ -612,181 +839,38 @@ generateMonthlyProfits() {
           }
         }
 
-        tableHTML += `<td>${
+        htmlContent += `<td>${
           cellValue !== undefined && cellValue !== null ? cellValue : ''
         }</td>`;
       });
-      tableHTML += '</tr>';
+      htmlContent += '</tr>';
     });
-    tableHTML += '</tbody>';
 
-    // معلومات إضافية للعميل/المورد
-    let additionalInfo = '';
-    if (this.currentReport === 'customer' && this.selectedCustomer) {
-      additionalInfo = `
-        <div class="customer-info">
-          <div class="info-row">
-            <span><strong>الاسم:</strong> ${this.selectedCustomer.name}</span>
-            <span><strong>الكود:</strong> ${
-              this.selectedCustomer.id || 'غير محدد'
-            }</span>
-          </div>
-          <div class="info-row">
-            <span><strong>رقم التليفون:</strong> ${
-              this.selectedCustomer.phone || 'غير محدد'
-            }</span>
-          </div>
+    htmlContent += `
+          </tbody>
+        </table>
+        
+        <div class="page-footer">
+          <span class="page-number">صفحة ${pageNum + 1} من ${totalPages}</span>
+          <span class="print-date">تاريخ الطباعة: ${printDateTime}</span>
         </div>
-      `;
-    } else if (this.currentReport === 'supplier' && this.selectedSupplier) {
-      additionalInfo = `
-        <div class="customer-info">
-          <div class="info-row">
-            <span><strong>الاسم:</strong> ${this.selectedSupplier.name}</span>
-            <span><strong>الكود:</strong> ${
-              this.selectedSupplier.code || 'غير محدد'
-            }</span>
-          </div>
-        </div>
-      `;
-    }
-
-    printWindow.document.write(`
-      <html dir="rtl">
-        <head>
-          <title>${this.reportTitles[this.currentReport]}</title>
-          <meta charset="UTF-8">
-          <style>
-            * {
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
-            }
-            
-            body {
-              font-family: 'Segoe UI', 'Tahoma', Arial, sans-serif;
-              padding: 20px;
-              direction: rtl;
-              background: white;
-            }
-            
-            .header {
-              text-align: center;
-              margin-bottom: 20px;
-              border: 2px solid #333;
-              padding: 10px;
-              background: white;
-            }
-            
-            .header h1 {
-              font-size: 20px;
-              font-weight: bold;
-              color: #000;
-            }
-            
-            .customer-info {
-              background: #f9f9f9;
-              padding: 15px;
-              margin-bottom: 20px;
-              border: 1px solid #ccc;
-            }
-            
-            .info-row {
-              display: flex;
-              justify-content: space-between;
-              margin: 8px 0;
-              font-size: 14px;
-            }
-            
-            .info-row span {
-              flex: 1;
-            }
-            
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin: 20px 0;
-              font-size: 13px;
-            }
-            
-            th {
-              background: #e0e0e0;
-              border: 1px solid #666;
-              padding: 10px 5px;
-              text-align: center;
-              font-weight: bold;
-              color: #000;
-            }
-            
-            td {
-              border: 1px solid #666;
-              padding: 8px 5px;
-              text-align: center;
-              color: #000;
-            }
-            
-            tbody tr:nth-child(even) {
-              background: #f5f5f5;
-            }
-            
-            /* عرض محدد للأعمدة */
-            th:nth-child(1), td:nth-child(1) { width: 12%; } /* التاريخ */
-            th:nth-child(2), td:nth-child(2) { width: 20%; } /* البيان */
-            th:nth-child(3), td:nth-child(3) { width: 15%; } /* رقم الفاتورة */
-            th:nth-child(4), td:nth-child(4) { width: 18%; } /* مدين */
-            th:nth-child(5), td:nth-child(5) { width: 18%; } /* دائن */
-            th:nth-child(6), td:nth-child(6) { width: 17%; } /* الرصيد */
-            .footer {
-              margin-top: 30px;
-              text-align: center;
-              font-size: 11px;
-              color: #666;
-              border-top: 1px solid #ccc;
-              padding-top: 10px;
-            }
-            
-            @media print {
-              body {
-                padding: 10px;
-              }
-              
-              thead {
-                display: table-header-group;
-              }
-              
-              tr {
-                page-break-inside: avoid;
-              }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1>${this.reportTitles[this.currentReport]}</h1>
-          </div>
-          
-          ${additionalInfo}
-          
-          <table>
-            ${tableHTML}
-          </table>
-          
-          <div class="footer">
-            <p>تاريخ الطباعة: ${new Date().toLocaleDateString(
-              'ar-EG'
-            )} - ${new Date().toLocaleTimeString('ar-EG')}</p>
-          </div>
-        </body>
-      </html>
-    `);
-
-    printWindow.document.close();
-
-    setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 300);
+      </div>
+    `;
   }
+
+  htmlContent += `
+      </body>
+    </html>
+  `;
+
+  printWindow.document.write(htmlContent);
+  printWindow.document.close();
+
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 300);
+}
 
   setDefaultDates() {
     const now = new Date();

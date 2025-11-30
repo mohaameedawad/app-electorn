@@ -18,9 +18,10 @@
 <app-dialog
   [(visible)]="displayReportDialog"
   [width]="'80vw'"
+  [height]="'97vh'"
   [header]="reportTitles[currentReport]"
 >
-  <div class="p-4">
+  <div class="p-4 pt-2">
     <!-- مصروفات / مشتريات / أرباح -->
     <div
       *ngIf="['expenses', 'purchases', 'profits'].includes(currentReport)"

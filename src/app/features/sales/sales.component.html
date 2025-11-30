@@ -13,6 +13,7 @@
 <app-dialog
   [(visible)]="visible"
   [width]="'60%'"
+  [height]="'97vh'"
   [draggable]="false"
   (onHide)="onDialogHide()"
   [header]="'فاتورة مبيعات'"
@@ -250,7 +251,7 @@
         </p-inputnumber>
       </div>
 
-      <div class="row">
+      <div class="row" style="margin-bottom: 80px;">
         <!-- Subtotal (before discount) -->
         <div class="col-4">
           <label class="mb-2 col">الإجمالي (قبل الخصم): </label>
@@ -295,7 +296,9 @@
 <!-- Preview Invoice Dialog -->
 <app-dialog
   [(visible)]="previewVisible"
+  class="sale-purchase-dialog"
   [width]="'900px'"
+  [height]="'97vh'"
   [draggable]="false"
   [header]="'معاينة الفاتورة'"
 >

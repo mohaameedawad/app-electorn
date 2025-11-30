@@ -1,72 +1,89 @@
 <div class="page-header">
   <button class="add-button" (click)="showDialog()">+ إضافة مورد</button>
 </div>
-<app-table [columns]="columns" [data]="data"></app-table>
 
-<app-dialog 
-  [(visible)]="visible"
-  [header]="'إضافة مورد'"
-  [width]="'600px'">
-  
-  <div dialog-content class="p-4">
-    <div class="mb-3">
-      <label class="form-label fw-semibold text-secondary">اسم المورد</label>
+<!-- 🔹 إضافة (edit) و (delete) events -->
+<app-table 
+  [columns]="columns" 
+  [data]="data"
+  (edit)="onEdit($event)" 
+  (delete)="onDelete($event)">
+</app-table>
+
+<!-- 🔹 تغيير من app-dialog إلى p-dialog -->
+<p-dialog 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [style]="{ width: '500px', height: '700px' }"
+  [header]="editingSupplierId ? 'تعديل مورد' : 'إضافة مورد'"
+  (onHide)="onDialogHide()"
+  [resizable]="false"
+  [draggable]="false"
+>
+  <div class="dialog-content p-4">
+    <div class="form-group mb-3">
+      <label for="name" class="form-label fw-semibold text-secondary">اسم المورد</label>
       <input 
-        type="text" 
         pInputText 
-        [(ngModel)]="newSupplier.name"
+        id="name" 
+        [(ngModel)]="newSupplier.name" 
         placeholder="أدخل اسم المورد"
-        class="w-100" />
+        class="w-full"
+      />
     </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-semibold text-secondary">رقم الهاتف</label>
+    <div class="form-group mb-3">
+      <label for="phone" class="form-label fw-semibold text-secondary">رقم الهاتف</label>
       <input 
-        type="text" 
         pInputText 
-        [(ngModel)]="newSupplier.phone"
+        id="phone" 
+        [(ngModel)]="newSupplier.phone" 
         placeholder="01000000000"
+        class="w-full"
         maxlength="11"
-        class="w-100" />
-      <span class="error-message" *ngIf="phoneError">{{ phoneError }}</span>
+      />
+      <span class="error-message text-danger" *ngIf="phoneError">{{ phoneError }}</span>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-semibold text-secondary">العنوان</label>
+    <div class="form-group mb-3">
+      <label for="address" class="form-label fw-semibold text-secondary">العنوان</label>
       <input 
-        type="text" 
         pInputText 
-        [(ngModel)]="newSupplier.address"
+        id="address" 
+        [(ngModel)]="newSupplier.address" 
         placeholder="أدخل العنوان"
-        class="w-100" />
+        class="w-full"
+      />
     </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-semibold text-secondary">نوع الرصيد</label>
+    <div class="form-group mb-3">
+      <label for="balanceType" class="form-label fw-semibold text-secondary">نوع الرصيد</label>
       <p-select 
+        id="balanceType"
         [(ngModel)]="newSupplier.balanceType"
         [options]="balanceTypes"
         optionLabel="label"
         optionValue="value"
         placeholder="اختر نوع الرصيد"
-        [style]="{'width': '100%'}">
-      </p-select>
+        class="w-full"
+      ></p-select>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-semibold text-secondary">المبلغ</label>
+    <div class="form-group mb-3">
+      <label for="balanceAmount" class="form-label fw-semibold text-secondary">المبلغ</label>
       <p-inputnumber 
+        id="balanceAmount" 
         [(ngModel)]="newSupplier.balanceAmount"
-        mode="decimal"
         [showButtons]="true"
         placeholder="أدخل المبلغ"
+        mode="decimal"
         [maxFractionDigits]="2"
-        [style]="{'width': '100%'}">
-      </p-inputnumber>
+        class="w-full"
+      ></p-inputnumber>
     </div>
   </div>
 
-  <div dialog-footer class="d-flex justify-content-end gap-2 p-3 border-top">
+  <div class="dialog-footer d-flex justify-content-end gap-2 p-3 border-top">
     <p-button 
       label="إلغاء" 
       severity="secondary" 
@@ -74,8 +91,10 @@
       [text]="true">
     </p-button>
     <p-button 
-      label="حفظ" 
+      [label]="editingSupplierId ? 'تحديث' : 'حفظ'"
       (onClick)="saveSupplier()">
     </p-button>
   </div>
-</app-dialog>
+</p-dialog>
+
+<app-confirmation-dialog #confirmDialog></app-confirmation-dialog>
