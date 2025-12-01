@@ -70,6 +70,12 @@
       "createStartMenuShortcut": true,
       "installerIcon": "src/favicon.ico",
       "uninstallerIcon": "src/favicon.ico"
-    }
+    },
+    "extraResources": [
+      {
+        "from": "database/",
+        "to": "database/"
+      }
+    ]
   }
 }

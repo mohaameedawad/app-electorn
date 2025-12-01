@@ -1,7 +1,13 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 // Import the new DatabaseService instead of the old DatabaseHandler
-const DatabaseService = require("./database/handlers/index"); // Adjust path as needed
+const isDev = !app.isPackaged;
+
+const handlersPath = isDev
+  ? path.join(__dirname, "database", "handlers", "index.js")
+  : path.join(process.resourcesPath, "database", "handlers", "index.js");
+
+const DatabaseService = require(handlersPath);
 
 let db;
 let mainWindow;
