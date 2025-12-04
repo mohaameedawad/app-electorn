@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class DatabaseService {
+
   private get api() {
     const electronAPI = (window as any).electronAPI;
     if (!electronAPI) {
@@ -12,6 +13,13 @@ export class DatabaseService {
     }
     return electronAPI;
   }
+
+
+getDatabasePath() {
+  const api = (window as any).electronAPI;
+  return api?.getDatabasePath();
+}
+
 
   // العملاء
   async getCustomers() {

@@ -2,6 +2,8 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 // تعريف API آمنة للتواصل مع main process
 contextBridge.exposeInMainWorld("electronAPI", {
+    getDatabasePath: () => ipcRenderer.invoke("get-db-path"),
+
   // العملاء
   getCustomers: () => ipcRenderer.invoke("db:getCustomers"),
   addCustomer: (customer) => ipcRenderer.invoke("db:addCustomer", customer),

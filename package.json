@@ -57,11 +57,19 @@
       "main.js",
       "preload.js",
       "database.js",
-      "package.json"
+      "package.json",
+      "database/**"
+    ],
+    "extraResources": [
+      {
+        "from": "database/",
+        "to": "database/"
+      }
     ],
     "win": {
       "target": "nsis",
-      "icon": "src/favicon.ico"
+      "icon": "src/favicon.ico",
+      "sign": false
     },
     "nsis": {
       "oneClick": false,
@@ -70,12 +78,6 @@
       "createStartMenuShortcut": true,
       "installerIcon": "src/favicon.ico",
       "uninstallerIcon": "src/favicon.ico"
-    },
-    "extraResources": [
-      {
-        "from": "database/",
-        "to": "database/"
-      }
-    ]
+    }
   }
 }

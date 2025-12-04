@@ -39,6 +39,10 @@ app.whenReady().then(() => {
   createWindow();
 });
 
+ipcMain.handle('get-db-path', () => {
+  return global.dbPath;
+});
+
 // إعداد IPC handlers
 function setupIPCHandlers() {
   // العملاء

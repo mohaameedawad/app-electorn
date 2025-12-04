@@ -4,9 +4,14 @@ const { app } = require("electron");
 
 class BaseHandler {
   constructor(sharedData = null) {
-    const userDataPath = app.getPath("userData");
-    this.dbPath = path.join(userDataPath, "app-database.json");
-    
+    const isDev = !app.isPackaged;
+
+    this.dbPath = isDev
+      ? path.join(__dirname, "..", "app-database.json")
+      : path.join(process.resourcesPath, "database", "app-database.json");
+      
+    global.dbPath = this.dbPath;
+
     if (sharedData) {
       this.data = sharedData;
     } else {
@@ -51,9 +56,9 @@ class BaseHandler {
 
   saveData() {
     try {
-      fs.writeFileSync(this.dbPath, JSON.stringify(this.data, null, 2), 'utf8');
+      fs.writeFileSync(this.dbPath, JSON.stringify(this.data, null, 2), "utf8");
     } catch (error) {
-      console.error('Error saving database:', error);
+      console.error("Error saving database:", error);
     }
   }
 

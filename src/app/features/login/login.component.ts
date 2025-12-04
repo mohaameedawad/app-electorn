@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
   }
 
   async login() {
+console.log(await this.dbService.getDatabasePath());
     this.errorMessage = '';
 
     if (!this.username || !this.password) {

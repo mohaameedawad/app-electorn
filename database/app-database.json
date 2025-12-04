@@ -1,0 +1,2103 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin",
+      "role": "admin",
+      "isActive": true,
+      "permissions": [
+        "dashboard",
+        "sales",
+        "customers",
+        "products",
+        "purchases",
+        "suppliers",
+        "employees",
+        "expenses",
+        "reports",
+        "users",
+        "customers_payments",
+        "suppliers_payments"
+      ],
+      "fullName": "Luvi",
+      "updatedAt": "2025-11-19T21:46:00.291Z"
+    },
+    {
+      "id": 2,
+      "username": "accountant",
+      "password": "accountant",
+      "role": "accountant",
+      "isActive": true,
+      "permissions": [
+        "dashboard",
+        "sales",
+        "customers",
+        "products",
+        "suppliers_payments"
+      ],
+      "fullName": "رحمة",
+      "updatedAt": "2025-11-20T18:21:33.627Z"
+    },
+    {
+      "id": 3,
+      "username": "user",
+      "password": "user",
+      "role": "user",
+      "permissions": [
+        "dashboard",
+        "sales",
+        "customers",
+        "products"
+      ],
+      "isActive": true,
+      "fullName": "أمنية"
+    }
+  ],
+  "customers": [
+    {
+      "id": 1,
+      "name": "بيتر",
+      "phone": "01111111111",
+      "address": "",
+      "balance": 3400,
+      "balanceType": "debit",
+      "balanceAmount": 4000,
+      "debit": 0,
+      "credit": 0,
+      "updatedAt": "2025-11-30T00:21:35.557Z"
+    },
+    {
+      "id": 2,
+      "name": "zahar",
+      "phone": "01000000221",
+      "address": "",
+      "balance": 0,
+      "balanceType": "debit",
+      "balanceAmount": 100,
+      "debit": 0,
+      "credit": 0,
+      "updatedAt": "2025-11-19T16:48:02.087Z"
+    },
+    {
+      "id": 3,
+      "name": "أحمد محمد",
+      "phone": "01012345678",
+      "address": "القاهرة",
+      "balance": -5000,
+      "debit": 0,
+      "credit": 0,
+      "updatedAt": "2025-11-25T11:40:16.770Z"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": 1,
+      "name": "شركة النور للإلكترونيات",
+      "phone": "01012345678",
+      "address": "القاهرة",
+      "balance": 121250,
+      "updatedAt": "2025-11-30T00:24:15.063Z"
+    },
+    {
+      "id": 2,
+      "name": "مؤسسة الأمل التجارية",
+      "phone": "01098765432",
+      "address": "الجيزة",
+      "balance": 0,
+      "updatedAt": "2025-11-25T11:53:20.859Z"
+    },
+    {
+      "id": 3,
+      "name": "شركة الفجر للاستيراد",
+      "phone": "01155443322",
+      "address": "الإسكندرية",
+      "balance": 800,
+      "updatedAt": "2025-11-25T11:53:26.883Z"
+    }
+  ],
+  "categories": [],
+  "products": [
+    {
+      "id": 1,
+      "name": "لابتوب Dell",
+      "category": "اكسسوار",
+      "purchase_price": 1000,
+      "sale_price": 5000,
+      "stock": 102,
+      "price": 5000,
+      "updatedAt": "2025-11-19T16:43:02.893Z"
+    },
+    {
+      "id": 2,
+      "name": "ماوس",
+      "purchase_price": 50,
+      "sale_price": 100,
+      "price": 100,
+      "stock": 1150,
+      "category": "اكسسوار",
+      "createdAt": "2025-11-18T21:23:30.685Z",
+      "isActive": true,
+      "updatedAt": "2025-11-19T16:42:57.897Z"
+    }
+  ],
+  "sales": [
+    {
+      "id": 1,
+      "invoice_no": 1,
+      "customer_id": 1,
+      "customer": "بيتر",
+      "employee_id": null,
+      "items": [
+        {
+          "product_id": 2,
+          "product_name": "ماوس",
+          "quantity": 10,
+          "price": 100,
+          "total": 1000
+        }
+      ],
+      "subtotal": 1000,
+      "discount": 0,
+      "tax": 0,
+      "total": 1000,
+      "paid_amount": 300,
+      "sale_date": "2025-11-19",
+      "status": "معلقة",
+      "createdAt": "2025-11-19T18:58:32.518Z",
+      "remaining_amount": 700,
+      "updatedAt": "2025-11-20T17:50:34.092Z"
+    },
+    {
+      "id": 2,
+      "invoice_no": 2,
+      "customer_id": 1,
+      "customer": "بيتر",
+      "employee_id": null,
+      "items": [
+        {
+          "product_id": 2,
+          "product_name": "ماوس",
+          "quantity": 10,
+          "price": 100,
+          "total": 1000
+        }
+      ],
+      "subtotal": 1000,
+      "discount": 0,
+      "tax": 0,
+      "total": 1000,
+      "paid_amount": 1000,
+      "sale_date": "2025-11-20",
+      "status": "معلقة",
+      "createdAt": "2025-11-20T19:30:12.680Z",
+      "remaining_amount": 0
+    },
+    {
+      "id": 3,
+      "invoice_no": 3,
+      "customer_id": 1,
+      "customer": "بيتر",
+      "employee_id": 1,
+      "items": [
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 5000,
+          "total": 5000
+        }
+      ],
+      "subtotal": 5000,
+      "discount": 0,
+      "tax": 0,
+      "total": 5000,
+      "paid_amount": 1000,
+      "sale_date": "2025-11-30",
+      "status": "معلقة",
+      "createdAt": "2025-11-30T00:17:50.450Z",
+      "remaining_amount": 4000
+    }
+  ],
+  "sale_items": [
+    {
+      "id": 1,
+      "sale_id": 1,
+      "product_id": 2,
+      "product_name": "ماوس",
+      "quantity": 10,
+      "price": 100,
+      "total": 1000
+    },
+    {
+      "id": 2,
+      "sale_id": 2,
+      "product_id": 2,
+      "product_name": "ماوس",
+      "quantity": 10,
+      "price": 100,
+      "total": 1000
+    },
+    {
+      "id": 3,
+      "sale_id": 3,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 1,
+      "price": 5000,
+      "total": 5000
+    }
+  ],
+  "purchases": [
+    {
+      "id": 1,
+      "invoice_no": 1,
+      "supplierId": 1,
+      "supplier": "شركة النور للإلكترونيات",
+      "employee_id": null,
+      "subtotal": 5000,
+      "discount": 0,
+      "tax": 0,
+      "total": 5000,
+      "paid_amount": 0,
+      "status": "معلقة",
+      "purchase_date": "2025-11-18",
+      "items": "[{\"product_id\":1,\"product_name\":\"لابتوب Dell\",\"quantity\":5,\"price\":1000,\"total\":5000}]",
+      "updatedAt": "2025-11-18T22:57:06.739Z"
+    },
+    {
+      "id": 2,
+      "invoice_no": 2,
+      "supplierId": 1,
+      "supplier": "شركة النور للإلكترونيات",
+      "employee_id": null,
+      "items": "[{\"product_id\":1,\"product_name\":\"لابتوب Dell\",\"quantity\":1,\"price\":1000,\"total\":1000}]",
+      "subtotal": 1000,
+      "discount": 0,
+      "tax": 0,
+      "total": 1000,
+      "paid_amount": 0,
+      "status": "معلقة",
+      "purchase_date": "2025-11-18",
+      "createdAt": "2025-11-18T21:24:16.716Z"
+    },
+    {
+      "id": 3,
+      "invoice_no": 3,
+      "supplierId": 1,
+      "supplier": "شركة النور للإلكترونيات",
+      "employee_id": null,
+      "items": "[{\"product_id\":2,\"product_name\":\"ماوس\",\"quantity\":20,\"price\":50,\"total\":1000}]",
+      "subtotal": 1000,
+      "discount": 0,
+      "tax": 0,
+      "total": 1000,
+      "paid_amount": 500,
+      "status": "معلقة",
+      "purchase_date": "2025-11-19",
+      "createdAt": "2025-11-18T22:50:24.294Z",
+      "updatedAt": "2025-11-19T13:56:48.002Z"
+    },
+    {
+      "id": 4,
+      "invoice_no": 4,
+      "supplierId": 1,
+      "supplier": "شركة النور للإلكترونيات",
+      "employee_id": null,
+      "items": [
+        {
+          "product_id": 2,
+          "product_name": "ماوس",
+          "quantity": 5,
+          "price": 50,
+          "total": 250
+        }
+      ],
+      "subtotal": 250,
+      "discount": 0,
+      "tax": 0,
+      "total": 250,
+      "paid_amount": 0,
+      "status": "معلقة",
+      "purchase_date": "2025-11-19",
+      "createdAt": "2025-11-19T14:11:55.430Z",
+      "updatedAt": "2025-11-26T20:43:27.747Z",
+      "remaining": 250
+    },
+    {
+      "id": 5,
+      "invoice_no": 5,
+      "supplierId": 3,
+      "supplier": "شركة الفجر للاستيراد",
+      "employee_id": null,
+      "items": [
+        {
+          "product_id": 2,
+          "product_name": "ماوس",
+          "quantity": 20,
+          "price": 50,
+          "total": 1000
+        }
+      ],
+      "subtotal": 1000,
+      "discount": 0,
+      "tax": 0,
+      "total": 1000,
+      "paid_amount": 0,
+      "status": "معلقة",
+      "purchase_date": "2025-11-19",
+      "createdAt": "2025-11-19T14:39:17.436Z",
+      "updatedAt": "2025-11-26T20:43:32.363Z",
+      "remaining": 1000
+    },
+    {
+      "id": 6,
+      "invoice_no": 6,
+      "supplierId": 1,
+      "supplier": "شركة النور للإلكترونيات",
+      "employee_id": null,
+      "items": [
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 10,
+          "price": 1000,
+          "total": 10000
+        }
+      ],
+      "subtotal": 10000,
+      "discount": 0,
+      "tax": 0,
+      "total": 10000,
+      "paid_amount": 0,
+      "status": "معلقة",
+      "purchase_date": "2025-11-20",
+      "remaining": 10000,
+      "createdAt": "2025-11-20T19:52:14.294Z"
+    },
+    {
+      "id": 7,
+      "invoice_no": 7,
+      "supplierId": 3,
+      "supplier": "شركة الفجر للاستيراد",
+      "employee_id": null,
+      "items": [
+        {
+          "product_id": 2,
+          "product_name": "ماوس",
+          "quantity": 20,
+          "price": 50,
+          "total": 1000
+        }
+      ],
+      "subtotal": 1000,
+      "discount": 0,
+      "tax": 0,
+      "total": 1000,
+      "paid_amount": 500,
+      "status": "معلقة",
+      "purchase_date": "2025-11-23",
+      "remaining": 500,
+      "createdAt": "2025-11-22T22:27:48.350Z"
+    },
+    {
+      "id": 8,
+      "invoice_no": 8,
+      "supplierId": 1,
+      "supplier": "شركة النور للإلكترونيات",
+      "employee_id": null,
+      "items": [
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 12,
+          "price": 1000,
+          "total": 12000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 10,
+          "price": 1000,
+          "total": 10000
+        },
+        {
+          "product_id": 2,
+          "product_name": "ماوس",
+          "quantity": 1000,
+          "price": 50,
+          "total": 50000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 2,
+          "product_name": "ماوس",
+          "quantity": 100,
+          "price": 50,
+          "total": 5000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        },
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 1000,
+          "total": 1000
+        }
+      ],
+      "subtotal": 108000,
+      "discount": 0,
+      "tax": 0,
+      "total": 108000,
+      "paid_amount": 0,
+      "status": "معلقة",
+      "purchase_date": "2025-11-29",
+      "remaining": 108000,
+      "createdAt": "2025-11-29T17:54:44.952Z",
+      "updatedAt": "2025-11-30T21:11:28.108Z"
+    },
+    {
+      "id": 9,
+      "invoice_no": 9,
+      "supplierId": 1,
+      "supplier": "شركة النور للإلكترونيات",
+      "employee_id": null,
+      "items": [
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 20,
+          "price": 1000,
+          "total": 20000
+        }
+      ],
+      "subtotal": 20000,
+      "discount": 0,
+      "tax": 0,
+      "total": 20000,
+      "paid_amount": 2000,
+      "status": "معلقة",
+      "purchase_date": "2025-11-30",
+      "remaining": 18000,
+      "createdAt": "2025-11-30T00:23:57.419Z"
+    }
+  ],
+  "purchase_items": [
+    {
+      "id": 1,
+      "purchase_id": 1,
+      "product_id": 1,
+      "quantity": 1,
+      "cost": 1000,
+      "total": 1000
+    },
+    {
+      "id": 2,
+      "purchase_id": 4,
+      "product_id": 2,
+      "product_name": "ماوس",
+      "quantity": 10,
+      "price": 50,
+      "total": 500
+    },
+    {
+      "id": 3,
+      "purchase_id": 5,
+      "product_id": 2,
+      "product_name": "ماوس",
+      "quantity": 20,
+      "price": 50,
+      "total": 1000
+    },
+    {
+      "id": 4,
+      "purchase_id": 6,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 10,
+      "price": 1000,
+      "total": 10000
+    },
+    {
+      "id": 5,
+      "purchase_id": 7,
+      "product_id": 2,
+      "product_name": "ماوس",
+      "quantity": 20,
+      "price": 50,
+      "total": 1000
+    },
+    {
+      "id": 6,
+      "purchase_id": 8,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 1,
+      "price": 1000,
+      "total": 1000
+    },
+    {
+      "id": 7,
+      "purchase_id": 8,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 12,
+      "price": 1000,
+      "total": 12000
+    },
+    {
+      "id": 8,
+      "purchase_id": 8,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 1,
+      "price": 1000,
+      "total": 1000
+    },
+    {
+      "id": 9,
+      "purchase_id": 8,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 1,
+      "price": 1000,
+      "total": 1000
+    },
+    {
+      "id": 10,
+      "purchase_id": 8,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 1,
+      "price": 1000,
+      "total": 1000
+    },
+    {
+      "id": 11,
+      "purchase_id": 8,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 1,
+      "price": 1000,
+      "total": 1000
+    },
+    {
+      "id": 12,
+      "purchase_id": 8,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 1,
+      "price": 1000,
+      "total": 1000
+    },
+    {
+      "id": 13,
+      "purchase_id": 9,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 20,
+      "price": 1000,
+      "total": 20000
+    }
+  ],
+  "customerPayments_received": [
+    {
+      "id": 1,
+      "receiptNumber": "1",
+      "customerId": 1,
+      "date": "2025-11-20",
+      "amount": 200,
+      "type": "received",
+      "createdAt": "2025-11-20T17:51:56.192Z",
+      "updatedAt": "2025-11-25T11:40:11.071Z",
+      "customerName": "بيتر"
+    },
+    {
+      "id": 2,
+      "receiptNumber": "2",
+      "customerId": 1,
+      "date": "2025-11-20",
+      "amount": 300,
+      "type": "received",
+      "createdAt": "2025-11-20T17:52:01.842Z",
+      "updatedAt": "2025-11-25T11:40:12.848Z",
+      "customerName": "بيتر"
+    },
+    {
+      "id": 3,
+      "receiptNumber": "3",
+      "customerId": 1,
+      "date": "2025-11-20",
+      "amount": 100,
+      "type": "received",
+      "createdAt": "2025-11-20T17:55:20.401Z",
+      "updatedAt": "2025-11-25T11:40:14.211Z",
+      "customerName": "بيتر"
+    },
+    {
+      "id": 4,
+      "receiptNumber": "4",
+      "customerId": 1,
+      "date": "2025-11-21",
+      "amount": 500,
+      "type": "received",
+      "createdAt": "2025-11-21T19:15:09.458Z",
+      "updatedAt": "2025-11-25T11:40:15.630Z",
+      "customerName": "بيتر"
+    },
+    {
+      "id": 5,
+      "receiptNumber": "5",
+      "customerId": 3,
+      "date": "2025-11-25",
+      "amount": 5000,
+      "type": "received",
+      "createdAt": "2025-11-22T22:26:57.454Z",
+      "updatedAt": "2025-11-25T11:40:16.770Z",
+      "customerName": "أحمد محمد"
+    },
+    {
+      "id": 6,
+      "receiptNumber": "6",
+      "customerId": 1,
+      "date": "2025-11-30",
+      "amount": 600,
+      "type": "received",
+      "createdAt": "2025-11-30T00:21:35.557Z"
+    }
+  ],
+  "payments_made": [
+    {
+      "id": 1,
+      "receiptNumber": "1",
+      "supplierId": 2,
+      "date": "2025-11-20",
+      "amount": 300,
+      "type": "paid",
+      "createdAt": "2025-11-20T18:30:10.851Z",
+      "updatedAt": "2025-11-25T11:53:20.859Z",
+      "supplierName": "مؤسسة الأمل التجارية"
+    },
+    {
+      "id": 2,
+      "receiptNumber": "2",
+      "supplierId": 1,
+      "date": "2025-11-20",
+      "amount": 6000,
+      "type": "paid",
+      "createdAt": "2025-11-20T19:33:52.580Z",
+      "supplierName": "شركة النور للإلكترونيات",
+      "updatedAt": "2025-11-25T11:53:22.707Z"
+    },
+    {
+      "id": 3,
+      "receiptNumber": "3",
+      "supplierId": 1,
+      "date": "2025-11-20",
+      "amount": 3000,
+      "type": "paid",
+      "createdAt": "2025-11-20T19:49:55.699Z",
+      "updatedAt": "2025-11-25T11:53:24.117Z",
+      "supplierName": "شركة النور للإلكترونيات"
+    },
+    {
+      "id": 4,
+      "receiptNumber": "4",
+      "supplierId": 1,
+      "date": "2025-11-20",
+      "amount": 5000,
+      "type": "paid",
+      "createdAt": "2025-11-20T20:00:41.178Z",
+      "updatedAt": "2025-11-25T11:53:25.558Z",
+      "supplierName": "شركة النور للإلكترونيات"
+    },
+    {
+      "id": 5,
+      "receiptNumber": "5",
+      "supplierId": 3,
+      "date": "2025-11-23",
+      "amount": 700,
+      "type": "paid",
+      "createdAt": "2025-11-22T22:28:06.202Z",
+      "updatedAt": "2025-11-25T11:53:26.883Z",
+      "supplierName": "شركة الفجر للاستيراد"
+    },
+    {
+      "id": 6,
+      "receiptNumber": "6",
+      "supplierId": 1,
+      "supplierName": "شركة النور للإلكترونيات",
+      "date": "2025-11-25",
+      "amount": 750,
+      "type": "made",
+      "createdAt": "2025-11-25T11:54:00.206Z"
+    },
+    {
+      "id": 7,
+      "receiptNumber": "7",
+      "supplierId": 1,
+      "supplierName": "شركة النور للإلكترونيات",
+      "date": "2025-11-30",
+      "amount": 8000,
+      "type": "made",
+      "createdAt": "2025-11-30T00:24:15.063Z"
+    }
+  ],
+  "expenses": [
+    {
+      "id": 1,
+      "voucherNumber": "1",
+      "expenseType": "القبض",
+      "date": "2025-11-19T20:28:46.934Z",
+      "amount": 10000,
+      "createdAt": "2025-11-19T20:28:56.331Z",
+      "status": "completed"
+    },
+    {
+      "id": 2,
+      "voucherNumber": "2",
+      "expenseType": "إيجار",
+      "date": "2025-10-31T22:00:00.000Z",
+      "amount": 8000,
+      "createdAt": "2025-11-22T22:22:21.353Z",
+      "status": "completed"
+    }
+  ],
+  "stock_movements": [
+    {
+      "id": 1,
+      "product_id": 1,
+      "type": "opening",
+      "qty": 20,
+      "date": "2025-11-17"
+    },
+    {
+      "id": 2,
+      "product_id": 1,
+      "type": "sale",
+      "qty": -1,
+      "date": "2025-11-17"
+    },
+    {
+      "id": 3,
+      "product_id": 1,
+      "type": "sale",
+      "qty": -1,
+      "date": "2025-11-17"
+    },
+    {
+      "id": 4,
+      "product_id": 1,
+      "type": "sale",
+      "qty": -1,
+      "date": "2025-11-17"
+    },
+    {
+      "id": 6,
+      "product_id": 1,
+      "type": "purchase",
+      "qty": 1,
+      "date": "2025-11-18",
+      "reference": "purchase:1"
+    },
+    {
+      "id": 7,
+      "product_id": 1,
+      "type": "sale",
+      "qty": -1,
+      "date": "2025-11-18",
+      "reference": "sale:1"
+    },
+    {
+      "id": 8,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -1,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة مبيعات",
+      "createdAt": "2025-11-18T21:49:34.751Z"
+    },
+    {
+      "id": 9,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 2,
+      "reference_id": 2,
+      "note": "استعادة مخزون من فاتورة مبيعات ملغاة",
+      "createdAt": "2025-11-18T21:50:13.387Z"
+    },
+    {
+      "id": 10,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 2,
+      "reference_id": 2,
+      "note": "استعادة مخزون من فاتورة مبيعات ملغاة",
+      "createdAt": "2025-11-18T21:54:02.698Z"
+    },
+    {
+      "id": 11,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": -1,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة مبيعات",
+      "createdAt": "2025-11-18T22:10:59.900Z"
+    },
+    {
+      "id": 12,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 3,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-3)",
+      "createdAt": "2025-11-18T22:39:13.789Z"
+    },
+    {
+      "id": 13,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": 2,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (-2)",
+      "createdAt": "2025-11-18T22:39:13.789Z"
+    },
+    {
+      "id": 14,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 3,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-3)",
+      "createdAt": "2025-11-18T22:39:27.851Z"
+    },
+    {
+      "id": 15,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (5)",
+      "createdAt": "2025-11-18T22:40:09.881Z"
+    },
+    {
+      "id": 16,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-5)",
+      "createdAt": "2025-11-18T22:40:28.155Z"
+    },
+    {
+      "id": 17,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-5)",
+      "createdAt": "2025-11-18T22:40:45.481Z"
+    },
+    {
+      "id": 18,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (5)",
+      "createdAt": "2025-11-18T22:48:47.910Z"
+    },
+    {
+      "id": 19,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-5)",
+      "createdAt": "2025-11-18T22:48:57.061Z"
+    },
+    {
+      "id": 20,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 2,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-2)",
+      "createdAt": "2025-11-18T22:48:58.472Z"
+    },
+    {
+      "id": 21,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": 2,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (-2)",
+      "createdAt": "2025-11-18T22:49:12.912Z"
+    },
+    {
+      "id": 22,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": -2,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (2)",
+      "createdAt": "2025-11-18T22:49:30.551Z"
+    },
+    {
+      "id": 23,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (5)",
+      "createdAt": "2025-11-18T22:49:49.872Z"
+    },
+    {
+      "id": 24,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-5)",
+      "createdAt": "2025-11-18T22:50:46.242Z"
+    },
+    {
+      "id": 25,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-10)",
+      "createdAt": "2025-11-18T22:51:31.565Z"
+    },
+    {
+      "id": 26,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-18T22:51:48.343Z"
+    },
+    {
+      "id": 27,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-10)",
+      "createdAt": "2025-11-18T22:55:11.607Z"
+    },
+    {
+      "id": 28,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-18T22:55:35.571Z"
+    },
+    {
+      "id": 29,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-18T22:55:48.523Z"
+    },
+    {
+      "id": 30,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": -3,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (3)",
+      "createdAt": "2025-11-18T22:56:11.341Z"
+    },
+    {
+      "id": 31,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": 5,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (-5)",
+      "createdAt": "2025-11-18T22:56:20.325Z"
+    },
+    {
+      "id": 32,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون من فاتورة شراء (1)",
+      "createdAt": "2025-11-18T22:56:49.266Z"
+    },
+    {
+      "id": 33,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 3,
+      "reference_id": 1,
+      "note": "إضافة مخزون من فاتورة شراء (3)",
+      "createdAt": "2025-11-18T22:57:06.738Z"
+    },
+    {
+      "id": 34,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-19T13:19:03.957Z"
+    },
+    {
+      "id": 35,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-10)",
+      "createdAt": "2025-11-19T13:19:54.904Z"
+    },
+    {
+      "id": 36,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-19T13:20:12.220Z"
+    },
+    {
+      "id": 37,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -30,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (30)",
+      "createdAt": "2025-11-19T13:21:50.021Z"
+    },
+    {
+      "id": 38,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": -1,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (1)",
+      "createdAt": "2025-11-19T13:22:31.039Z"
+    },
+    {
+      "id": 39,
+      "product_id": 1,
+      "type": "purchase_cancel",
+      "quantity": -1,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (1)",
+      "createdAt": "2025-11-19T13:35:07.214Z"
+    },
+    {
+      "id": 40,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -30,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (30)",
+      "createdAt": "2025-11-19T13:35:24.931Z"
+    },
+    {
+      "id": 41,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون من فاتورة شراء (1)",
+      "createdAt": "2025-11-19T13:36:14.816Z"
+    },
+    {
+      "id": 42,
+      "product_id": 1,
+      "type": "purchase_cancel",
+      "quantity": -2,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (2)",
+      "createdAt": "2025-11-19T13:36:55.953Z"
+    },
+    {
+      "id": 43,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (10)",
+      "createdAt": "2025-11-19T13:39:42.744Z"
+    },
+    {
+      "id": 44,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (10)",
+      "createdAt": "2025-11-19T13:39:58.759Z"
+    },
+    {
+      "id": 45,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -30,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (30)",
+      "createdAt": "2025-11-19T13:50:01.831Z"
+    },
+    {
+      "id": 46,
+      "product_id": 1,
+      "type": "purchase_cancel",
+      "quantity": -1,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (1)",
+      "createdAt": "2025-11-19T13:50:01.831Z"
+    },
+    {
+      "id": 47,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (10)",
+      "createdAt": "2025-11-19T13:50:28.227Z"
+    },
+    {
+      "id": 48,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "إضافة مخزون من فاتورة شراء (5)",
+      "createdAt": "2025-11-19T13:56:31.250Z"
+    },
+    {
+      "id": 49,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "إضافة مخزون من فاتورة شراء (5)",
+      "createdAt": "2025-11-19T13:56:48.002Z"
+    },
+    {
+      "id": 50,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (5)",
+      "createdAt": "2025-11-19T13:57:04.877Z"
+    },
+    {
+      "id": 51,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (10)",
+      "createdAt": "2025-11-19T14:09:06.388Z"
+    },
+    {
+      "id": 52,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (5)",
+      "createdAt": "2025-11-19T14:09:16.237Z"
+    },
+    {
+      "id": 53,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "إضافة مخزون من فاتورة شراء (10)",
+      "createdAt": "2025-11-19T14:11:39.091Z"
+    },
+    {
+      "id": 54,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (10)",
+      "createdAt": "2025-11-19T14:11:46.294Z"
+    },
+    {
+      "id": 55,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "إضافة مخزون من فاتورة شراء (10)",
+      "createdAt": "2025-11-19T14:11:55.430Z"
+    },
+    {
+      "id": 56,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (5)",
+      "createdAt": "2025-11-19T14:12:22.718Z"
+    },
+    {
+      "id": 57,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -15,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (15)",
+      "createdAt": "2025-11-19T14:12:39.677Z"
+    },
+    {
+      "id": 58,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 20,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-20)",
+      "createdAt": "2025-11-19T14:12:45.568Z"
+    },
+    {
+      "id": 59,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -30,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (30)",
+      "createdAt": "2025-11-19T14:26:29.790Z"
+    },
+    {
+      "id": 60,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -20,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (20)",
+      "createdAt": "2025-11-19T14:32:42.455Z"
+    },
+    {
+      "id": 61,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 20,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-20)",
+      "createdAt": "2025-11-19T14:39:07.242Z"
+    },
+    {
+      "id": 62,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 20,
+      "reference_id": 2,
+      "note": "إضافة مخزون من فاتورة شراء (20)",
+      "createdAt": "2025-11-19T14:39:17.437Z"
+    },
+    {
+      "id": 63,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -30,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (30)",
+      "createdAt": "2025-11-19T14:39:55.394Z"
+    },
+    {
+      "id": 64,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -20,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (20)",
+      "createdAt": "2025-11-19T15:10:34.616Z"
+    },
+    {
+      "id": 65,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "إضافة مخزون من فاتورة شراء (10)",
+      "createdAt": "2025-11-19T15:11:13.738Z"
+    },
+    {
+      "id": 66,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-19T15:12:43.898Z"
+    },
+    {
+      "id": 67,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-10)",
+      "createdAt": "2025-11-19T15:12:50.815Z"
+    },
+    {
+      "id": 68,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-19T15:12:59.290Z"
+    },
+    {
+      "id": 69,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (5)",
+      "createdAt": "2025-11-19T15:13:23.067Z"
+    },
+    {
+      "id": 70,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-5)",
+      "createdAt": "2025-11-19T15:15:10.624Z"
+    },
+    {
+      "id": 71,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (5)",
+      "createdAt": "2025-11-19T15:15:25.154Z"
+    },
+    {
+      "id": 72,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-5)",
+      "createdAt": "2025-11-19T15:30:14.575Z"
+    },
+    {
+      "id": 73,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (5)",
+      "createdAt": "2025-11-19T15:30:25.129Z"
+    },
+    {
+      "id": 74,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (10)",
+      "createdAt": "2025-11-19T15:30:44.198Z"
+    },
+    {
+      "id": 75,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 14,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-14)",
+      "createdAt": "2025-11-19T15:31:24.250Z"
+    },
+    {
+      "id": 76,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -9,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (9)",
+      "createdAt": "2025-11-19T15:32:03.960Z"
+    },
+    {
+      "id": 77,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-5)",
+      "createdAt": "2025-11-19T15:32:13.429Z"
+    },
+    {
+      "id": 78,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "إضافة مخزون من فاتورة شراء (10)",
+      "createdAt": "2025-11-19T15:32:23.943Z"
+    },
+    {
+      "id": 79,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة شراء ملغاة (10)",
+      "createdAt": "2025-11-19T15:32:35.336Z"
+    },
+    {
+      "id": 80,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (5)",
+      "createdAt": "2025-11-19T16:00:59.862Z"
+    },
+    {
+      "id": 81,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -1,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (1)",
+      "createdAt": "2025-11-19T16:42:15.364Z"
+    },
+    {
+      "id": 82,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 1,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-1)",
+      "createdAt": "2025-11-19T16:42:37.885Z"
+    },
+    {
+      "id": 83,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-5)",
+      "createdAt": "2025-11-19T16:42:39.457Z"
+    },
+    {
+      "id": 84,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 5,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-5)",
+      "createdAt": "2025-11-19T16:42:40.875Z"
+    },
+    {
+      "id": 85,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 30,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-30)",
+      "createdAt": "2025-11-19T16:42:42.689Z"
+    },
+    {
+      "id": 86,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (-1)",
+      "createdAt": "2025-11-19T16:42:44.147Z"
+    },
+    {
+      "id": 87,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-10)",
+      "createdAt": "2025-11-19T16:42:45.401Z"
+    },
+    {
+      "id": 88,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-19T18:51:07.065Z"
+    },
+    {
+      "id": 89,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (-10)",
+      "createdAt": "2025-11-19T18:58:21.482Z"
+    },
+    {
+      "id": 90,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-19T18:58:32.518Z"
+    },
+    {
+      "id": 91,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 10,
+      "reference_id": 2,
+      "note": "إضافة مخزون من فاتورة شراء (10)",
+      "createdAt": "2025-11-19T19:54:48.598Z"
+    },
+    {
+      "id": 92,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-20T19:30:12.685Z"
+    },
+    {
+      "id": 93,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 10,
+      "reference_id": 1,
+      "note": "إضافة مخزون (10)",
+      "createdAt": "2025-11-20T19:33:35.832Z"
+    },
+    {
+      "id": 94,
+      "product_id": 1,
+      "type": "purchase_cancel",
+      "quantity": -10,
+      "reference_id": 1,
+      "note": "خصم مخزون (10)",
+      "createdAt": "2025-11-20T19:48:58.922Z"
+    },
+    {
+      "id": 95,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 10,
+      "reference_id": 1,
+      "note": "إضافة مخزون (10)",
+      "createdAt": "2025-11-20T19:49:27.449Z"
+    },
+    {
+      "id": 96,
+      "product_id": 1,
+      "type": "purchase_cancel",
+      "quantity": -10,
+      "reference_id": 1,
+      "note": "خصم مخزون (10)",
+      "createdAt": "2025-11-20T19:50:15.254Z"
+    },
+    {
+      "id": 97,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -10,
+      "reference_id": 2,
+      "note": "خصم مخزون (10)",
+      "createdAt": "2025-11-20T19:50:34.817Z"
+    },
+    {
+      "id": 98,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 10,
+      "reference_id": 1,
+      "note": "إضافة مخزون (10)",
+      "createdAt": "2025-11-20T19:52:14.294Z"
+    },
+    {
+      "id": 99,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": -10,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (10)",
+      "createdAt": "2025-11-22T22:26:30.495Z"
+    },
+    {
+      "id": 100,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 20,
+      "reference_id": 2,
+      "note": "إضافة مخزون (20)",
+      "createdAt": "2025-11-22T22:27:48.351Z"
+    },
+    {
+      "id": 101,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": 10,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (-10)",
+      "createdAt": "2025-11-22T22:33:02.252Z"
+    },
+    {
+      "id": 102,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-29T17:54:44.952Z"
+    },
+    {
+      "id": 103,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 12,
+      "reference_id": 1,
+      "note": "إضافة مخزون (12)",
+      "createdAt": "2025-11-29T17:54:44.960Z"
+    },
+    {
+      "id": 104,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-29T17:54:44.960Z"
+    },
+    {
+      "id": 105,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-29T17:54:44.961Z"
+    },
+    {
+      "id": 106,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-29T17:54:44.969Z"
+    },
+    {
+      "id": 107,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-29T17:54:44.976Z"
+    },
+    {
+      "id": 108,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-29T17:54:44.983Z"
+    },
+    {
+      "id": 109,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 10,
+      "reference_id": 1,
+      "note": "إضافة مخزون (10)",
+      "createdAt": "2025-11-29T17:55:18.936Z"
+    },
+    {
+      "id": 110,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 1000,
+      "reference_id": 2,
+      "note": "إضافة مخزون (1000)",
+      "createdAt": "2025-11-29T17:55:18.937Z"
+    },
+    {
+      "id": 111,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 5,
+      "reference_id": 1,
+      "note": "إضافة مخزون (5)",
+      "createdAt": "2025-11-29T17:55:52.431Z"
+    },
+    {
+      "id": 112,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 6,
+      "reference_id": 1,
+      "note": "إضافة مخزون (6)",
+      "createdAt": "2025-11-29T17:56:18.358Z"
+    },
+    {
+      "id": 113,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 4,
+      "reference_id": 1,
+      "note": "إضافة مخزون (4)",
+      "createdAt": "2025-11-29T17:56:37.313Z"
+    },
+    {
+      "id": 114,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-29T18:30:02.379Z"
+    },
+    {
+      "id": 115,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 4,
+      "reference_id": 1,
+      "note": "إضافة مخزون (4)",
+      "createdAt": "2025-11-29T18:47:43.630Z"
+    },
+    {
+      "id": 116,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-29T18:49:23.961Z"
+    },
+    {
+      "id": 117,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 100,
+      "reference_id": 2,
+      "note": "إضافة مخزون (100)",
+      "createdAt": "2025-11-29T18:49:23.961Z"
+    },
+    {
+      "id": 118,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": -1,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (1)",
+      "createdAt": "2025-11-30T00:17:50.455Z"
+    },
+    {
+      "id": 119,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 20,
+      "reference_id": 1,
+      "note": "إضافة مخزون (20)",
+      "createdAt": "2025-11-30T00:23:57.419Z"
+    },
+    {
+      "id": 120,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-30T01:30:32.455Z"
+    },
+    {
+      "id": 121,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-30T01:30:45.814Z"
+    },
+    {
+      "id": 122,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-30T01:31:00.513Z"
+    },
+    {
+      "id": 123,
+      "product_id": 1,
+      "type": "purchase",
+      "quantity": 1,
+      "reference_id": 1,
+      "note": "إضافة مخزون (1)",
+      "createdAt": "2025-11-30T01:31:45.253Z"
+    },
+    {
+      "id": 124,
+      "product_id": 2,
+      "type": "purchase",
+      "quantity": 9000,
+      "reference_id": 2,
+      "note": "إضافة مخزون (9000)",
+      "createdAt": "2025-11-30T21:11:09.254Z"
+    },
+    {
+      "id": 125,
+      "product_id": 2,
+      "type": "purchase_cancel",
+      "quantity": -9000,
+      "reference_id": 2,
+      "note": "خصم مخزون (9000)",
+      "createdAt": "2025-11-30T21:11:28.106Z"
+    }
+  ],
+  "sales_returns": [],
+  "sales_return_items": [],
+  "purchase_returns": [],
+  "purchase_return_items": [],
+  "transactions": [],
+  "employees": [
+    {
+      "id": 2,
+      "name": "luvi",
+      "phone": "01100000002",
+      "position": "مدير"
+    },
+    {
+      "id": 1,
+      "name": "رحمة",
+      "phone": "01100000001",
+      "position": "بائع"
+    }
+  ],
+  "settings": [],
+  "audit_log": []
+}

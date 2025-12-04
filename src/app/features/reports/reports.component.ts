@@ -52,6 +52,7 @@ export class ReportsComponent implements OnInit {
 
   // Data
   customers: any[] = [];
+  products: any[] = [];
   suppliers: any[] = [];
   expenses: any[] = [];
   customerPayments: any[] = [];
@@ -131,6 +132,7 @@ export class ReportsComponent implements OnInit {
     this.customers = await this.db.getCustomers();
     this.suppliers = await this.db.getSuppliers();
     this.expenses = await this.db.getExpenses();
+    this.products = await this.db.getProducts();
     this.customerPayments = await this.db.getCustomerPayments();
     this.supplierPayments = await this.db.getSupplierPayments();
     this.purchases = await this.db.getPurchases();
@@ -453,130 +455,205 @@ export class ReportsComponent implements OnInit {
     ];
   }
 
-generateMonthlyProfits() {
-  let totalSales = 0;
-  let totalPurchases = 0;
-  let totalExpenses = 0;
+  // generateMonthlyProfits() {
+  //   let totalSales = 0;
+  //   let totalPurchases = 0;
+  //   let totalExpenses = 0;
 
-  // المبيعات
-  this.sales.forEach((s) => {
-    const d = new Date(s.sale_date || s.date || s.createdAt);
-    if (d >= this.dateFrom && d <= this.dateTo) {
-      const amount = Number(s.totalAmount ?? s.total ?? 0);
-      totalSales += amount;
-    }
-  });
+  //   // المبيعات
+  //   this.sales.forEach((s) => {
+  //     const d = new Date(s.sale_date || s.date || s.createdAt);
+  //     if (d >= this.dateFrom && d <= this.dateTo) {
+  //       const amount = Number(s.totalAmount ?? s.total ?? 0);
+  //       totalSales += amount;
+  //     }
+  //   });
 
-  // المشتريات
-  this.purchases.forEach((p) => {
-    const d = new Date(p.purchase_date || p.date || p.createdAt);
-    if (d >= this.dateFrom && d <= this.dateTo) {
-      const amount = Number(p.totalAmount ?? p.total ?? 0);
-      totalPurchases += amount;
-    }
-  });
+  //   // المشتريات
+  //   this.purchases.forEach((p) => {
+  //     const d = new Date(p.purchase_date || p.date || p.createdAt);
+  //     if (d >= this.dateFrom && d <= this.dateTo) {
+  //       const amount = Number(p.totalAmount ?? p.total ?? 0);
+  //       totalPurchases += amount;
+  //     }
+  //   });
 
-  // المصروفات
-  this.expenses.forEach((e) => {
-    const d = new Date(e.date);
-    if (d >= this.dateFrom && d <= this.dateTo) {
-      totalExpenses += Number(e.amount || 0);
-    }
-  });
+  //   // المصروفات
+  //   this.expenses.forEach((e) => {
+  //     const d = new Date(e.date);
+  //     if (d >= this.dateFrom && d <= this.dateTo) {
+  //       totalExpenses += Number(e.amount || 0);
+  //     }
+  //   });
 
-  const profit = totalSales - totalPurchases - totalExpenses;
+  //   const profit = totalSales - totalPurchases - totalExpenses;
 
-  this.currentData = [
-    {
-      period: `من ${this.dateFrom.toLocaleDateString(
-        'ar-EG'
-      )} إلى ${this.dateTo.toLocaleDateString('ar-EG')}`,
-      totalSales,
-      totalPurchases,
-      totalExpenses,
-      profit,
-    },
-  ];
+  //   this.currentData = [
+  //     {
+  //       period: `من ${this.dateFrom.toLocaleDateString(
+  //         'ar-EG'
+  //       )} إلى ${this.dateTo.toLocaleDateString('ar-EG')}`,
+  //       totalSales,
+  //       totalPurchases,
+  //       totalExpenses,
+  //       profit,
+  //     },
+  //   ];
 
-  this.currentColumns = [
-    { field: 'period', header: 'الفترة' },
-    { field: 'totalSales', header: 'المبيعات', type: 'number' },
-    { field: 'totalPurchases', header: 'المشتريات', type: 'number' },
-    { field: 'totalExpenses', header: 'المصروفات', type: 'number' },
-    { field: 'profit', header: 'صافي الربح', type: 'number' },
-  ];
-}
+  //   this.currentColumns = [
+  //     { field: 'period', header: 'الفترة' },
+  //     { field: 'totalSales', header: 'المبيعات', type: 'number' },
+  //     { field: 'totalPurchases', header: 'المشتريات', type: 'number' },
+  //     { field: 'totalExpenses', header: 'المصروفات', type: 'number' },
+  //     { field: 'profit', header: 'صافي الربح', type: 'number' },
+  //   ];
+  // }
+
+  generateMonthlyProfits() {
+    let totalSales = 0;
+    let totalCostOfGoodsSold = 0;
+    let totalExpenses = 0;
+
+    // حساب المبيعات + COGS
+    this.sales.forEach((sale) => {
+      const d = new Date(sale.sale_date || sale.date || sale.createdAt);
+
+      if (d >= this.dateFrom && d <= this.dateTo) {
+        // (1) إجمالي المبيعات بعد الخصم
+        const saleTotal = Number(sale.totalAmount || sale.total || 0);
+        const discount = Number(sale.discount || 0);
+        totalSales += saleTotal - discount;
+
+        // (2) تكلفة البضاعة المباعة = سعر شراء المنتج × الكمية
+        const costOfGoodsForThisSale = sale.items.reduce(
+          (sum: any, item: any) => {
+            const product = this.products.find(
+              (p: any) => p.id === item.product_id
+            );
+
+            const buyingPrice = Number(
+              product?.purchase_price ||
+                product?.cost ||
+                product?.buyingPrice ||
+                0
+            );
+            const qty = Number(item.quantity || 0);
+
+            return sum + buyingPrice * qty;
+          },
+          0
+        );
+
+        totalCostOfGoodsSold += costOfGoodsForThisSale;
+      }
+    });
+
+    // المصروفات
+    this.expenses.forEach((e) => {
+      const d = new Date(e.date);
+      if (d >= this.dateFrom && d <= this.dateTo) {
+        totalExpenses += Number(e.amount || 0);
+      }
+    });
+
+    // صافي الربح
+    const profit = totalSales - totalCostOfGoodsSold - totalExpenses;
+
+    this.currentData = [
+      {
+        period: `من ${this.dateFrom.toLocaleDateString(
+          'ar-EG'
+        )} إلى ${this.dateTo.toLocaleDateString('ar-EG')}`,
+        totalSales,
+        totalCostOfGoodsSold,
+        totalExpenses,
+        profit,
+      },
+    ];
+
+    this.currentColumns = [
+      { field: 'period', header: 'الفترة' },
+      { field: 'totalSales', header: 'المبيعات', type: 'number' },
+      {
+        field: 'totalCostOfGoodsSold',
+        header: 'تكلفة البضائع المباعة',
+        type: 'number',
+      },
+      { field: 'totalExpenses', header: 'المصروفات', type: 'number' },
+      { field: 'profit', header: 'صافي الربح', type: 'number' },
+    ];
+  }
 
   // ============================
   // PRINT PREVIEW
   // ============================
 
-printPreview() {
-  if (this.currentData.length === 0) {
-    this.confirmDialog.show({
-      message: 'لا يوجد بيانات للطباعة',
-      header: 'تنبيه',
-      acceptLabel: 'إغلاق',
-      showReject: false,
-    });
-    return;
-  }
+  printPreview() {
+    if (this.currentData.length === 0) {
+      this.confirmDialog.show({
+        message: 'لا يوجد بيانات للطباعة',
+        header: 'تنبيه',
+        acceptLabel: 'إغلاق',
+        showReject: false,
+      });
+      return;
+    }
 
-  const printContent = document.getElementById('reportPrint');
-  if (!printContent) return;
+    const printContent = document.getElementById('reportPrint');
+    if (!printContent) return;
 
-  const printWindow = window.open('', '_blank', 'width=850,height=1200');
-  if (!printWindow) return;
+    const printWindow = window.open('', '_blank', 'width=850,height=1200');
+    if (!printWindow) return;
 
-  // إنشاء محتوى الجدول
-  let tableHTML = '';
+    // إنشاء محتوى الجدول
+    let tableHTML = '';
 
-  // رأس الجدول
-  tableHTML += '<thead><tr>';
-  this.currentColumns.forEach((col) => {
-    tableHTML += `<th>${col.header}</th>`;
-  });
-  tableHTML += '</tr></thead>';
-
-  // بيانات الجدول
-  tableHTML += '<tbody>';
-  this.currentData.forEach((row) => {
-    tableHTML += '<tr>';
+    // رأس الجدول
+    tableHTML += '<thead><tr>';
     this.currentColumns.forEach((col) => {
-      let cellValue = row[col.field];
-
-      // تنسيق التاريخ
-      if (col.type === 'date' && cellValue) {
-        const date = new Date(cellValue);
-        cellValue = date.toLocaleDateString('ar-EG');
-      }
-
-      // تنسيق الأرقام
-      if (col.type === 'number') {
-        const numericValue = Number(cellValue);
-
-        if (isNaN(numericValue)) {
-          cellValue = '0.00';
-        } else {
-          cellValue = numericValue.toLocaleString('ar-EG', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          });
-        }
-      }
-
-      tableHTML += `<td>${
-        cellValue !== undefined && cellValue !== null ? cellValue : ''
-      }</td>`;
+      tableHTML += `<th>${col.header}</th>`;
     });
-    tableHTML += '</tr>';
-  });
-  tableHTML += '</tbody>';
+    tableHTML += '</tr></thead>';
 
-  // معلومات إضافية للعميل/المورد
-  let additionalInfo = '';
-  if (this.currentReport === 'customer' && this.selectedCustomer) {
-    additionalInfo = `
+    // بيانات الجدول
+    tableHTML += '<tbody>';
+    this.currentData.forEach((row) => {
+      tableHTML += '<tr>';
+      this.currentColumns.forEach((col) => {
+        let cellValue = row[col.field];
+
+        // تنسيق التاريخ
+        if (col.type === 'date' && cellValue) {
+          const date = new Date(cellValue);
+          cellValue = date.toLocaleDateString('ar-EG');
+        }
+
+        // تنسيق الأرقام
+        if (col.type === 'number') {
+          const numericValue = Number(cellValue);
+
+          if (isNaN(numericValue)) {
+            cellValue = '0.00';
+          } else {
+            cellValue = numericValue.toLocaleString('ar-EG', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            });
+          }
+        }
+
+        tableHTML += `<td>${
+          cellValue !== undefined && cellValue !== null ? cellValue : ''
+        }</td>`;
+      });
+      tableHTML += '</tr>';
+    });
+    tableHTML += '</tbody>';
+
+    // معلومات إضافية للعميل/المورد
+    let additionalInfo = '';
+    if (this.currentReport === 'customer' && this.selectedCustomer) {
+      additionalInfo = `
       <div class="customer-info">
         <div class="info-row">
           <span><strong>الاسم:</strong> ${this.selectedCustomer.name}</span>
@@ -591,8 +668,8 @@ printPreview() {
         </div>
       </div>
     `;
-  } else if (this.currentReport === 'supplier' && this.selectedSupplier) {
-    additionalInfo = `
+    } else if (this.currentReport === 'supplier' && this.selectedSupplier) {
+      additionalInfo = `
       <div class="customer-info">
         <div class="info-row">
           <span><strong>الاسم:</strong> ${this.selectedSupplier.name}</span>
@@ -602,20 +679,24 @@ printPreview() {
         </div>
       </div>
     `;
-  }
+    }
 
-  // الحصول على التاريخ الحالي للطباعة
-  const now = new Date();
-  const printDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-  const printTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-  const printDateTime = `${printDate} ${printTime}`;
+    // الحصول على التاريخ الحالي للطباعة
+    const now = new Date();
+    const printDate = `${now.getFullYear()}-${String(
+      now.getMonth() + 1
+    ).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const printTime = `${String(now.getHours()).padStart(2, '0')}:${String(
+      now.getMinutes()
+    ).padStart(2, '0')}`;
+    const printDateTime = `${printDate} ${printTime}`;
 
-  // حساب عدد الصفوف في كل صفحة (حوالي 25 صف لكل صفحة A4)
-  const rowsPerPage = 25;
-  const totalRows = this.currentData.length;
-  const totalPages = Math.ceil(totalRows / rowsPerPage);
+    // حساب عدد الصفوف في كل صفحة (حوالي 25 صف لكل صفحة A4)
+    const rowsPerPage = 25;
+    const totalRows = this.currentData.length;
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
 
-  let htmlContent = `
+    let htmlContent = `
     <html dir="rtl">
       <head>
         <title>${this.reportTitles[this.currentReport]}</title>
@@ -789,14 +870,14 @@ printPreview() {
       <body>
   `;
 
-  // إنشاء صفحات متعددة
-  for (let pageNum = 0; pageNum < totalPages; pageNum++) {
-    const startRow = pageNum * rowsPerPage;
-    const endRow = Math.min(startRow + rowsPerPage, totalRows);
-    const pageData = this.currentData.slice(startRow, endRow);
-    const isLastPage = pageNum === totalPages - 1;
+    // إنشاء صفحات متعددة
+    for (let pageNum = 0; pageNum < totalPages; pageNum++) {
+      const startRow = pageNum * rowsPerPage;
+      const endRow = Math.min(startRow + rowsPerPage, totalRows);
+      const pageData = this.currentData.slice(startRow, endRow);
+      const isLastPage = pageNum === totalPages - 1;
 
-    htmlContent += `
+      htmlContent += `
       <div class="page">
         <div class="header">
           <h1>${this.reportTitles[this.currentReport]}</h1>
@@ -807,46 +888,48 @@ printPreview() {
         <table>
           <thead>
             <tr>
-              ${this.currentColumns.map(col => `<th>${col.header}</th>`).join('')}
+              ${this.currentColumns
+                .map((col) => `<th>${col.header}</th>`)
+                .join('')}
             </tr>
           </thead>
           <tbody>
     `;
 
-    // إضافة بيانات الصفحة الحالية
-    pageData.forEach((row) => {
-      htmlContent += '<tr>';
-      this.currentColumns.forEach((col) => {
-        let cellValue = row[col.field];
+      // إضافة بيانات الصفحة الحالية
+      pageData.forEach((row) => {
+        htmlContent += '<tr>';
+        this.currentColumns.forEach((col) => {
+          let cellValue = row[col.field];
 
-        // تنسيق التاريخ
-        if (col.type === 'date' && cellValue) {
-          const date = new Date(cellValue);
-          cellValue = date.toLocaleDateString('ar-EG');
-        }
-
-        // تنسيق الأرقام
-        if (col.type === 'number') {
-          const numericValue = Number(cellValue);
-
-          if (isNaN(numericValue)) {
-            cellValue = '0.00';
-          } else {
-            cellValue = numericValue.toLocaleString('ar-EG', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            });
+          // تنسيق التاريخ
+          if (col.type === 'date' && cellValue) {
+            const date = new Date(cellValue);
+            cellValue = date.toLocaleDateString('ar-EG');
           }
-        }
 
-        htmlContent += `<td>${
-          cellValue !== undefined && cellValue !== null ? cellValue : ''
-        }</td>`;
+          // تنسيق الأرقام
+          if (col.type === 'number') {
+            const numericValue = Number(cellValue);
+
+            if (isNaN(numericValue)) {
+              cellValue = '0.00';
+            } else {
+              cellValue = numericValue.toLocaleString('ar-EG', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              });
+            }
+          }
+
+          htmlContent += `<td>${
+            cellValue !== undefined && cellValue !== null ? cellValue : ''
+          }</td>`;
+        });
+        htmlContent += '</tr>';
       });
-      htmlContent += '</tr>';
-    });
 
-    htmlContent += `
+      htmlContent += `
           </tbody>
         </table>
         
@@ -856,21 +939,21 @@ printPreview() {
         </div>
       </div>
     `;
-  }
+    }
 
-  htmlContent += `
+    htmlContent += `
       </body>
     </html>
   `;
 
-  printWindow.document.write(htmlContent);
-  printWindow.document.close();
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
 
-  setTimeout(() => {
-    printWindow.print();
-    printWindow.close();
-  }, 300);
-}
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 300);
+  }
 
   setDefaultDates() {
     const now = new Date();
