@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class DatabaseService {
-
   private get api() {
     const electronAPI = (window as any).electronAPI;
     if (!electronAPI) {
@@ -14,12 +13,10 @@ export class DatabaseService {
     return electronAPI;
   }
 
-
-getDatabasePath() {
-  const api = (window as any).electronAPI;
-  return api?.getDatabasePath();
-}
-
+  getDatabasePath() {
+    const api = (window as any).electronAPI;
+    return api?.getDatabasePath();
+  }
 
   // العملاء
   async getCustomers() {
@@ -260,47 +257,47 @@ getDatabasePath() {
     if (!this.api) return null;
     return await this.api.deleteSupplierPayment(id);
   }
-  
+
   async getSupplierPaymentsBySupplierId(supplierId: number) {
     if (!this.api) return [];
     return await this.api.getSupplierPaymentsBySupplierId(supplierId);
   }
 
-  // المصروفات
-  async getExpenses() {
-    if (!this.api) return [];
-    try {
-      return await this.api.getExpenses();
-    } catch (error) {
-      console.error('Error getting expenses:', error);
-      return [];
+    // المصروفات
+    async getExpenses() {
+      if (!this.api) return [];
+      try {
+        return await this.api.getExpenses();
+      } catch (error) {
+        console.error('Error getting expenses:', error);
+        return [];
+      }
     }
-  }
 
-  async addExpense(expense: any) {
-    if (!this.api) return null;
-    return await this.api.addExpense(expense);
-  }
+    async addExpense(expense: any) {
+      if (!this.api) return null;
+      return await this.api.addExpense(expense);
+    }
 
-  async updateExpense(id: number, expense: any) {
-    if (!this.api) return null;
-    return await this.api.updateExpense(id, expense);
-  }
+    async updateExpense(id: number, expense: any) {
+      if (!this.api) return null;
+      return await this.api.updateExpense(id, expense);
+    }
 
-  async deleteExpense(id: number) {
-    if (!this.api) return null;
-    return await this.api.deleteExpense(id);
-  }
+    async deleteExpense(id: number) {
+      if (!this.api) return null;
+      return await this.api.deleteExpense(id);
+    }
 
-  async getExpenseStats() {
-    if (!this.api) return null;
-    return await this.api.getExpenseStats();
-  }
+    async getExpenseStats() {
+      if (!this.api) return null;
+      return await this.api.getExpenseStats();
+    }
 
-  async getExpensesByDateRange(startDate: string, endDate: string) {
-    if (!this.api) return [];
-    return await this.api.getExpensesByDateRange(startDate, endDate);
-  }
+    async getExpensesByDateRange(startDate: string, endDate: string) {
+      if (!this.api) return [];
+      return await this.api.getExpensesByDateRange(startDate, endDate);
+    }
 
   // المستخدمين
   async getUsers() {

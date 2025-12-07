@@ -20,7 +20,7 @@ class ExpenseHandler extends BaseHandler {
     const newExpense = {
       id: this._getNextId('expenses'),
       ...expense,
-      createdAt: new Date().toISOString(),
+      date: expense.date || new Date().toISOString(),
       status: expense.status || 'completed'
     };
     
@@ -35,6 +35,7 @@ class ExpenseHandler extends BaseHandler {
       this.data.expenses[index] = { 
         ...this.data.expenses[index], 
         ...expense,
+        date: expense.date || this.data.expenses[index].date,
         updatedAt: new Date().toISOString()
       };
       this.saveData();
@@ -52,7 +53,7 @@ class ExpenseHandler extends BaseHandler {
 
   getExpensesByDateRange(startDate, endDate) {
     return this.getExpenses().filter(expense => {
-      const expenseDate = new Date(expense.createdAt || expense.date);
+    const expenseDate = new Date(expense.date);
       return expenseDate >= new Date(startDate) && expenseDate <= new Date(endDate);
     });
   }
@@ -84,7 +85,7 @@ class ExpenseHandler extends BaseHandler {
     
     if (filters.startDate && filters.endDate) {
       expenses = expenses.filter(expense => {
-        const expenseDate = new Date(expense.createdAt || expense.date);
+        const expenseDate = new Date(expense.date);
         return expenseDate >= new Date(filters.startDate) && expenseDate <= new Date(filters.endDate);
       });
     }
@@ -124,7 +125,7 @@ class ExpenseHandler extends BaseHandler {
     
     const byMonth = {};
     expenses.forEach(expense => {
-      const date = new Date(expense.createdAt || expense.date);
+      const date = new Date(expense.date);
       const monthYear = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
       if (!byMonth[monthYear]) {
         byMonth[monthYear] = 0;

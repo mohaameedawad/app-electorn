@@ -953,22 +953,14 @@
   ],
   "expenses": [
     {
-      "id": 1,
-      "voucherNumber": "1",
-      "expenseType": "القبض",
-      "date": "2025-11-19T20:28:46.934Z",
-      "amount": 10000,
-      "createdAt": "2025-11-19T20:28:56.331Z",
-      "status": "completed"
-    },
-    {
       "id": 2,
       "voucherNumber": "2",
       "expenseType": "إيجار",
       "date": "2025-10-31T22:00:00.000Z",
-      "amount": 8000,
+      "amount": 6000,
       "createdAt": "2025-11-22T22:22:21.353Z",
-      "status": "completed"
+      "status": "completed",
+      "updatedAt": "2025-12-05T19:59:56.058Z"
     }
   ],
   "stock_movements": [

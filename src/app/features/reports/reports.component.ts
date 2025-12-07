@@ -455,26 +455,43 @@ export class ReportsComponent implements OnInit {
     ];
   }
 
+
   // generateMonthlyProfits() {
   //   let totalSales = 0;
-  //   let totalPurchases = 0;
+  //   let totalCostOfGoodsSold = 0;
   //   let totalExpenses = 0;
 
-  //   // المبيعات
-  //   this.sales.forEach((s) => {
-  //     const d = new Date(s.sale_date || s.date || s.createdAt);
-  //     if (d >= this.dateFrom && d <= this.dateTo) {
-  //       const amount = Number(s.totalAmount ?? s.total ?? 0);
-  //       totalSales += amount;
-  //     }
-  //   });
+  //   // حساب المبيعات + COGS
+  //   this.sales.forEach((sale) => {
+  //     const d = new Date(sale.sale_date || sale.date || sale.createdAt);
 
-  //   // المشتريات
-  //   this.purchases.forEach((p) => {
-  //     const d = new Date(p.purchase_date || p.date || p.createdAt);
   //     if (d >= this.dateFrom && d <= this.dateTo) {
-  //       const amount = Number(p.totalAmount ?? p.total ?? 0);
-  //       totalPurchases += amount;
+  //       // (1) إجمالي المبيعات بعد الخصم
+  //       const saleTotal = Number(sale.totalAmount || sale.total || 0);
+  //       const discount = Number(sale.discount || 0);
+  //       totalSales += saleTotal - discount;
+
+  //       // (2) تكلفة البضاعة المباعة = سعر شراء المنتج × الكمية
+  //       const costOfGoodsForThisSale = sale.items.reduce(
+  //         (sum: any, item: any) => {
+  //           const product = this.products.find(
+  //             (p: any) => p.id === item.product_id
+  //           );
+
+  //           const buyingPrice = Number(
+  //             product?.purchase_price ||
+  //               product?.cost ||
+  //               product?.buyingPrice ||
+  //               0
+  //           );
+  //           const qty = Number(item.quantity || 0);
+
+  //           return sum + buyingPrice * qty;
+  //         },
+  //         0
+  //       );
+
+  //       totalCostOfGoodsSold += costOfGoodsForThisSale;
   //     }
   //   });
 
@@ -486,7 +503,8 @@ export class ReportsComponent implements OnInit {
   //     }
   //   });
 
-  //   const profit = totalSales - totalPurchases - totalExpenses;
+  //   // صافي الربح
+  //   const profit = totalSales - totalCostOfGoodsSold - totalExpenses;
 
   //   this.currentData = [
   //     {
@@ -494,7 +512,7 @@ export class ReportsComponent implements OnInit {
   //         'ar-EG'
   //       )} إلى ${this.dateTo.toLocaleDateString('ar-EG')}`,
   //       totalSales,
-  //       totalPurchases,
+  //       totalCostOfGoodsSold,
   //       totalExpenses,
   //       profit,
   //     },
@@ -503,86 +521,74 @@ export class ReportsComponent implements OnInit {
   //   this.currentColumns = [
   //     { field: 'period', header: 'الفترة' },
   //     { field: 'totalSales', header: 'المبيعات', type: 'number' },
-  //     { field: 'totalPurchases', header: 'المشتريات', type: 'number' },
+  //     {
+  //       field: 'totalCostOfGoodsSold',
+  //       header: 'تكلفة البضائع المباعة',
+  //       type: 'number',
+  //     },
   //     { field: 'totalExpenses', header: 'المصروفات', type: 'number' },
   //     { field: 'profit', header: 'صافي الربح', type: 'number' },
   //   ];
   // }
 
-  generateMonthlyProfits() {
-    let totalSales = 0;
-    let totalCostOfGoodsSold = 0;
-    let totalExpenses = 0;
+generateMonthlyProfits() {
+  let totalSales = 0;
+  let totalCostOfGoodsSold = 0;
+  let totalExpenses = 0;
 
-    // حساب المبيعات + COGS
-    this.sales.forEach((sale) => {
-      const d = new Date(sale.sale_date || sale.date || sale.createdAt);
+  // نحسب إجمالي المبيعات
+  this.sales.forEach((sale) => {
+    const saleDate = new Date(sale.sale_date || sale.date || sale.createdAt);
+    if (saleDate >= this.dateFrom && saleDate <= this.dateTo) {
+      totalSales += sale.totalAmount ?? sale.total ?? 0;
 
-      if (d >= this.dateFrom && d <= this.dateTo) {
-        // (1) إجمالي المبيعات بعد الخصم
-        const saleTotal = Number(sale.totalAmount || sale.total || 0);
-        const discount = Number(sale.discount || 0);
-        totalSales += saleTotal - discount;
+      // نحسب تكلفة البضاعة المباعة بناءً على تكلفة الشراء
+      const costOfGoodsForThisSale = sale.items.reduce((sum: any, item: any) => {
+        // نجيب سعر الشراء من الـ products أو من البيانات المتاحة
+        const product = this.products.find((p: any) => p.id === item.product_id);
+        const itemCost = product ? product.purchase_price : item.cost || 0;
+        return sum + (itemCost * item.quantity);
+      }, 0);
 
-        // (2) تكلفة البضاعة المباعة = سعر شراء المنتج × الكمية
-        const costOfGoodsForThisSale = sale.items.reduce(
-          (sum: any, item: any) => {
-            const product = this.products.find(
-              (p: any) => p.id === item.product_id
-            );
+      totalCostOfGoodsSold += costOfGoodsForThisSale;
+    }
+  });
 
-            const buyingPrice = Number(
-              product?.purchase_price ||
-                product?.cost ||
-                product?.buyingPrice ||
-                0
-            );
-            const qty = Number(item.quantity || 0);
+  // نحسب إجمالي المصروفات
+  this.expenses.forEach((expense) => {
+    const expenseDate = new Date(expense.date);
+    if (expenseDate >= this.dateFrom && expenseDate <= this.dateTo) {
+      totalExpenses += Number(expense.amount || 0);
+    }
+  });
 
-            return sum + buyingPrice * qty;
-          },
-          0
-        );
+  // نحسب صافي الربح قبل المصروفات
+  const grossProfit = totalSales - totalCostOfGoodsSold;
 
-        totalCostOfGoodsSold += costOfGoodsForThisSale;
-      }
-    });
+  // صافي الربح النهائي بعد المصروفات
+  const netProfit = grossProfit - totalExpenses;
 
-    // المصروفات
-    this.expenses.forEach((e) => {
-      const d = new Date(e.date);
-      if (d >= this.dateFrom && d <= this.dateTo) {
-        totalExpenses += Number(e.amount || 0);
-      }
-    });
+  this.currentData = [
+    {
+      period: `من ${this.dateFrom.toLocaleDateString('ar-EG')} إلى ${this.dateTo.toLocaleDateString('ar-EG')}`,
+      totalSales,
+      totalCostOfGoodsSold,
+      totalExpenses,
+      grossProfit,
+      netProfit,
+    },
+  ];
 
-    // صافي الربح
-    const profit = totalSales - totalCostOfGoodsSold - totalExpenses;
+  this.currentColumns = [
+    { field: 'period', header: 'الفترة' },
+    { field: 'totalSales', header: 'المبيعات', type: 'number' },
+    { field: 'totalCostOfGoodsSold', header: 'تكلفة البضائع المباعة', type: 'number' },
+    { field: 'grossProfit', header: 'صافي الربح للبضائع المباعة', type: 'number' },
+    { field: 'totalExpenses', header: 'المصروفات', type: 'number' },
+    { field: 'netProfit', header: 'صافي الربح', type: 'number' },
+  ];
+}
 
-    this.currentData = [
-      {
-        period: `من ${this.dateFrom.toLocaleDateString(
-          'ar-EG'
-        )} إلى ${this.dateTo.toLocaleDateString('ar-EG')}`,
-        totalSales,
-        totalCostOfGoodsSold,
-        totalExpenses,
-        profit,
-      },
-    ];
-
-    this.currentColumns = [
-      { field: 'period', header: 'الفترة' },
-      { field: 'totalSales', header: 'المبيعات', type: 'number' },
-      {
-        field: 'totalCostOfGoodsSold',
-        header: 'تكلفة البضائع المباعة',
-        type: 'number',
-      },
-      { field: 'totalExpenses', header: 'المصروفات', type: 'number' },
-      { field: 'profit', header: 'صافي الربح', type: 'number' },
-    ];
-  }
 
   // ============================
   // PRINT PREVIEW
