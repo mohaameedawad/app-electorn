@@ -60,7 +60,7 @@
       "name": "بيتر",
       "phone": "01111111111",
       "address": "",
-      "balance": 3400,
+      "balance": 8400,
       "balanceType": "debit",
       "balanceAmount": 4000,
       "debit": 0,
@@ -124,7 +124,7 @@
       "category": "اكسسوار",
       "purchase_price": 1000,
       "sale_price": 5000,
-      "stock": 102,
+      "stock": 101,
       "price": 5000,
       "updatedAt": "2025-11-19T16:43:02.893Z"
     },
@@ -134,7 +134,7 @@
       "purchase_price": 50,
       "sale_price": 100,
       "price": 100,
-      "stock": 1150,
+      "stock": 1130,
       "category": "اكسسوار",
       "createdAt": "2025-11-18T21:23:30.685Z",
       "isActive": true,
@@ -147,7 +147,7 @@
       "invoice_no": 1,
       "customer_id": 1,
       "customer": "بيتر",
-      "employee_id": null,
+      "employee_id": 1,
       "items": [
         {
           "product_id": 2,
@@ -166,14 +166,14 @@
       "status": "معلقة",
       "createdAt": "2025-11-19T18:58:32.518Z",
       "remaining_amount": 700,
-      "updatedAt": "2025-11-20T17:50:34.092Z"
+      "updatedAt": "2025-12-05T21:03:02.703Z"
     },
     {
       "id": 2,
       "invoice_no": 2,
       "customer_id": 1,
       "customer": "بيتر",
-      "employee_id": null,
+      "employee_id": 1,
       "items": [
         {
           "product_id": 2,
@@ -191,7 +191,8 @@
       "sale_date": "2025-11-20",
       "status": "معلقة",
       "createdAt": "2025-11-20T19:30:12.680Z",
-      "remaining_amount": 0
+      "remaining_amount": 0,
+      "updatedAt": "2025-12-05T21:03:07.334Z"
     },
     {
       "id": 3,
@@ -216,7 +217,40 @@
       "sale_date": "2025-11-30",
       "status": "معلقة",
       "createdAt": "2025-11-30T00:17:50.450Z",
-      "remaining_amount": 4000
+      "remaining_amount": 4000,
+      "updatedAt": "2025-12-05T21:03:10.967Z"
+    },
+    {
+      "id": 4,
+      "invoice_no": 4,
+      "customer_id": 1,
+      "customer": "بيتر",
+      "employee_id": 1,
+      "items": [
+        {
+          "product_id": 1,
+          "product_name": "لابتوب Dell",
+          "quantity": 1,
+          "price": 5000,
+          "total": 5000
+        },
+        {
+          "product_id": 2,
+          "product_name": "ماوس",
+          "quantity": 20,
+          "price": 100,
+          "total": 2000
+        }
+      ],
+      "subtotal": 7000,
+      "discount": 0,
+      "tax": 0,
+      "total": 7000,
+      "paid_amount": 2000,
+      "sale_date": "2025-12-07",
+      "status": "معلقة",
+      "createdAt": "2025-12-07T16:33:41.120Z",
+      "remaining_amount": 5000
     }
   ],
   "sale_items": [
@@ -246,6 +280,24 @@
       "quantity": 1,
       "price": 5000,
       "total": 5000
+    },
+    {
+      "id": 4,
+      "sale_id": 4,
+      "product_id": 1,
+      "product_name": "لابتوب Dell",
+      "quantity": 1,
+      "price": 5000,
+      "total": 5000
+    },
+    {
+      "id": 5,
+      "sale_id": 4,
+      "product_id": 2,
+      "product_name": "ماوس",
+      "quantity": 20,
+      "price": 100,
+      "total": 2000
     }
   ],
   "purchases": [
@@ -961,6 +1013,46 @@
       "createdAt": "2025-11-22T22:22:21.353Z",
       "status": "completed",
       "updatedAt": "2025-12-05T19:59:56.058Z"
+    },
+    {
+      "id": 3,
+      "voucherNumber": "3",
+      "expenseType": "القبض",
+      "date": "2025-12-07T16:41:59.667Z",
+      "amount": 3040,
+      "status": "completed",
+      "updatedAt": "2025-12-07T18:30:44.650Z",
+      "employeeId": 1,
+      "fixedSalary": 3000,
+      "deduction": 200,
+      "employeeSales": [
+        {
+          "product_id": 1,
+          "productName": "لابتوب Dell",
+          "quantity": 1,
+          "commission": 200,
+          "total": 200
+        },
+        {
+          "product_id": 2,
+          "productName": "ماوس",
+          "quantity": 20,
+          "commission": 2,
+          "total": 40
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "voucherNumber": "4",
+      "expenseType": "القبض",
+      "date": "2025-12-07T18:00:13.864Z",
+      "amount": 1800,
+      "employeeId": 2,
+      "fixedSalary": 3000,
+      "deduction": 1200,
+      "employeeSales": [],
+      "status": "completed"
     }
   ],
   "stock_movements": [
@@ -2069,6 +2161,24 @@
       "reference_id": 2,
       "note": "خصم مخزون (9000)",
       "createdAt": "2025-11-30T21:11:28.106Z"
+    },
+    {
+      "id": 126,
+      "product_id": 1,
+      "type": "sale",
+      "quantity": -1,
+      "reference_id": 1,
+      "note": "خصم مخزون لفاتورة بيع (1)",
+      "createdAt": "2025-12-07T16:33:41.142Z"
+    },
+    {
+      "id": 127,
+      "product_id": 2,
+      "type": "sale",
+      "quantity": -20,
+      "reference_id": 2,
+      "note": "خصم مخزون لفاتورة بيع (20)",
+      "createdAt": "2025-12-07T16:33:41.146Z"
     }
   ],
   "sales_returns": [],
@@ -2087,7 +2197,19 @@
       "id": 1,
       "name": "رحمة",
       "phone": "01100000001",
-      "position": "بائع"
+      "position": "بائع",
+      "sales": [
+        {
+          "product_id": 1,
+          "productName": "لابتوب Dell",
+          "quantity": 1
+        },
+        {
+          "product_id": 2,
+          "productName": "ماوس",
+          "quantity": 20
+        }
+      ]
     }
   ],
   "settings": [],

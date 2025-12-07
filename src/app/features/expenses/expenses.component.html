@@ -1,79 +1,190 @@
-  <div class="page-header">
-    <button class="add-button" (click)="showAddDialog()">
-      <i class="pi pi-plus mx-2"></i>
-      إضافة مصروف
-    </button>
-  </div>
+<div class="page-header">
+  <button class="add-button" (click)="showAddDialog()">
+    <i class="pi pi-plus mx-2"></i>
+    إضافة مصروف
+  </button>
+</div>
 
-  <app-table
-    [data]="expenses"
-    [columns]="columns"
-    (edit)="editExpense($event)"
-    (delete)="deleteExpense($event)"
-  ></app-table>
+<app-table
+  [data]="expenses"
+  [columns]="columns"
+  (edit)="editExpense($event)"
+  (delete)="deleteExpense($event)"
+></app-table>
 
-  
 <app-dialog
   [(visible)]="displayDialog"
-  [width]="'500px'"
+  [width]="'75vw'"
+  [height]="'80vh'"
   [header]="isEditMode ? 'تعديل مصروف' : 'إضافة مصروف جديد'"
 >
-  <div class="dialog-content p-4">
-    <div class="mb-4">
-      <label class="form-label fw-semibold text-secondary">رقم السند</label>
-      <input
-        pInputText
-        type="text"
-        [value]="expense.voucherNumber"
-        class="form-control w-100"
-        disabled
-        readonly
-      />
-    </div>
+  <div class="dialog-content">
+    <div class="scroll-area p-4">
+      <!-- رقم السند -->
+      <div class="col-md-12 mb-4">
+        <label class="form-label fw-semibold text-secondary">رقم السند</label>
+        <div>{{ expense.voucherNumber }}</div>
+      </div>
 
-    <div class="mb-4">
-      <label class="form-label fw-semibold text-secondary">نوع المصروف</label>
-      <p-select
-        [(ngModel)]="expense.expenseType"
-        [options]="expenseTypes"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="اختر نوع المصروف"
-        class="w-100"
-        [style.width]="'100%'"
-      ></p-select>
-    </div>
+      <div class="row g-3">
+        <!-- نوع المصروف -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold text-secondary"
+            >نوع المصروف</label
+          >
+          <p-select
+            [(ngModel)]="expense.expenseType"
+            [options]="expenseTypes"
+            (onChange)="onExpenseTypeChange()"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="اختر نوع المصروف"
+            class="w-100"
+            appendTo="body"
+          ></p-select>
+        </div>
 
-    <div class="mb-4">
-      <label for="expenseDate" class="font-bold block mb-2">التاريخ</label>
-      <p-datepicker
-        [(ngModel)]="expense.date"
-        dateFormat="yy-mm-dd"
-        [showIcon]="true"
-        [appendTo]="'body'"
-        [style]="{ width: '100% !important' }"
-        inputId="expenseDate"
-      ></p-datepicker>
-    </div>
+        <!-- التاريخ -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold text-secondary">التاريخ</label>
+          <p-datepicker
+            [(ngModel)]="expense.date"
+            dateFormat="yy-mm-dd"
+            [showIcon]="true"
+            class="w-100"
+            appendTo="body"
+          ></p-datepicker>
+        </div>
+      </div>
+      <div class="row">
+        <!-- المبلغ (لغير القبض) -->
+        <div class="col-md-4 mt-2" *ngIf="expense.expenseType !== 'القبض'">
+          <label class="form-label fw-semibold text-secondary">المبلغ</label>
+          <p-inputnumber
+            [(ngModel)]="expense.amount"
+            styleClass="w-100"
+            [showButtons]="false"
+          ></p-inputnumber>
+          <span class="text-danger" *ngIf="!expense.amount">
+            هذا الحقل مطلوب
+          </span>
+        </div>
+      </div>
 
-    <div class="mb-4 d-flex flex-column">
-      <label class="form-label fw-semibold text-secondary">المبلغ</label>
-      <p-inputnumber
-        [(ngModel)]="expense.amount"
-        styleClass="w-100"
-      ></p-inputnumber>
+      <!-- قسم القبض -->
+      <div class="mt-4" *ngIf="expense.expenseType === 'القبض'">
+        <div class="row">
+          <!-- اختيار الموظف -->
+          <div class="col-md-4 mb-3">
+            <label class="form-label fw-semibold text-secondary"
+              >اختر الموظف</label
+            >
+            <p-select
+              [(ngModel)]="expense.employeeId"
+              [options]="employees"
+              optionLabel="name"
+              optionValue="id"
+              class="w-100"
+              placeholder="اختر الموظف"
+              (onChange)="onEmployeeSelected()"
+            ></p-select>
+            <span class="text-danger" *ngIf="!expense.employeeId">
+              هذا الحقل مطلوب
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <!-- الراتب الثابت -->
+          <div class="col-md-4 mb-3" *ngIf="expense.employeeId">
+            <label class="form-label fw-semibold text-secondary"
+              >الراتب الثابت</label
+            >
+            <p-inputnumber
+              type="number"
+              [showButtons]="false"
+              class="form-control w-100"
+              [(ngModel)]="fixedSalary"
+              (ngModelChange)="updateTotals()"
+            />
+
+            <div *ngIf="fixedSalary === 0" class="text-danger mt-1">
+              يجب إدخال راتب ثابت أكبر من الصفر
+            </div>
+          </div>
+          <div class="col-md-4 mb-3" *ngIf="expense.employeeId">
+            <label class="form-label fw-semibold text-secondary">الخصم</label>
+            <p-inputnumber
+              type="number"
+              [showButtons]="false"
+              class="form-control w-100"
+              [(ngModel)]="deduction"
+              (ngModelChange)="updateTotals()"
+            />
+          </div>
+        </div>
+
+        <div class="col-12 mt-4" *ngIf="employeeSales.length">
+          <h5 class="fw-bold mb-3">المنتجات المباعة</h5>
+
+          <p-table
+            [value]="employeeSales"
+            [stripedRows]="true"
+            [paginator]="true"
+            [rows]="5"
+            [rowsPerPageOptions]="[5, 10]"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>المنتج</th>
+                <th>الكمية</th>
+                <th>العمولة</th>
+                <th>الإجمالي</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-item>
+              <tr>
+                <td>{{ item.productName }}</td>
+
+                <td>
+                  <strong>{{ item.quantity }}</strong>
+                </td>
+
+                <td>
+                  <p-inputnumber
+                    [(ngModel)]="item.commission"
+                    styleClass="w-50"
+                    (ngModelChange)="updateTotals()"
+                  ></p-inputnumber>
+                </td>
+
+                <td class="text-end fw-bold">{{ item.total }} جنيه</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <!-- الإجمالي -->
+        <div class="col-12 mt-3 p-3 bg-light rounded border">
+          <h4>
+            إجمالي القبض: <strong>{{ totalSalary }}</strong> جنيه
+          </h4>
+        </div>
+      </div>
     </div>
   </div>
-
-  <div dialog-footer class="d-flex justify-content-end gap-2 p-3 border-top">
-    <p-button
-      label="إلغاء"
-      severity="secondary"
-      (onClick)="hideDialog()"
-      [text]="true"
-    >
-    </p-button>
-    <p-button label="حفظ" (onClick)="saveExpense()"> </p-button>
+  <div class="relative">
+    <div dialog-footer class="dialog-footer">
+      <p-button
+        label="إلغاء"
+        severity="secondary"
+        (click)="hideDialog()"
+        text="true"
+      ></p-button>
+      <p-button
+        [label]="isEditMode ? 'تحديث' : 'حفظ'"
+        (click)="saveExpense()"
+      ></p-button>
+    </div>
   </div>
 </app-dialog>
 

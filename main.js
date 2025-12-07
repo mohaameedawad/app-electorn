@@ -39,7 +39,7 @@ app.whenReady().then(() => {
   createWindow();
 });
 
-ipcMain.handle('get-db-path', () => {
+ipcMain.handle("get-db-path", () => {
   return global.dbPath;
 });
 
@@ -179,27 +179,29 @@ function setupIPCHandlers() {
     return await db.customerPayments.deleteCustomerPayment(id);
   });
 
-// دفعات الموردين
-ipcMain.handle("db:getSupplierPayments", async () => {
-  return await db.supplierPayments.getAllSupplierPayments();
-});
+  // دفعات الموردين
+  ipcMain.handle("db:getSupplierPayments", async () => {
+    return await db.supplierPayments.getAllSupplierPayments();
+  });
 
-ipcMain.handle("db:getSupplierPaymentsBySupplierId", async (event, supplierId) => {
-    return await db.supplierPayments.getSupplierPayments(supplierId);
-});
+  ipcMain.handle(
+    "db:getSupplierPaymentsBySupplierId",
+    async (event, supplierId) => {
+      return await db.supplierPayments.getSupplierPayments(supplierId);
+    }
+  );
 
-ipcMain.handle("db:addSupplierPayment", async (event, payment) => {
-  return await db.supplierPayments.addSupplierPayment(payment);
-});
+  ipcMain.handle("db:addSupplierPayment", async (event, payment) => {
+    return await db.supplierPayments.addSupplierPayment(payment);
+  });
 
-ipcMain.handle("db:updateSupplierPayment", async (event, id, payment) => {
-  return await db.supplierPayments.updateSupplierPayment(id, payment);
-});
+  ipcMain.handle("db:updateSupplierPayment", async (event, id, payment) => {
+    return await db.supplierPayments.updateSupplierPayment(id, payment);
+  });
 
-ipcMain.handle("db:deleteSupplierPayment", async (event, id) => {
-  return await db.supplierPayments.deleteSupplierPayment(id);
-});
-
+  ipcMain.handle("db:deleteSupplierPayment", async (event, id) => {
+    return await db.supplierPayments.deleteSupplierPayment(id);
+  });
 
   // المصروفات
   ipcMain.handle("db:getExpenses", async () => {
@@ -254,6 +256,10 @@ ipcMain.handle("db:deleteSupplierPayment", async (event, id) => {
   // Dashboard stats
   ipcMain.handle("db:getDashboardStats", async () => {
     return db.getDashboardStats();
+  });
+
+  ipcMain.handle("db:getEmployeeSales", (event, id) => {
+    return db.sales.getEmployeeSales(id);
   });
 }
 

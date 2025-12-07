@@ -2,7 +2,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 // تعريف API آمنة للتواصل مع main process
 contextBridge.exposeInMainWorld("electronAPI", {
-    getDatabasePath: () => ipcRenderer.invoke("get-db-path"),
+  getDatabasePath: () => ipcRenderer.invoke("get-db-path"),
 
   // العملاء
   getCustomers: () => ipcRenderer.invoke("db:getCustomers"),
@@ -58,7 +58,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   getSupplierPaymentsBySupplierId: (supplierId) =>
     ipcRenderer.invoke("db:getSupplierPaymentsBySupplierId", supplierId),
-  
+
   addSupplierPayment: (payment) =>
     ipcRenderer.invoke("db:addSupplierPayment", payment),
   updateSupplierPayment: (id, payment) =>
@@ -78,4 +78,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   addUser: (user) => ipcRenderer.invoke("db:addUser", user),
   updateUser: (id, user) => ipcRenderer.invoke("db:updateUser", id, user),
   deleteUser: (id) => ipcRenderer.invoke("db:deleteUser", id),
+
+  getEmployeeSales: (id) => ipcRenderer.invoke("db:getEmployeeSales", id),
+
 });

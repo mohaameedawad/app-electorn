@@ -1,7 +1,28 @@
 @import "primeicons/primeicons.css";
 
-/* Cairo Font */
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap");
+@font-face {
+  font-family: 'Cairo';
+  src: url('/assets/fonts/cairo/Cairo-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Cairo';
+  src: url('/assets/fonts/cairo/Cairo-Medium.ttf') format('truetype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Cairo';
+  src: url('/assets/fonts/cairo/Cairo-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Cairo';
+  src: url('/assets/fonts/cairo/Cairo-Bold.ttf') format('truetype');
+  font-weight: 700;
+}
 
 /* ---------- COLORS ---------- */
 $primary-green: #0b6e3a;

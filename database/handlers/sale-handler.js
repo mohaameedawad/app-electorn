@@ -41,6 +41,14 @@ class SaleHandler extends BaseHandler {
 
         // 🔹 تحديث المخزون - تقليل كمية المنتج
         this.updateProductStockOnSale(item.product_id, item.quantity);
+
+        if (sale.employee_id) {
+          this.updateEmployeeSales(
+            sale.employee_id,
+            item.product_id,
+            item.quantity
+          );
+        }
       });
     }
 
@@ -233,7 +241,7 @@ class SaleHandler extends BaseHandler {
       const diff = newQty - oldQty;
 
       if (diff !== 0) {
-    this.updateProductStockOnSale(productId, diff);
+        this.updateProductStockOnSale(productId, diff);
       }
     });
   }
@@ -312,6 +320,99 @@ class SaleHandler extends BaseHandler {
     });
   }
 
+  updateEmployeeSales(employeeId, productId, quantity) {
+    if (!this.data.employees || !employeeId) return;
+
+    const empIndex = this.data.employees.findIndex((e) => e.id === employeeId);
+    if (empIndex === -1) return;
+
+    if (!this.data.employees[empIndex].sales) {
+      this.data.employees[empIndex].sales = [];
+    }
+
+    // 🔹 الحصول على اسم المنتج
+    const product = this.data.products.find((p) => p.id === productId);
+    const productName = product ? product.name : "منتج";
+
+    const existing = this.data.employees[empIndex].sales.find(
+      (s) => s.product_id === productId
+    );
+
+    if (existing) {
+      existing.quantity += quantity;
+    } else {
+      this.data.employees[empIndex].sales.push({
+        product_id: productId,
+        productName: productName,
+        quantity: quantity,
+      });
+    }
+
+    this.saveData();
+  }
+
+// getEmployeeSales(employeeId) {
+//   const now = new Date();
+//   const year = now.getFullYear();
+//   const month = now.getMonth(); // 0-indexed
+
+//   const saleItems = this.data.sale_items || [];
+//   const products = this.data.products || [];
+
+//   // فقط عناصر البيع المرتبطة بالموظف في هذا الشهر
+//   const result = saleItems
+//     .filter(item => {
+//       // الحصول على الفاتورة المرتبطة بالعنصر
+//       const sale = this.data.sales.find(s => s.id === item.sale_id);
+//       if (!sale || sale.employee_id !== employeeId) return false;
+
+//       const saleDate = new Date(sale.createdAt || sale.sale_date);
+//       return saleDate.getFullYear() === year && saleDate.getMonth() === month;
+//     })
+//     .map(item => {
+//       const product = products.find(p => p.id === item.product_id);
+//       return {
+//         product_id: item.product_id,
+//         productName: product ? product.name : item.product_name,
+//         quantity: item.quantity,
+//       };
+//     });
+
+//   return result;
+// }
+getEmployeeSales(employeeId) {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0-indexed
+
+  const saleItems = this.data.sale_items || [];
+  const products = this.data.products || [];
+  const sales = this.data.sales || [];
+
+  const result = saleItems
+    .filter(item => {
+      const sale = sales.find(s => s.id === item.sale_id);
+      if (!sale || sale.employee_id !== employeeId) return false;
+
+      // استخدم sale_date وليس createdAt
+      const saleDate = new Date(sale.sale_date);
+
+      return (
+        saleDate.getFullYear() === year &&
+        saleDate.getMonth() === month
+      );
+    })
+    .map(item => {
+      const product = products.find(p => p.id === item.product_id);
+      return {
+        product_id: item.product_id,
+        productName: product ? product.name : item.product_name,
+        quantity: item.quantity,
+      };
+    });
+
+  return result;
+}
 
 }
 
